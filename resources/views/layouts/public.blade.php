@@ -523,21 +523,14 @@ function dateDiff(date1, date2){
                       }
                       
                         }
-                        
-                       // $('#'+resusltw).html(p);
 
-                    
             });
-
         }
     </script>
 <script>
-
-
     function unique(){
         var denomination= $('#denomination').val();
         var code_promoteur= $('#code_promoteur').val();
-
         var url= "{{ route("verifierentreprise") }}"
         $.ajax({
                     url: url,
@@ -563,16 +556,11 @@ function dateDiff(date1, date2){
 </script>
   <script>
       function changeValue(parent, child, niveau)
-
         {
-
             var idparent_val = $("#"+parent).val();
-
             var id_param = parseInt(niveau);
             //alert(niveau);
-
             var url = '{{ route('valeur.selection') }}';
-
             $.ajax({
                     url: url,
                     type: 'GET',
@@ -582,7 +570,6 @@ function dateDiff(date1, date2){
                     success: function (data) {
                         var options = '<option></option>';
                         for (var x = 0; x < data.length; x++) {
-
                             options += '<option value="' + data[x]['id'] + '">' + data[x]['name'] + '</option>';
                         }
                        $('#'+child).html(options);
@@ -590,7 +577,6 @@ function dateDiff(date1, date2){
             });
         }
   </script>
-
 </body>
 
 </html>
