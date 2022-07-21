@@ -10,7 +10,7 @@
 
           <div class="section-title" style="padding-bottom: 20px;">
             <h2>Projet BRAVE WOMEN</h2>
-           {{-- <p id="horloge"></p> --}}
+           <p id="horloge"></p>
             <hr>
           </div>
           <div class="row bravedesc">
@@ -106,8 +106,9 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                 <div class="testimonial-item">
 
                   <img src="{{ asset('assets/img/wefi_logo.svg') }}" class="testimonial-img" alt="" height="200px">
-                  <h3>Women  Finance Initiative</h3>
-                  <h4>Partenaire  et financier</h4>
+                  <h3>Women Entrepreneurs Finance Initiative</h3>
+                  <h4>Partenaire techique et financier</h4>
+
                 </div>
               </div><!-- End testimonial item -->
 
