@@ -8,6 +8,8 @@ use App\Mail\resumeMail;
 use App\Mail\synthese;
 use App\Models\Decision;
 use App\Models\Entreprise;
+use App\Models\Entreprise_activite;
+use App\Models\Entreprise_activite_invest;
 use App\Models\Evaluation;
 use App\Models\Infoeffectifentreprise;
 use App\Models\Infoentreprise;
@@ -137,7 +139,6 @@ class EntrepriseController extends Controller
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
        $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->get();
        $date_de_formalisation= date('Y-m-d', strtotime($request->date_de_formalisation));
-       //dd($date_de_formalisation);
        if($entreprises->count()< 2){
         $entreprise = Entreprise::create([
             'denomination'=>$request->denomination,
@@ -244,18 +245,7 @@ class EntrepriseController extends Controller
                 ]);
             }
         }
-        // foreach($rentabilite_criteres as $rentabilite_critere){
-        //     foreach($annees as $annee){
-        //         $variable=$rentabilite_critere->id.$annee->id;
-        //         Infoentreprise::create([
-        //             "indicateur"=>$rentabilite_critere->id,
-        //             "annee"=>$annee->id,
-        //             "quantite"=>$request->$variable,
-        //             "entreprise_id"=>$entreprise->id,
-        //             "code_promoteur"=>$request->code_promoteur
-        //         ]);
-        //     }
-        // }
+        
 
         foreach($effectifs as $effectif){
             foreach($annees as $annee){
@@ -271,36 +261,7 @@ class EntrepriseController extends Controller
                 ]);
             }
         }
-    //    for($i=0; $i<count($infracstructures_designation); $i++){
-    //        if($infracstructures_designation[$i]!="" && $infracstructures_quantite[$i]!=""){
-    //         Investissement::create([
-    //             "type_invest"=>"infrastructure",
-    //             "designation"=>$infracstructures_designation[$i],
-    //             "quantite"=>$infracstructures_quantite[$i],
-    //             "entreprise_id"=>$entreprise->id,
-    //             "code_promoteur"=>$request->code_promoteur
-    //         ]);
-    //        }
-
-    //    }
-
-    //    for($i=0; $i<count($materiel_designation); $i++){
-    //     if($materiel_designation[$i]!=null){
-    // if($materiel_quantite[$i]!="" && $materiel_designation[$i]!=""){
-    //     Investissement::create([
-    //         "type_invest"=>"équipement",
-    //         "designation"=>$materiel_designation[$i],
-    //         "quantite"=>$materiel_quantite[$i],
-    //         "entreprise_id"=>$entreprise->id,
-    //         "code_promoteur"=>$request->code_promoteur
-    //     ]);
-    // }
-    //     }
-
-    //    }
-
-       //Recuperation de id entreprise pour passer dans la vue validateStep1 en vu de le passer à projet
-        //Evaluation de l'entreprise
+    
 $formation_en_rapport_avec_activite= $entreprise->promotrice->formation_en_rapport_avec_activite;
 switch ($formation_en_rapport_avec_activite) {
   case "1":
@@ -329,11 +290,7 @@ elseif($nombre_annee_experience<=6 && $nombre_annee_experience>1){
 else{
     $note_nombre_annee_experience = env("NOTE_EXPERIENCE_MOINS_DE_1AN");
 }
-
-
-  //notation secteur d'activite
 $secteur_activite= $entreprise->secteur_activite;
-
 if($secteur_activite==6690 || $secteur_activite==6691 || $secteur_activite==6692 || $secteur_activite==6693){
     $note_secteur_activite=env("NOTE_SECTEUR_ACTIVITE_PRIORITAIRE");
 }
@@ -425,10 +382,10 @@ $note_secteur_activite+ $note_entreprise_formalise + $note_outil_de_suivi+$note_
 // else{
 //     $decision_ugp="inéligible";
 // }
-// $entreprise->update([
-//     "noteTotale"=>$note_totale,
-//     "decision_ugp"=> $decision_ugp
-// ]);
+ $entreprise->update([
+     "noteTotale"=>$note_totale,
+   // "decision_ugp"=> $decision_ugp
+ ]);
 $entreprise=$entreprise->id;
 
 return view("validateStep1", compact("promoteur","entreprise"));
@@ -481,14 +438,34 @@ else{
         $nombre_nouveau_produit=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 6715)->get();
         $nombre_total_client=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', env("VALEUR_NOMBRE_CLIENT") )->get();
         $nombre_innovation=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 6713 )->get();
-        $proportion_de_depense_education= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_EDUCATION") )->get();
+        $proportion_de_depense_education= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_BIEN") )->get();
         $proportion_de_depense_sante= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_SANTE"))->get();
         $proportion_de_depense_bien_materiel= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_BIEN"))->get();
-        //dd($proportion_de_depense_education);
         $decision_dossier_user=Decision::where(['entreprise_id'=>$entreprise->id, 'user_id'=>Auth::user()->id])->get();
         $aStatuer=count($decision_dossier_user)>=1?true:false;
-        //dd($aStatuer);
-        return view("entreprise.detail",compact("aStatuer","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
+        if($entreprise->entrepriseaop){
+           $activite_verticale_devs= Entreprise_activite::where('entreprise_id',$entreprise->id)->where('type','verticale')->get();
+           $activite_verticale_invests= Entreprise_activite_invest::where('entreprise_id',$entreprise->id)->where('type','verticale')->get();
+           $activite_horizontale_devs=Entreprise_activite::where('entreprise_id',$entreprise->id)->where('type','horizontale')->get();
+           $activite_horizontale_invests=  Entreprise_activite_invest::where('entreprise_id',$entreprise->id)->where('type','horizontale')->get();
+           $nombre_de_pme_partenaires= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7100)->get();
+           $montant_des_achats_aupres_des_mpme_des_femmes= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7102)->get();
+	   $nombre_de_pme_partenaires_de_la_zones= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7116)->get();
+	   $montant_obtenu_aupres_des_institutions_financiaires=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7102)->get();
+           if($entreprise->aopOuleader=='aop'){
+            $nombre_membres= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7098)->get();
+            $pourcentage_femmes= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7099)->get();
+            
+                return view("entreprise.detailaopleader",compact("nombre_de_pme_partenaires_de_la_zones","montant_obtenu_aupres_des_institutions_financiaires","montant_des_achats_aupres_des_mpme_des_femmes","nombre_de_pme_partenaires","nombre_membres","pourcentage_femmes","aStatuer","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises","activite_verticale_devs","activite_horizontale_devs","activite_verticale_invests","activite_horizontale_invests"));
+           }
+           else{
+                return view("entreprise.detailaopleader",compact("nombre_de_pme_partenaires_de_la_zones","montant_obtenu_aupres_des_institutions_financiaires","montant_des_achats_aupres_des_mpme_des_femmes","nombre_de_pme_partenaires","aStatuer","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises","activite_verticale_devs","activite_horizontale_devs","activite_verticale_invests","activite_horizontale_invests"));
+           }
+        }
+        else{
+            return view("entreprise.detail",compact("aStatuer","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
+        }
+
     }
     public function view($id)
     {

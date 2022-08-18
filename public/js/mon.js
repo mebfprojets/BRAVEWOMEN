@@ -20,6 +20,7 @@
     $('#description_innovation').hide();
     $("#structure_rep").hide();
     $("#banque").hide();
+    //$(".chaine_de_valeur").hide();
 
 
 
@@ -95,8 +96,9 @@ function cout(){
         }
     }
     function afficherSiOui(champinit, champdep){
-        var contenuchampinit= $('#'+champinit).val();
 
+        var contenuchampinit= $('#'+champinit).val();
+//alert(contenuchampinit);
         if((contenuchampinit==1) || (contenuchampinit=="oui") ){
             $('.'+champdep).show();
         }

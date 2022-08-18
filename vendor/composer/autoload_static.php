@@ -614,6 +614,7 @@ class ComposerStaticInit5c450201a9df88e63364bd2a10f3c0a4
         'App\\Http\\Controllers\\AccompteController' => __DIR__ . '/../..' . '/app/Http/Controllers/AccompteController.php',
         'App\\Http\\Controllers\\BanqueController' => __DIR__ . '/../..' . '/app/Http/Controllers/BanqueController.php',
         'App\\Http\\Controllers\\BaremeController' => __DIR__ . '/../..' . '/app/Http/Controllers/BaremeController.php',
+        'App\\Http\\Controllers\\BeneficiaireController' => __DIR__ . '/../..' . '/app/Http/Controllers/BeneficiaireController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DashboradController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboradController.php',
         'App\\Http\\Controllers\\EntrepriseController' => __DIR__ . '/../..' . '/app/Http/Controllers/EntrepriseController.php',

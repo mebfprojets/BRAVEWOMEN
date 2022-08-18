@@ -272,7 +272,7 @@
                             <p class="col-md-6" >
                                 <span class="valdetail">
                                     @empty($entreprise->promotrice->compte_perso_existe)
-                                    Informations non disponible
+                                        Informations non disponible
                                     @endempty
                         @if($entreprise->promotrice->compte_perso_existe=="oui")
                                     Oui à la {{ $entreprise->promotrice->structure_financiere_personne }}

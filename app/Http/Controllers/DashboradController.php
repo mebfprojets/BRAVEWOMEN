@@ -31,11 +31,14 @@ class DashboradController extends Controller
         $decisions_retenu= count($decisions_retenu);
         $totalenregistres= count($entreprises);
         $entreprisesLeaderAOP=count($entreprisesAOP);
-        if(Auth::user()->structure_represente == null && Auth::user()->banque_id==null ){
+        if(Auth::user()->structure_represente == null && Auth::user()->banque_id==null && Auth::user()->code_promoteur == null ){
             return view("dashboard",compact("totalenregistres","decisions_retenu","entreprisesLeaderAOP"));
         }
-        elseif(Auth::user()->structure_represente == null && Auth::user()->banque_id!=null){
+        elseif(Auth::user()->structure_represente == null && Auth::user()->banque_id!=null ){
             return redirect()->route("banque.beneficiaires");
+        }
+        elseif(Auth::user()->code_promoteur != null){
+            return redirect()->route("profil.beneficiaire");
         }
         else{
             return redirect()->route("soumises_au_comite_technique");
@@ -98,8 +101,8 @@ class DashboradController extends Controller
     public function souscriptionparsecteuractivite(){
         //select  p.categorie_id, v.libelle, SUM(l.quantite) as quantiteCmde FROM ligne_de_commandes l , produits p, valeurs v where p.categorie_id = v.id and l.produit_id = p.id GROUP by p.categorie_id, v.libelle;
         
-       $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(distinct(e.id)) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop IS NULL and e.updated_at BETWEEN '2022-05-27 00-00-00' AND '2022-07-01 00-00-00' AND e.status=1 GROUP by e.secteur_activite, v.libelle");
-       //$souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle');
+       //$souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(distinct(e.id)) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop IS NULL and e.updated_at BETWEEN '2022-05-27 00-00-00' AND '2022-07-01 00-00-00' AND e.status=1 GROUP by e.secteur_activite, v.libelle");
+       $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle');
 
         $datacategorie=[];
             foreach( $souscriptionsParsecteur as $value)
@@ -133,9 +136,9 @@ public function enregistreSecteurActiviteZone()
 //fonction pour le représentation graphique de souscriptions enregistrées par zone
 public function souscriptionparzone(Request $request)
 { 
-   $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.updated_at BETWEEN '2022-05-27 00-00-00' AND '2022-07-01 00-00-00' and e.status=1  GROUP by e.region, v.libelle");
+  // $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.updated_at BETWEEN '2022-05-27 00-00-00' AND '2022-07-01 00-00-00' and e.status=1  GROUP by e.region, v.libelle");
     
-   //$souscriptionsParsecteur= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.status=1  GROUP by e.region, v.libelle');
+   $souscriptionsParsecteur= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.status=1  GROUP by e.region, v.libelle');
     $datacategorie=[];
         foreach( $souscriptionsParsecteur as $value)
         {

@@ -71,8 +71,8 @@
                 <ul>
                   <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                      {{-- <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li> --}}
-                      <li><a href="#modal-Fin-souscription" data-toggle="modal">S'ENREGISTRER</a></li>
+                      <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li> 
+                      {{-- <li><a href="#modal-Fin-souscription" data-toggle="modal">S'ENREGISTRER</a></li> --}}
                       {{-- <li><a href="#modal-soumettre-PCA" data-toggle="modal">SOMETTRE LE PCA</a></li> --}}
                       <li><a href="#modal-soumettre-devis" data-toggle="modal">SOUMETTRE DEVIS</a></li>
                     </ul>
@@ -88,6 +88,23 @@
               </li>
               <li><a class="nav-link scrollto @yield('active_poursuivre')" href="{{ route("afficherform") }}">POURSUIVRE</a></li>
               <li><a class="nav-link scrollto @yield('active_result')" href="#modal-consulter-resultat" data-toggle="modal">RESULTAT</a></li>
+              @if(auth()->guest())
+                <li><a class="getstarted scrollto" href="#modal-user-create" data-toggle="modal">Créer un compte</a></li>
+                <li><a class="getstarted scrollto" href="#modal-user-connexion" data-toggle="modal">Se Connecter</a></li>
+            @else
+                {{-- <li><a class="getstarted scrollto" href="#modal-user-connexion" data-toggle="modal">Se Déconnecter</a> --}}
+            <li>
+                <a class="getstarted scrollto" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                             document.getElementById('logout-form').submit();">
+                    Se Deconnecter
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+            </li>
+            @endif
+
 
               {{-- <li><a class="nav-link scrollto @yield('active_comment')" href="{{ route("commentsouscrire") }}">COMMENT SOUSCRIRE?</a></li> --}}
               {{-- <li><a class="nav-link scrollto" href="#contact">NOS CONTACTER </a></li> --}}
@@ -98,9 +115,6 @@
 
         </div>
       </header><!-- End Header -->
-
-
-
         <!-- ======= About Section ======= -->
 
     <div class="container ">
@@ -164,6 +178,174 @@
         </div>
     </div>
 </div>
+<div id="modal-user-create" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Créer un compte Bénéficiaire</h2>
+            </div>
+            <div class="modal-body">
+                <form  id="form-validation" action="{{route("storecompte.promoteur")}}" method="post"  class="form-horizontal form-bordered">
+                    @csrf
+                    <fieldset>
+                        <legend></legend>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="user_name">Code promoteur:</label>
+                            <div class="col-md-8">
+                                <input type="text" id="code_promoteur_cpt_promo" name="code_promoteur" class="form-control" onchange="afficher_le_formulaire_cpt_promoteur();">
+                            </div>
+                            <p id="code_incorrect" style="color:red; display:none"> Code incorrect ou compte déja créer avec ce code. Bien vouloir verifier </p>
+                        </div>
+                    </fieldset>
+                <fieldset class="create_compte_promoteur" style="display: none">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="user_name">Email :</label>
+                        <div class="col-md-8">
+                            <input type="email" id="email" name="email" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="user-settings-password">Mot de Passe</label>
+                        <div class="col-md-8">
+                            <input type="password" id="val_password" name="password" class="form-control" placeholder="SVP entrez un mot de passe complexe">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="user-settings-repassword">Confirmer le Nouveau Mot de Passe</label>
+                        <div class="col-md-8">
+                            <input type="password" id="val_confirm_password" name="password_confirmation" class="form-control" placeholder="Et confirmer le ...">
+                        </div>
+                    </div>
+                </fieldset>
+                    <div class="form-group form-actions create_compte_promoteur" >
+                        <div class="col-xs-12 text-right">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                        </div>
+                    </div>
+               
+                </form>
+            </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div>
+<div id="modal-user-connexion" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+          
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Se connecter</h2>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('login') }}" method="post" id="form-login" class="form-horizontal">
+                    @csrf
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
+                                <input id="email" class="form-control input-lg" type="email" name="email" :value="old('email')" required autofocus />
+                                {{-- <input type="text" id="login-email" name="login-email" class="form-control input-lg" placeholder="Email"> --}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="gi gi-asterisk"></i></span>
+                                <input id="password" class="form-control input-lg" type="password" name="password" required autocomplete="current-password" />
+                                {{-- <input type="password" id="login-password" name="login-password" class="form-control input-lg" placeholder="Password"> --}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-actions">
+                         <div class="col-xs-4">
+                            <label class="switch switch-primary" data-toggle="tooltip" title="Remember Me?">
+                                <input type="checkbox" id="login-remember-me" name="login-remember-me" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Se connecter</button>
+                        </div>
+                    </div>
+                    {{-- <div class="flex items-center justify-end mt-4">
+                        @if (Route::has('password.request'))
+                            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                              Mot de passe oublié?
+                            </a>
+                        @endif
+                    </div> --}}
+                    <div class="form-group">
+                        <div class="col-xs-12 text-center">
+                            <a href="javascript:void(0)" id="link-reminder-login"><small>Mot de passe oublié?</small></a>
+                        </div>
+                    </div>
+                </form>
+                <form  method="POST" action="{{ route('password.email') }}" id="form-reminder" class="form-horizontal display-none">
+                @csrf
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
+                                <input type="text" id="email" type="email" name="email" :value="old('email', $request->email)" required autofocus class="form-control input-lg" placeholder="Email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-actions">
+                        <div class="col-xs-12 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Changer mot de passe</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12 text-center">
+                            <small>Vous rappellez-vous du mot de passe?</small> <a href="javascript:void(0)" id="link-reminder"><small>Login</small></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div> 
+<div id="modal-user-changepassword" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+          
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Connexion</h2>
+            </div>
+            <div class="modal-body">
+                <form  method="POST" action="{{ route('password.email') }}" id="form-reminder" class="form-horizontal display-none">
+                    @csrf
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
+                                    <input type="text" id="email" type="email" name="email" :value="old('email', $request->email)" required autofocus class="form-control input-lg" placeholder="Email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-actions">
+                            <div class="col-xs-12 text-right">
+                                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Changer mot de passe</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12 text-center">
+                                <small>Vous rappellez-vous du mot de passe?</small> <a href="javascript:void(0)" id="link-reminder"><small>Login</small></a>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div>
+
 <div id="modal-soumettre-devis" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -261,11 +443,9 @@
                         <button onclick="afficherResultat('code_promoteur_r');" class="btn btn-success">Valider</button>
                     </div>
                 </div>
-
                 <div id="palette" class="row">
                        <span> <p style="color: red;" id="resusltw"> </p></span>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Fermer</button>
@@ -368,9 +548,31 @@
   <script>$(function(){ FormsWizard.init(); });</script>
   <script src="{{ asset("js/mon.js") }}"></script>
   <script src="{{ asset("assets/js/main.js") }}"></script>
-
+  <script src="{{ asset("js/pages/login.js") }}"></script>
+  <script>$(function(){ Login.init(); });</script>
 
 <script>
+function afficher_le_formulaire_cpt_promoteur(){
+    var code_promoteur = $('#code_promoteur_cpt_promo').val();
+            var url= "{{ route("verifier_validite_cpt_promo") }}"
+        $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {code_promoteur: code_promoteur},
+                    dataType: 'json',
+                    error:function(data){alert("Erreur");},
+                    success: function(data) {
+                        if(data==true){
+                            $('.create_compte_promoteur').show();
+                            $('#code_incorrect').hide();
+                        }else{
+                            $('.create_compte_promoteur').hide();
+                            $('#code_incorrect').show();
+                        }
+                       
+                    }
+            });
+}
     function gotoaccueil(){
         window.location.replace('https://www.bravewomen.bf/');
     }
@@ -510,16 +712,13 @@ function dateDiff(date1, date2){
                     dataType: 'json',
                     error:function(data){alert("Erreur");},
                     success: function(data) {
-                           
                         $('#palette1').show();
-                        
-                            for (var x = 0; x < data.length; x++) {
-                          
+                            for (var x = 0; x < data.length; x++) { 
                           var rout= '{{ route("add.planDeContinute",":id")}}';
                            var rout = rout.replace(':id', data[x]['id_entreprise']);
                           p = '<p>' + 'Votre entreprise' +' '+ data[x]['denomination'] +' '+'est'+' ' + '<a href="'+rout+'" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-primary">Soummettre le plan de continuté des affaire</a>';
                           $('#palette1').append(p);
-                         // $('#resusltw').text('Entreprise'+' '+data[x]['denomination']+' '+'votre souscription a été'+' '+ data[x]['resultat'])
+                         
                       }
                       
                         }

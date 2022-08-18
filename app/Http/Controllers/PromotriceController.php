@@ -35,7 +35,7 @@ class PromotriceController extends Controller
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $nb_annee_experience=Valeur::where("parametre_id", env('PARAMETRE_TRANCHE_EXPERIENCE'))->get();
-        $proportiondedepences= Valeur::where('parametre_id', 32)->get();
+        $proportiondedepences= Valeur::where('parametre_id', 31)->get();
        // dd($proportiondedepences);
         $annees=Valeur::where('parametre_id',16 )->get();
         return view("public.subscription", compact("regions", "niveau_instructions","nb_annee_experience","proportiondedepences","annees"));
@@ -49,8 +49,8 @@ class PromotriceController extends Controller
      */
     public function store(Request $request)
     {
-        $proportiondedepences= Valeur::where('parametre_id', 32)->get();
-        // dd($proportiondedepences);
+        $proportiondedepences= Valeur::where('parametre_id', 31)->get();
+       
          $annees=Valeur::where('parametre_id',16 )->get();
         $this->email = $request->email_promoteur;
         $this->nom = $request->nom_promoteur;
@@ -67,9 +67,9 @@ class PromotriceController extends Controller
         $details['nom'] = $this->nom;
         $details['prenom'] = $this->prenom;
         $details['code'] = $code_promoteur;
+        $dest=dispatch(new SendEmailJob($details));
         $datenaiss= date('Y-m-d', strtotime($request->datenais_promoteur));
         $date_etabli_identite= date('Y-m-d', strtotime($request->date_identification));
-        $dest=dispatch(new SendEmailJob($details));
        $promoteur= Promotrice::create([
             'nom' => $request->nom_promoteur,
             'prenom' => $request->prenom_promoteur,
@@ -81,10 +81,7 @@ class PromotriceController extends Controller
             'type_identite' => $request->type_identite_promoteur,
             'numero_identite' => $request->numero_identite,
             'date_etabli_identite' => $date_etabli_identite,
-            // 'date_expire_identite' => $request->date_identification,
-            // 'autorite_delivrance' => $request->autorite_delivrance_identification,
             'mobile_promoteur' => $request->mobile_promoteur,
-            // 'lieu_etablissement' => $request->lieu_etablissement_identification,
             'code_promoteur'=>$code_promoteur,
             'region_residence' => $request->region_residence,
             'province_residence' => $request->province_residence,
@@ -100,7 +97,6 @@ class PromotriceController extends Controller
             'formation_en_rapport_avec_activite' => $request->formation_activite,
             'occupation_professionnelle_actuelle' => $request->occupation_pro_actuelle,
             'membre_ass' => $request->membre_ass,
-            
             'compte_perso_existe' => $request->compte_perso_existe,
             'structure_financiere_personne'=> $request->structure_financiere_personne,
             'associations' => $request->associations,
@@ -165,7 +161,7 @@ class PromotriceController extends Controller
             $result= 'code promoteur invalide';
         }
         else{
-           // dd($promoteur);
+          
            $entreprises= Entreprise::where('promotrice_id', $promoteur->id)->where('decision_du_comite_phase1', "selectionnee")->where('participer_a_la_formation',1)->get();
             //dd($entreprises);
            $data=[];

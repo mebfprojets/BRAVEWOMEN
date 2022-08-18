@@ -8,7 +8,6 @@
     <div class="block-title">
         <h2><strong>Liste</strong> des beneficiaires de la banque </h2>
     </div>
-
     <div class="table-responsive">
         <table id="" class="table table-vcenter table-condensed table-bordered listepdf">
             <thead>

@@ -27,7 +27,7 @@
 
                                 @foreach($parametres as $parametre)
                                         <option value="{{ $parametre->id }}"
-                                            @if ($parametre->id == $valeur->par_id)
+                                            @if ($parametre->id == $valeur->parametre_id)
                                                 selected
                                             @endif
                                             >{{ $parametre->libelle }}</option>

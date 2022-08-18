@@ -16,7 +16,7 @@
                                          <fieldset>
                                                 <legend>Informations générales</legend>
                                                         <div class="form-group">
-                                                            <label control-label" for="nom_promoteur">Nom <span class="text-danger">*</span></label>
+                                                            <label class="control-label" for="nom_promoteur">Nom <span class="text-danger">*</span></label>
                                                             <div class="input-group">
                                                                 <input type="text" id="nom_promoteur" name="nom_promoteur" class="form-control" style="width: 100%;" value="{{old('nom_promoteur')}}" placeholder="Entrez votre nom" title="Ce champ est obligatoire" required >
                                                                 @if ($errors->has('nom'))
@@ -217,17 +217,7 @@
                                             <span class="input-group-addon"><i class="gi gi-learning"></i></span>
                                         </div>
                                     </div>
-                                    {{-- <div class="form-group">
-                                        <label class=" control-label" for="">Nombre d’années d’expérience dans le domaine d'activite <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                         <select id="nombre_annee_experience" name="nombre_annee_experience" class="select-select2" data-placeholder="Nombre d'année d'expérience dans l'activité" title="Précisez le nombre d'années dans l'activité" style="width: 100%;" required="Ce champ est obligatoire">
-                                             <option></option>
-                                             @foreach($nb_annee_experience as $experience )
-                                                     <option value="{{ $experience->id  }}" {{ old('experience') == $experience->id ? 'selected' : '' }}>{{ $experience->libelle }}</option>
-                                             @endforeach
-                                         </select>
-                                        </div>
-                                    </div> --}}
+                                    
                                     <div class="form-group">
                                         <label class="control-label " for="">Nombre d’années d’expérience dans le domaine d'activite <span class="text-danger">*</span></label>
                                             <div class="input-group">

@@ -22,6 +22,9 @@ class Entreprise extends Model
     public function Infoeffectifs(){
         return $this->hasMany(Infoeffectifentreprise::class);
     }
+  public function chiffredaffaires(){
+        return $this->hasMany(Infoentreprise::class)->where('indicateur',42);
+    }
 
     // public function projet(){
     //     return $this->hasOne(Projet::class,'entreprise_id');

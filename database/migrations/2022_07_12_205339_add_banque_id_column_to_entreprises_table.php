@@ -14,7 +14,7 @@ class AddBanqueIdColumnToEntreprisesTable extends Migration
     public function up()
     {
         Schema::table('entreprises', function (Blueprint $table) {
-            $table->integer('banque_id');
+            $table->integer('banque_id')->nullable();
             //$table->foreign('banque_id')->references('id')->on('banques');
         });
     }

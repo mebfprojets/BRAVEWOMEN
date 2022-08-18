@@ -31,7 +31,8 @@ class User extends Authenticatable
         "prenom",
         "telephone",
         "structure_represente",
-        "banque_id"
+        "banque_id",
+        "code_promoteur",
     ];
     public function roles()
     {

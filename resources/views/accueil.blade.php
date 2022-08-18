@@ -7,7 +7,6 @@
 <div class="accueil">
     <section id="faq" class="faq section-bg" style="margin-top:0px; padding-top:10px !important">
         <div class="container" data-aos="fade-up">
-
           <div class="section-title" style="padding-bottom: 20px;">
             <h2>Projet BRAVE WOMEN</h2>
            {{-- <p id="horloge"></p> --}}
@@ -20,9 +19,7 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
               </p>
             </div>
           <div class="faq-list row">
-
             <ul>
-
               <li data-aos="fade-up">
                   <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse" data-bs-target="#faq-list-1">COMPOSANTE 1 : RENFORCEMENT DES CAPACITÉS DE RÉSILIENCE DES ENTREPRISES <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="faq-list-1" class="collapse show" data-bs-parent=".faq-list">
@@ -31,7 +28,6 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                     </p>
                   </div>
                 </li>
-
                 <li data-aos="fade-up" data-aos-delay="100">
                   <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed">COMPOSANTE 2: SOUTIEN FINANCIER SOUS FORME DE SUBVENTIONS A COUTS PARTAGES <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
@@ -40,7 +36,6 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                     </p>
                   </div>
                 </li>
-
                 <li data-aos="fade-up" data-aos-delay="200">
                   <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">COMPOSANTE 3 : RESILIENCE DES CHAINES DE VALEURS <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
@@ -106,9 +101,6 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                 <div class="testimonial-item">
 
                   <img src="{{ asset('assets/img/wefi_logo.svg') }}" class="testimonial-img" alt="" height="200px">
-
-
-
                   <h3>Women  Finance Initiative</h3>
                   <h4>Partenaire  et financier</h4>
                 </div>

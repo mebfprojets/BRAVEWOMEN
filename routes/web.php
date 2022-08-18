@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccompteController;
 use App\Http\Controllers\BanqueController;
 use App\Http\Controllers\BaremeController;
+use App\Http\Controllers\BeneficiaireController;
 use App\Http\Controllers\DashboradController;
 use App\Http\Controllers\EntrepriseaopController;
 use App\Http\Controllers\EntrepriseController;
@@ -25,6 +26,7 @@ use App\Models\Parametre;
 use App\Models\Valeur;
 use App\Policies\SouscriptionPolicy;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Sanctum;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,7 +85,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get("create/subvention/forbeneficiary/{entreprise}",[SubventionController::class,'create_for_beneficiary'])->name('entreprise.subvention.create');
     Route::get("list/subvention/forbeneficiary/{entreprise}",[SubventionController::class,'subvention_de_la_beneficiaire'])->name('entreprise.subvention');
     Route::get("/subvention/valider_montant",[SubventionController::class,'valider_montant'])->name('valider_montant');
-    
+
     Route::resource("subvention",SubventionController::class);
     Route::get("versement_account/{accompt}",[AccompteController::class,'get_recu'])->name('subvention.getRecu');
 
@@ -130,10 +132,10 @@ Route::get("rechercher/filtre/", [SouscriptionController::class,'filtrerdata'])-
 Route::get("/commentSouscrire",function () {
     return view('commentSouscrire');
 })->name("commentsouscrire");
+
 Route::post("/contact/message/", [SouscriptionController::class, "contactSendMessage"])->name("contact");
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[DashboradController::class, 'dashboard'])->name('dashboard');
 Route::get('/dashboardgeo', [DashboradController::class, 'dashboardgeo'])->name('dashboardgeo');
-// AOP Routes 
 Route::get("/responsableaop", [ResponsableaopController::class,'create'])->name("responsableaop.create");
 Route::post("/responsableaop/store", [ResponsableaopController::class,'store'])->name("responsableaop.store");
 Route::get("/new/entreprise/AOP-L/{code}",[EntrepriseaopController::class, 'create'])->name("entrepriseaopl.new");
@@ -145,6 +147,19 @@ Route::get("/AOP/soumises_au_comite_technique", [SouscriptionAOPController::clas
 Route::get("/aop/retenus/formation",[SouscriptionAOPController::class, 'aopretenues'] )->name("listeAOPretenu");
 Route::get("/aop/analyseParLeComite", [SouscriptionAOPController::class,'souscriptionaopAnalyses_par_lecomite'])->name("aop.analyseParComite");
 Route::get("/aop/retenu", [SouscriptionAOPController::class,'souscriptionsaopretenues'])->name("aop.retenu");
+
+route::post("/create/compte/beneficiaire/",[UserController::class,'storecomptePromoteur'])->name('storecompte.promoteur');
+route::get("/verifier_promoteur/compte/",[UserController::class,'verifier_conformite_cpt'])->name('verifier_validite_cpt_promo');
+Route::get("/espace/beneficiaire/",[BeneficiaireController::class,'gotoEspaceBeneficiaire'])->name('espace.beneficiaires');
+Route::post('logout', [UserController::class, 'logout'])->name('logout');
+Route::get("/beneficiciare/myprofil",[BeneficiaireController::class, 'showprofil'])->name("profil.beneficiaire");
+Route::get("/beneficiciare/myentreprise",[BeneficiaireController::class, 'showentreprise'])->name("entreprise.beneficiaire");
+Route::get('/beneficiciare/updatedate/{promotrice}',[BeneficiaireController::class, 'updatebeneficiare'])->name('updateprofilbeneficiaire');
+Route::get('souscriptions/listepostepreanalyse', [SouscriptionController::class, 'listersouscriptionpostpreanalyse'])->name("liste.postpreanalyse");
+
+
+
+
 
 
 

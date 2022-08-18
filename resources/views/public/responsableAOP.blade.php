@@ -9,7 +9,7 @@
         <h2><strong>Enregistrement des informations sur la/ le responsable </h2>
     </div>
         <div class="block-content2">
-            <form  id="progress-wizard" action="{{ route("responsableaop.store") }}" method="post" class="form-horizontal form-bordered" style="padding-left: 20px; border:1px solid black;" enctype="multipart/form-data" >
+            <form  id="progress-wizard" action="{{ route("responsableaop.store") }}" method="post" class="form-horizontal form-bordered" style="padding-left: 20px; border:1px solid black;"  enctype="multipart/form-data" >
                 @csrf
                             <div class="row">
                                <div class="col-lg-5">
@@ -33,7 +33,7 @@
                                                             </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label" for="val_username">Fonction dans l'entreprise AOP <span class="text-danger">*</span></label>
+                                                        <label class="control-label" for="val_username">Fonction: <span class="text-danger">*</span></label>
                                                             <div class="input-group">
                                                                 <input type="text" id="fonction_du_responsable" name="fonction" class="form-control" value="{{old('fonction')}}"placeholder="Entrez la fonction.." required="Ce champ est obligatoire">
                                                             </div>
@@ -85,13 +85,13 @@
                                                         </div>
                                                         <div class="offset-md-1 col-lg-5">
                                                             <fieldset>
-                                                                <legend>Référence du document d’identité</legend>
+                                                                <legend>Références du document d’identité</legend>
                                                                 <div class="form-group select-list">
                                                                     <label class=" control-label" for="example-chosen">Type<span class="text-danger">*</span></label>
                                                                         <select id="type_identite_promoteur" name="type_identite_promoteur" data-placeholder="Choisir type identite" class="select-select2" style="width: 100%;" required>
                                                                             <option></option>
                                                                             <option value="1" {{ old('type_identite_promoteur') == 1 ? 'selected' : '' }} >CNIB</option>
-                                                                            <option value="2" {{ old('type_identite_promoteur') == 2 ? 'selected' : '' }}>Passport</option>
+                                                                            <option value="2" {{ old('type_identite_promoteur') == 2 ? 'selected' : '' }}>Passeport</option>
                                                                         </select>
 
                                                                 </div>
@@ -99,21 +99,29 @@
                                                                     <label class=" control-label" for="">Numéro <span class="text-danger">*</span></label>
                                                                     <div class="input-group">
                                                                         <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." required>
-
                                                                     </div>
                                                                     @if ($errors->has('numero_identite'))
 										                                <span class="help-block text-danger">
 										                                     <strong>Une personne a déja été enregistrée avec ce numéro d'identité</strong>
 										                                </span>
 										                            @endif
-
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class=" control-label" for="">Date d'établissement <span class="text-danger">*</span></label>
                                                             <div class="input-group">
                                                                 <input type="text" id="date_identification" value="{{old('date_identification')}}" name="date_identification" class="form-control datepicker" data-date-format="dd-mm-yyyy" placeholder="mm/dd/yy"required>
-                                                        </div>
                                                             </div>
+                                                            </div>
+                                                            <div class="form-group{{ $errors->has('docidentite') ? ' has-error' : '' }}">
+                                                                <label class=" control-label" for="docidentite">Joindre une copie<span class="text-danger">*</span></label>
+                                                                    <input class="form-control" type="file" name="docidentite" id="docidentite" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie du document d'identification" required>
+                                                                @if ($errors->has('docidentite'))
+                                                                    <span class="help-block">
+                                                                        <strong>{{ $errors->first('docidentite') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                        </div>
+                                                           
                                             
                                             </fieldset>
                                             </div>
@@ -121,7 +129,7 @@
                                         </div>
                                     <div class="row">
                                     <fieldset>
-                                               <legend>Residence du promoteur</legend>
+                                               <legend>Residence du / de la promoteur</legend>
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label class=" control-label" for="example-chosen">Region<span class="text-danger">*</span></label>

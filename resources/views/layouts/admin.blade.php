@@ -46,13 +46,6 @@
         <script src=" {{ asset('js/vendor/modernizr.min.js') }}"></script>
     </head>
     <body>
-        <!-- Page Wrapper -->
-        <!-- In the PHP version you can set the following options from inc/config file -->
-        <!--
-            Available classes:
-
-            'page-loading'      enables page preloader
-        -->
         <div id="page-wrapper">
             <!-- Preloader -->
             <!-- Preloader functionality (initialized in js/app.js) - pageLoading() -->
@@ -92,9 +85,7 @@
             </div>
             <!-- END Page Container -->
         </div>
-        <!-- END Page Wrapper -->
-
-        <!-- Scroll to top link, initialized in js/app.js - scrollToTop() -->
+       
         <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
 
         <!-- User Settings, modal which opens from Settings link (found in top right user menu) and the Cog link (found in sidebar user info) -->
@@ -105,9 +96,7 @@
                     <div class="modal-header text-center">
                         <h2 class="modal-title"><i class="fa fa-pencil"></i> Profile utilisateur</h2>
                     </div>
-                    <!-- END Modal Header -->
 
-                    <!-- Modal Body -->
                     <div class="modal-body">
                         <form  id="form-validation" action="{{route('updateByUser',Auth::user()->id)}}" method="get"  class="form-horizontal form-bordered">
                             <fieldset>
@@ -217,7 +206,6 @@
                 </div>
             </div>
         </div>
-      
         <div id="modal-confirm-changestatus" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

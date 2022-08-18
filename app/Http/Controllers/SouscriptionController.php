@@ -18,6 +18,7 @@ class SouscriptionController extends Controller
         {
             $this->middleware('auth')->except(["afficher", "contactSendMessage","send"]);
         }
+        
     public function afficher(){
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
@@ -38,7 +39,19 @@ class SouscriptionController extends Controller
         $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])->orderBy('updated_at', 'desc')->get();  
         return view("souscriptions.liste_de_souscription_soumis_a_ugp", compact("entreprises","active","titre","active_principal"));
     }
-    public function listersouscriptionParZone(){
+
+public function listersouscriptionpostpreanalyse(Request $request){
+        $active='souscription_post_preanalyse';
+        $active_principal="pme";
+        $titre="Enregistrées";
+        $categorieentreprise= $request->typeentreprise;
+        ($categorieentreprise=='mpme')?($active='souscription_enregistre'):($active='aop_enregistre');
+        ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
+        ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
+        $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])->orderBy('updated_at', 'desc')->get();  
+        return view("souscriptions.liste_souscription_postpreanalyse", compact("entreprises","active","titre","active_principal"));
+    }
+  public function listersouscriptionParZone(){
         $active='souscription_par_zone';
         $active_principal="pme";
         $titre="de la zone"." ".getlibelle(Auth::user()->zone);
@@ -119,30 +132,7 @@ public function listerlespmeretenueEtFormee(){
             "raison"=> $request->raison,
             'decision'=> $decision,
         ]);
-   // $nombre_de_decision= Decision::where("entreprise_id", $id_entreprise)->get();
-    //     $entreprise = Entreprise::find("$id_entreprise");
-    //     if(count($nombre_de_decision)== env("NOMBRE_MEMBRE_COMITE") ){
-    //              $entreprise->update([
-    //             "analysetermineeparlesmembreducomite"=>1
-    //   ]);
-    //     }
 
-        // $entreprise = Entreprise::find("$id_entreprise");
-        // $decisions_retenu= Decision::where("entreprise_id", $entreprise->id)->where("decision", "retenu")->orderBy('updated_at', 'desc')->get();
-        //  if(count($entreprise->decisions)== env("NOMBRE_MEMBRE_COMITE"))
-        //  {
-        //    if ( (count($decisions_retenu) >= (count($entreprise->decisions)/2)) )
-        //    {
-        //      $entreprise->update([
-        //          "decision_du_comite_phase1"=>"selectionnee"
-        //      ]);
-        //    }
-        //    else{
-        //      $entreprise->update([
-        //          "decision_du_comite_phase1"=>"ajournee"
-        //      ]);
-        //    }
-        //  }
             return redirect()->back();
     }
 //fonction lister les souscriptions MPME soumises au comité de selection
@@ -335,4 +325,5 @@ public function generer_en_excel(){
         }
         exit();
 }
+       
     }

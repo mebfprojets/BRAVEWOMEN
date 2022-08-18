@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banque;
+use App\Models\Entreprise;
+use App\Models\Promotrice;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Valeur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(["verifier_conformite_cpt",'storecomptePromoteur']);
     }
     /**
      * Display a listing of the resource.
@@ -114,7 +117,6 @@ class UserController extends Controller
             'nom'=>"required",
             'email'=>"required|email"
         ]);
-       
         if($request['structure_rep'] == ""){
             $structure_represente=0;
         }
@@ -161,6 +163,51 @@ public function updateuser(Request $request, User $user)
                 ]);
             }
             return redirect()->back();
+}
+public function verifier_conformite_cpt(Request $request){ 
+    $entreprises=Entreprise::where('code_promoteur',$request->code_promoteur)->get();
+    $user=User::where("code_promoteur",$request->code_promoteur)->first();
+    if(!$entreprises || $user){
+        return 2;
+    }
+    elseif(count($entreprises)>0){
+        return 1;
+    }else{
+        return 0;
+    }
+
+}
+public function storecomptePromoteur(Request $request){
+    $request->validate([
+        'code_promoteur'=>'unique:users|max:255',
+    ]);
+    $promoteur=Promotrice::where('code_promoteur',$request->code_promoteur)->first();
+    if(isset($request['code_promoteur'], $request['email'])){
+        $user= User::create([
+            "name"=>$promoteur['nom'],
+            "email"=>$request['email'],
+            'prenom'=> $promoteur['prenom'],
+            'telephone'=> $request ['telephone'],
+            'email' => $request['email'],
+            'code_promoteur' => $request['code_promoteur'],
+            'password' => bcrypt($request['password'])
+        ]);
+    }
+    
+    return redirect()->back();
+    
+}
+public function logout(Request $request) {
+   
+    if(Auth::user()->code_promoteur==null){
+        Auth::logout();
+        return redirect()->route('login');
+    }
+    else{
+        Auth::logout();
+        return redirect()->route('accueil');
+    }
+   
 }
 
 }

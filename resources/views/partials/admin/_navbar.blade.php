@@ -41,6 +41,11 @@
                                 <a href="{{ route("souscription__reparties_par_zone") }}"> <i class="hi hi-map-marker"></i> Par Zone</a>
                             </li>
                         @endcan
+			@can('souscription.liste', Auth::user())
+                            <li class="@yield('souscription_soumis_aucomite')">
+                                    <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=mpme"> <i class="gi gi-filter"></i> Préanalysés</a>
+                            </li>
+                        @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('souscription_soumis_aucomite')">
                                     <a href="{{ route("soumises_au_comite_technique") }}?typeentreprise=mpme"> <i class="gi gi-filter"></i> En Attente d'Analyse</a>

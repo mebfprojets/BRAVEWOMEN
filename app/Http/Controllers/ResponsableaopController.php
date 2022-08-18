@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailJob;
+use App\Models\Piecejointe;
 use App\Models\Promotrice;
 use App\Models\Valeur;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use App\Models\Proportion_de_depense_promotrice;
 class ResponsableaopController extends Controller
 {
     public function completeview($code){
-        $proportiondedepences= Valeur::where('parametre_id', 32)->get();
+        $proportiondedepences= Valeur::where('parametre_id', 31)->get();
          $annees=Valeur::where('parametre_id',16 )->get();
         $promoteur = Promotrice::where('code_promoteur',$code)->first();
         $proportiondedepence=Proportion_de_depense_promotrice::where('promotrice_id', $promoteur->id )->get();
@@ -25,13 +26,13 @@ class ResponsableaopController extends Controller
         
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
-        $proportiondedepences= Valeur::where('parametre_id', 32)->get();
+        $proportiondedepences= Valeur::where('parametre_id', 31)->get();
          $annees=Valeur::where('parametre_id',16 )->get();
         return view("public.responsableAOP", compact("regions","proportiondedepences","annees", "niveau_instructions"));
     }
     public function storecompleteresponsableaop(Request $request)
     {
-        $proportiondedepences= Valeur::where('parametre_id', 32)->get();
+        $proportiondedepences= Valeur::where('parametre_id', 31)->get();
         $annees=Valeur::where('parametre_id',16 )->get();
         $promoteur= Promotrice::find($request->promoteur);
         $promoteur->update([
@@ -60,14 +61,13 @@ class ResponsableaopController extends Controller
         $this->email = $request->email_promoteur;
         $this->nom = $request->nom_promoteur;
         $this->prenom= $request->prenom_promoteur;
-        $proportiondedepences= Valeur::where('parametre_id', 32)->get();
+        $proportiondedepences= Valeur::where('parametre_id', 31)->get();
         $annees=Valeur::where('parametre_id',16 )->get();
        $validated= $request->validate([
             'nom_promoteur' =>'required',
             // 'numero_identite'=>'unique:promotrices|max:255',
             'telephone_promoteur'=>'unique:promotrices|max:255',
             ]);
-
         $dateTime = new \DateTime();
         $dateTime= $dateTime->format('is');
         $code_promoteur = 'BWBF-AL'.$request->telephone_promoteur.$dateTime;
@@ -104,13 +104,17 @@ class ResponsableaopController extends Controller
             'occupation_professionnelle_actuelle' => $request->occupation_pro_actuelle,
              'membre_ass' => 0,
              'domaine_etude'=>$request->domaine_detude,
-            // 'compte_perso_existe' => $request->compte_perso_existe,
-            // 'structure_financiere_personne'=> $request->structure_financiere_personne,
-            // 'associations' => $request->associations,
             "resp_aop"=>1,
-
             'suscriptionaopleader_etape'=>1
         ]);
+        if ($request->hasFile('docidentite')) {
+            $urldocidentite= $request->docidentite->store('public/docidentification');
+            Piecejointe::create([
+                'type_piece'=>env("VALEUR_ID_DOCUMENT_IDENTITE"),
+                  'promotrice_id'=>$promoteur->id,
+                  'url'=>$urldocidentite,
+              ]);
+        }
         foreach($proportiondedepences as $proportiondedepence){
             foreach($annees as $annee){
                 $variable=$proportiondedepence->id.$annee->id;
