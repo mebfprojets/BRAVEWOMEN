@@ -392,7 +392,7 @@
                     {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
                 </li> 
             @endcan
-            @can('formation.all', Auth::user())
+            {{-- @can('formation.all', Auth::user())
             <li class="@yield('gestion_projet')">
                 <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Archives</span></a>
                 <ul>
@@ -405,7 +405,7 @@
             <li class="@yield('budget')">
                 <a href="{{ route('budgets.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Documents</a>
             </li>
-             @endcan
+             @endcan --}}
                 </ul>
                 {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
             </li> 
