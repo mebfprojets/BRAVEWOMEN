@@ -17,11 +17,16 @@ class Promotrice extends Model
     public function entreprises(){
         return $this->hasMany(Entreprise::class,'promotrice_id');
     }
+    public function entreprise_formes(){
+        return $this->hasMany(Entreprise::class,'promotrice_id')->where('participer_a_la_formation', 1);
+    }
     //changer la clé id par une autre dans le cas présent il sera remplacé par slug
+
     public function getRouteKeyName()
     {
         return 'slug';
     }
+
      public function sluggable(): array
      {
          return [
@@ -30,4 +35,5 @@ class Promotrice extends Model
              ]
          ];
      }
+
 }

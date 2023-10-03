@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(["verifier_conformite_cpt",'storecomptePromoteur']);
+        $this->middleware('auth')->except(["verifier_conformite_cpt",'storecomptePromoteur','login_form_beneficiaire']);
     }
     /**
      * Display a listing of the resource.
@@ -24,8 +24,14 @@ class UserController extends Controller
      */
     public function index()
     {
+    if (Auth::user()->can('user.create')) {
         $users= User::with("roles")->orderBy('updated_at', 'desc')->get();
         return view('users.index', compact("users"));
+    }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+        return redirect()->back();
+    }
     }
 
     /**
@@ -35,11 +41,17 @@ class UserController extends Controller
      */
     public function create()
     {
+    if (Auth::user()->can('user.create')) {
         $roles= Role::all();
         $zones=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
         $strucure_representees=Valeur::where('parametre_id',env("PARAMETRE_ID_REPRESENTANT_STRUCTURE") )->get();
         $banques= Banque::all();
         return view("users.create", compact("roles", "zones","strucure_representees", "banques"));
+    }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+        return redirect()->back();
+    }
     }
 
     /**
@@ -50,7 +62,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->all());
+    if (Auth::user()->can('user.create')) {
         $request->validate([
             "nom"=>"required",
             "email"=>"required|email"
@@ -74,7 +86,14 @@ class UserController extends Controller
             'password' => bcrypt('bwburkina@2022')
         ]);
         $user->roles()->sync($request->roles);
+        flash("Utilisateur ajouté avec succes !!!")->success();
+
         return redirect()->route("user.index");
+    }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+        return redirect()->back();
+    }
     }
 
     /**
@@ -96,12 +115,18 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+    if (Auth::user()->can('user.create')) {
         $zones=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
         //$zones= Valeur::where("parametre_id",env("PRARAMETRE_ZONE"))->get();
         $roles=Role::all();
         $strucure_representees=Valeur::where('parametre_id',env("PARAMETRE_ID_REPRESENTANT_STRUCTURE") )->get();
         $banques= Banque::all();
         return view("users.update",compact(["user","roles","zones","strucure_representees","banques"]));
+    }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+        return redirect()->back();
+    }
     }
 
     /**
@@ -113,6 +138,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+     if (Auth::user()->can('user.create')) {
         $request->validate([
             'nom'=>"required",
             'email'=>"required|email"
@@ -134,7 +160,13 @@ class UserController extends Controller
             'structure_represente'=>$structure_represente,
         ]);
         $user->roles()->sync($request->roles);
+        flash("Utilisateur modiffié avec succes !!!")->error();
         return redirect()->route("user.index");
+    }
+        else{
+            flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+            return redirect()->back();
+        }
     }
 
     /**
@@ -149,6 +181,7 @@ class UserController extends Controller
     }
 public function updateuser(Request $request, User $user)
         {
+        if (Auth::user()->can('user.create')) {
             $user->update([
                     'name' => $request ['nom'],
                     'prenom'=> $request ['prenom'],
@@ -162,11 +195,18 @@ public function updateuser(Request $request, User $user)
                     'password' => bcrypt($request['password'])
                 ]);
             }
+            flash("Utilisateur modifié avec succès!!!")->error();
             return redirect()->back();
+        }
+        else{
+            flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+            return redirect()->back();
+        }
 }
 public function verifier_conformite_cpt(Request $request){ 
-    $entreprises=Entreprise::where('code_promoteur',$request->code_promoteur)->get();
+    $entreprises=Entreprise::where('code_promoteur',$request->code_promoteur)->where("participer_a_la_formation",1)->where("decision_du_comite_phase1","selectionnee")->get();
     $user=User::where("code_promoteur",$request->code_promoteur)->first();
+    
     if(!$entreprises || $user){
         return 2;
     }
@@ -180,6 +220,7 @@ public function verifier_conformite_cpt(Request $request){
 public function storecomptePromoteur(Request $request){
     $request->validate([
         'code_promoteur'=>'unique:users|max:255',
+        'password' => 'required|confirmed|min:6'
     ]);
     $promoteur=Promotrice::where('code_promoteur',$request->code_promoteur)->first();
     if(isset($request['code_promoteur'], $request['email'])){
@@ -193,12 +234,20 @@ public function storecomptePromoteur(Request $request){
             'password' => bcrypt($request['password'])
         ]);
     }
-    
-    return redirect()->back();
+    if($user){
+        return redirect()->back();
+        flash("Votre compte à été créé avec success !!!")->success();
+
+    }
+    else{
+        return redirect()->back();
+        flash("Desolé votre compte n'a pas été créé. Bien vouloir vérifier la confirmation de mot de passe!!!")->error();
+
+    }
+   
     
 }
 public function logout(Request $request) {
-   
     if(Auth::user()->code_promoteur==null){
         Auth::logout();
         return redirect()->route('login');
@@ -208,6 +257,9 @@ public function logout(Request $request) {
         return redirect()->route('accueil');
     }
    
+}
+public function login_form_beneficiaire(){
+    return view("public.login_beneficiaire");
 }
 
 }

@@ -6,6 +6,8 @@ use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
 class RoleController extends Controller
 {
     public function __construct()
@@ -19,9 +21,15 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles=Role::orderBy('updated_at', 'desc')
-                    ->get();
-            return view('roles.index',compact('roles'));
+            if (Auth::user()->can('role.view')) {
+                $roles=Role::orderBy('updated_at', 'desc')->get();
+                return view('roles.index',compact('roles'));
+            }
+            else{
+                flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+                return redirect()->back();
+            }
+       
     }
 
     /**
@@ -31,8 +39,15 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (Auth::user()->can('role.create')) {
         $permissions=Permission::all();
+        
         return view('roles.create', compact('permissions'));
+        }
+        else{
+            flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+            return redirect()->back();
+        }
     }
 
     /**
@@ -43,12 +58,19 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        Role::create([
+    if (Auth::user()->can('role.create')) {
+       $role= Role::create([
             'nom'=> $request ['nom'],
         ]);
-
-        //Flashy::message('Role enregistré avec succes !!!');
+        $role->permissions()->sync($request->permissions);
+        flash("Role créer avec succes!!!")->error();
         return redirect(route('role.index'));
+    }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+        return redirect()->back();
+    }
+
     }
 
     /**
@@ -59,7 +81,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+       
     }
 
     /**
@@ -70,8 +92,14 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        if (Auth::user()->can('role.create')) {
             $permissions=Permission::all()->where('supprimer', '!=', 1 );
             return view('roles.update', compact('role', 'permissions'));
+        }
+        else{
+            flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+            return redirect()->back();
+        }
     }
 
     /**
@@ -83,14 +111,19 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        if (Auth::user()->can('role.create')) {
         $role->update([
             'nom'=>$request['nom'],
         ]);
         $role->permissions()->sync($request->permissions);
-
-       /// Flashy::message('Role modifié avec succes !!!');
+        flash("Role modifié avec success!!!")->error();
         return redirect(route('role.index'));
     }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->success();
+        return redirect()->back();
+    }
+}
 
     /**
      * Remove the specified resource from storage.

@@ -17,7 +17,7 @@
         <h2><strong>Procedure de souscription </h2>
     </div>
     <div class="block-content" style="font-family: cursive; font-size:18px;">
-        <p>La souscription se fait en trois étapes à savoir :
+        <p>La souscriptio se fait en trois étapes à savoir :
             <ol>
                 <li style="color: red">Enregistrement des informations sur le promoteur</li>
                 <p> A cette étape Le promoteur est invité remplir le formulaire, a prendre connaissance des conditions et obligation et à les accepter pour pouvoir enregistrer les données.

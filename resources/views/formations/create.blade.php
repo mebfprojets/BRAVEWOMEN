@@ -11,7 +11,7 @@
                     <div class="block-title">
                         <h2> Créer une <strong>Session de Formation</strong></h2>
                     </div>
-                    <form id="form-validation" method="POST"  action="{{route('formation.store')}}" class="form-horizontal form-bordered">
+                    <form id="form-validation" method="POST"  action="{{route('formation.store')}}" class="form-horizontal form-bordered" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }}">
                                 <label class="col-md-4 control-label" for="libelle">Libellé de la formation<span class="text-danger">*</span></label>
@@ -51,12 +51,13 @@
                                     </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-4" for="date_fin">Joindre une copie du reçu de versement<span class="text-danger">*</span></label>
+                                <label class="control-label col-md-4" for="date_fin">Date de Fin<span class="text-danger">*</span></label>
                                     <div class="input-group col-md-6">
-                                        <input class="form-control col-md-6" type="file" name="copie_du_recu" id="copie_du_recu" accept=".pdf, .jpeg, .png"   placeholder="Joindre une copie du reçu de versement">
+                                        <input type="text" id="date_fin" name="date_fin" value="{{old('date_fin')}}" class="form-control input-datepicker" data-date-format="yyyy-mm-dd" placeholder="Entrer la date de fin.." required="Ce champ est obligatoire">
                                         <span class="input-group-addon"><i class="gi gi-user"></i></span>
                                     </div>
                             </div>
+                            
                         <div class="form-group form-actions">
                         <div class="col-md-8 col-md-offset-4">
                             <button type="submit" class="btn btn-sm btn-sucess"><i class="fa fa-arrow-right"></i> Valider</button>

@@ -2,7 +2,7 @@
 @section('administration', 'active')
 @section('administration-parametre', 'active')
 @section('content')
-<div class="col-md-10">
+<div class="col-md-12">
     <div class="block">
         <!-- Basic Form Elements Title -->
         <div class="block-title">

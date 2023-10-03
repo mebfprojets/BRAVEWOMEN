@@ -8,25 +8,29 @@
     <li><a href="">Détails</a></li>
 @endsection
 @section('content')
-
-            <div class=" col-xs-10 block-content ">
+            <div class="col-xs-12 block-content" >
                 @if($entreprise->conforme== null)
                 @can('avisqualitative_ugp', Auth::user())
                     <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 2)" title="non conforme" class="btn btn-md btn-warning">Non conforme<i class="gi gi-remove_2"></i></a>
                     <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Conforme<i class="fa fa-check"></i></a>
                 @endcan
                 @endif
-             @if($entreprise->conforme!=null && $entreprise->decision_ugp==null) 
+        @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif === null)) 
+            @can('avisqualitative_ugp', Auth::user()) 
+                <a href="#modal-note-critere-qualitatif-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="Noter les critères qualitatifs" class="btn btn-md btn-danger ">Noter les critères qualitatifs<i class="fa fa-check-square-o"></i></a>
+             @endcan
+        @endif
+             @if(!($entreprise->note_critere_qualitatif === null) && $entreprise->decision_ugp==null) 
              @can('avisfinal_ugp', Auth::user()) 
                 <a href="#modal-decision-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="La décision de l'ugp" class="btn btn-md btn-danger avis_ugp">Avis final UGP<i class="fa fa-check-square-o"></i></a>
              @endcan 
            @endif 
-        @can('souscription.statuerSurSouscription', Auth::user())
-            @if(!$aStatuer)
+        {{-- @can('donner_avis_membre_comite', Auth::user())
+            @if(!$aStatuer && $entreprise->conforme!=null)
                 <a href="#modal-confirm-rejet" data-toggle="modal" onclick="confirmChangeStatus1({{$entreprise->id}}, {{ Auth::user()->id }})" title="rejeter" class="btn btn-md btn-danger">Défavorable<i class="fa fa-times"></i></a>
                 <a href="#modal-confirm-changestatus" data-toggle="modal" onclick="confirmChangeStatus1({{$entreprise->id}}, {{ Auth::user()->id }})" title="Valider" class="btn btn-md btn-success">Favorable<i class="fa fa-check"></i></a>
-           @endif
-       @endcan
+           @endif 
+       @endcan --}}
 
                             <div class="block full">
                                 <!-- Block Tabs Title -->
@@ -38,18 +42,17 @@
                                         <li><a href="#indicateurs-entreprise">Indicateurs de l'entreprise </a></li>
                                         <li><a href="#example-tabs2-options" data-toggle="tooltip" title="Les details de l'entreprise"> Details du projet</a></li>
                                         <li><a href="#example-tabs2-pieces">Pièces Jointes</a></li>
+                                    @can('acceder.aux_decision_du_dossier', Auth::user()) 
                                          <li><a href="#example-tabs2-decisions">Les decisions</a></li>
+                                    @endcan
                                          <a onclick="history.back()" class="btn btn-success pull-right" style="float: right;"><span><i class="fa fa-repeat"></i></span> Fermer </a>
                                     </ul>
                                 </div>
-                                <!-- END Block Tabs Title -->
-
-                                <!-- Tabs Content -->
                                 <div class="tab-content" >
-                            <div class="tab-pane active" id="example-tabs2-activity" style="height:100%;background: #fff">
-                                <div class="row">
+                            <div class="tab-pane  active" id="example-tabs2-activity" style="height:200%;background: #fff">
+                                <div class="row" style="text-align: justify;">
                                     <div class="col-md-6">
-                                        <div  id="condanation" class="form-group ">
+                                        <div  id="condanation" class="form-group row ">
                                             <p class="col-md-4 control-label labdetail"> <span class="labdetail">Code Promoteur : </span> </p>
                                             <p class="col-md-6" >
                                             <span class="valdetail">
@@ -71,7 +74,6 @@
                                                     </span>
                                                  </p>
                                             </div>
-
                                     <div  id="condanation" class="form-group row" >
                                         <p class="col-md-4 control-label labdetail"> <span >Prenom : </span> </p>
                                         <p class="col-md-6" >
@@ -381,8 +383,8 @@
                      </div>
                      @endif
                           </div>
-                               <div class="tab-pane" id="example-tabs2-profile" style="height:120%;background: #fff">
-                                        <div class="row">
+                               <div class="tab-pane" id="example-tabs2-profile" style="height:300%;background: #fff">
+                                        <div class="row" style="text-align: justify;">
                                             <div class="col-md-6">
                                                 <div  id="condanation" class="form-group row">
                                                     <p class="col-md-6 control-label labdetail"><span class="">Denomination de l'entreprise : </span> </p>
@@ -392,6 +394,17 @@
                                                                  Informations non disponible
                                                         @endempty
                                                              {{$entreprise->denomination}}
+                                                    </span></p>
+                                                </div>
+                                                <div  id="condanation" class="form-group row">
+                                                    <p class="col-md-6 control-label labdetail"><span class="">Banque partenaire choisi : </span> </p>
+                                                        <p class="col-md-6" >
+                                                        <span class="valdetail">
+                                                            @empty($entreprise->banque_id)
+                                                            Informations non disponible
+                                                   @else
+                                                   {{$entreprise->banque->nom}}
+                                                   @endempty
                                                     </span></p>
                                                 </div>
                                                 <div  id="condanation" class="form-group row">
@@ -465,7 +478,19 @@
                                                              {{getlibelle($entreprise->arrondissement)}}
                                                     </span></p>
                                                 </div>
-
+                                            @if( $entreprise->banque)
+                                                <div  id="condanation" class="form-group row">
+                                                    <p class="col-md-6 control-label labdetail"><span class="">Banque partenaire: </span> </p>
+                                                        <p class="col-md-6" >
+                                                        <span class="valdetail">
+                                                        @empty( $entreprise->banque->nom)
+                                                                Informations non disponible
+                                                                            @endempty
+                                                             {{ $entreprise->banque->nom}}
+                                                    </span></p>
+                                                </div>
+                                            @endif
+                                               
                                                 <div  id="condanation" class="form-group">
                                                     <p class="col-md-6 control-label labdetail"><span class="">Formalisé? : </span> </p>
                                                         <p class="col-md-6" >
@@ -474,13 +499,13 @@
                                                                             Informations non disponible
                                                             @endempty
                                                         @if($entreprise->formalise==1)
-                                                                Oui le {{ $entreprise->date_de_formalisation }} sous la forme juridique {{ $entreprise->forme_juridique }}  avec le {{ getlibelle($entreprise->type_document_de_formalisation) }}  numéro du document: {{ $entreprise->num_rccm }} 
+                                                                Oui le {{ $entreprise->date_de_formalisation }} sous la forme juridique {{ getlibelle($entreprise->forme_juridique)}}  avec le {{ getlibelle($entreprise->type_document_de_formalisation) }}  numéro du document: {{ $entreprise->num_rccm }} 
                                                         @else
                                                              Non
                                                         @endif
                                                     </span></p>
                                                 </div>
-                                                <div  id="condanation" class="form-group">
+                                                <div  id="condanation" class="form-group row">
                                                     <p class="col-md-6 control-label labdetail"><span class="">Agrément exigé? : </span> </p>
                                                         <p class="col-md-6" >
                                                         <span class="valdetail">
@@ -494,7 +519,7 @@
                                                         @endif
                                                     </span></p>
                                                 </div>
-                                                <div  id="condanation" class="form-group">
+                                                <div  id="condanation" class="form-group row">
                                                     <p class="col-md-6 control-label labdetail"><span class="">Entreprise affectée par la COVID? : </span> </p>
                                                         <p class="col-md-6" >
                                                         <span class="valdetail">
@@ -504,17 +529,17 @@
                                                         {{ getlibelle($entreprise->affecte_par_covid)  }}
                                                     </span></p>
                                                 </div>
-                                                <div  id="condanation" class="form-group">
-                                                    <p class="col-md-6 control-label labdetail"><span class="">Description de l'effet de la COVID : </span> </p>
+                                                <div  id="condanation" class="form-group row">
+                                                    <p class="col-md-6 control-label labdetail">Effet de la COVID :  </p>
                                                         <p class="col-md-6" >
-                                                        <span class="valdetail">
+                                                        <span class="valdetail" style="text-justify: auto;">
                                                         @empty($entreprise->description_effect_covid)
                                                                 Informations non disponible
                                                             @endempty
                                                         {{ $entreprise->description_effect_covid }}
                                                     </span></p>
                                                 </div>
-                                                <div  id="condanation" class="form-group">
+                                                <div  id="condanation" class="form-group row">
                                                     <p class="col-md-6 control-label labdetail"><span class="">Entreprise affectée par la sécurité? : </span> </p>
                                                         <p class="col-md-6" >
                                                         <span class="valdetail">
@@ -745,7 +770,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="tab-pane" id="indicateurs-entreprise" style="height:100%;">
+                                    <div class="tab-pane" id="indicateurs-entreprise" style="height:200%;">
                                         <div class="row mt-6" >
                                    @if($entreprise->aopOuleader=='aop')
                                    <div class="col-md-3 ">
@@ -906,7 +931,6 @@
                                         <tbody id="tbadys">
                                     @foreach($chiffre_daffaire as $key => $chiffre_daffaire)
                                     <tr>
-
                                                 <td>
                                                     {{getlibelle($chiffre_daffaire->annee)}}
                                                 </td>
@@ -1145,20 +1169,44 @@
                                         <div class="row">
                                             <div class="col-md-10">
                                                 <div  id="condanation" class="form-group">
-                                                    <p class="col-md-2 control-label"><span class="labdetail">L'idee de projet : </span> </p>
-                                                        <p class="col-md-10" style="text-align: justify;">
+                                                    <p class="col-md-3 control-label"><span class="labdetail">L'idee de projet : </span> </p>
+                                                        <p class="col-md-9" style="text-align: justify;">
                                                         <span style="text-align: justify;" class="valdetail">
                                                         @empty($entreprise->description_du_projet)
                                                                 Informations non disponible
-                                                                            @endempty
+                                                        @endempty
                                                              {{$entreprise->description_du_projet}}
+                                                    </span></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div  id="condanation" class="form-group">
+                                                    <p class="col-md-3 control-label"><span class="labdetail">Cout du projet : </span> </p>
+                                                        <p class="col-md-9" style="text-align: justify;">
+                                                        <span style="text-align: justify;" class="valdetail">
+                                                        @empty($entreprise->cout_projet )
+                                                                Informations non disponible
+                                                                            @endempty
+                                                             {{ format_prix($entreprise->cout_projet)}}
+                                                    </span></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div  id="condanation" class="form-group">
+                                                    <p class="col-md-3 control-label"><span class="labdetail">Montant subvention demandée : </span> </p>
+                                                        <p class="col-md-9" style="text-align: justify;">
+                                                        <span style="text-align: justify;" class="valdetail">
+                                                        @empty($entreprise->montant_subvention )
+                                                                Informations non disponible
+                                                                            @endempty
+                                                             {{ format_prix($entreprise->montant_subvention)}}
                                                     </span></p>
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
-                                    <div class="tab-pane" id="example-tabs2-pieces" style="height:400px;">
+                                    <div class="tab-pane" id="example-tabs2-pieces" style="height:800px;">
                                     <div class="control-label">
                                         <h1 class="labdetail">Pièces jointes</h1>
                                         <table class="table table-vcenter table-condensed table-bordered listepdf valdetail"   >
@@ -1206,7 +1254,7 @@
                                         </div>
                                     @endforeach
                                         <div  id="condanation" class="form-group">
-                                            <p class="col-md-7 control-label labdetail"><span class="">Total : </span> </p>
+                                            <p class="col-md-7 control-label labdetail"><span class="">Note totale critères quantitatifs : </span> </p>
                                                 <p class="col-md-5" >
                                                 <span class="valdetail">
                                                 @empty($entreprise->noteTotale)
@@ -1215,57 +1263,139 @@
                                                     {{$entreprise->noteTotale}}
                                             </span></p>
                                         </div>
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-7 control-label labdetail"><span class="">Note critères qualitatifs : </span> </p>
+                                                <p class="col-md-5" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->note_critere_qualitatif)
+                                                     Informations non disponible
+                                                        @endempty
+                                                    {{$entreprise->note_critere_qualitatif}}
+                                            </span></p>
+                                        </div>
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-7 control-label labdetail"><span class="">Note totale : </span> </p>
+                                                <p class="col-md-5" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->note_critere_qualitatif)
+                                                     Informations non disponible
+                                                        @endempty
+                                                    {{$entreprise->note_critere_qualitatif +  $entreprise->noteTotale}} 
+                                            </span></p>
+                                        </div>
 
                                 </div>
-                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <div  id="condanation" class="form-group">
+                                        <p class="col-md-7 control-label labdetail"><span class="">Conformité au règlements du bailleur : </span> </p>
+                                            <p class="col-md-5" >
+                                            <span class="valdetail">
+                                            @empty($entreprise->conforme)
+                                                Information non disponible
+                                            @else
+                                            @if($entreprise->conforme==1)
+                                                 Conforme
+                                            @endif
+                                            @if($entreprise->conforme==2)
+                                                Non conforme
+                                            @endif
+                                            @endempty
+                                        </span></p>
+                                    </div>
+                                    <div  id="condanation" class="form-group">
+                                        <p class="col-md-6 control-label labdetail"><span class="">Avis de l'UGP : </span> </p>
+                                            <p class="col-md-6" >
+                                            <span class="valdetail">
+                                            @empty($entreprise->decision_ugp)
+                                                Informations non disponible
+                                             @else
+                                                 {{$entreprise->decision_ugp}}
+                                             @endempty
+                                        </span></p>
+                                    </div>
                                 <div  id="condanation" class="form-group">
-                                    <p class="col-md-7 control-label labdetail"><span class="">Conformité aux règlements du bailleur : </span> </p>
-                                        <p class="col-md-5" >
-                                        <span class="valdetail">
-                                        @empty($entreprise->conforme)
-                                            Information non disponible
-                                        @else
-                                        @if($entreprise->conforme==1)
-                                             Conforme
-                                        @endif
-                                        @if($entreprise->conforme==2)
-                                            Non conforme
-                                        @endif
-                                        @endempty
-                                    </span></p>
-                                </div>
-                                <div  id="condanation" class="form-group">
-                                    <p class="col-md-6 control-label labdetail"><span class="">Avis de l'UGP : </span> </p>
-                                        <p class="col-md-6" >
-                                        <span class="valdetail">
-                                        @empty($entreprise->decision_ugp)
-                                            Informations non disponible
-                                        @endempty
-                                             {{$entreprise->decision_ugp}}
-                                    </span></p>
-                                </div>
-				<div  id="condanation" class="form-group">
-                                    <p class="col-md-6 control-label labdetail"><span class="">Observations de l'UGP : </span> </p>
-                                        <p class="col-md-6" >
-                                        <span class="valdetail">
-                                        @empty($entreprise->observation_ugp )
-                                            Informations non disponible
-                                        @endempty
-                                             {{$entreprise->observation_ugp}} 
-                                    </span></p>
-                                </div>
-
+                                        <p class="col-md-6 control-label labdetail"><span class="">Observations de l'UGP : </span> </p>
+                                            <p class="col-md-6" >
+                                            <span class="valdetail">
+                                            @empty($entreprise->observation_ugp )
+                                                Informations non disponible
+                                                @else
+                                                 {{$entreprise->observation_ugp}} 
+                                             @endempty
+                                        </span></p>
+                                    </div>
                                     <div  id="condanation" class="form-group">
                                         <p class="col-md-6 control-label labdetail"><span class="">Decison du comité : </span> </p>
                                             <p class="col-md-6" >
                                             <span class="valdetail">
                                             @empty($entreprise->decision_du_comite_phase1)
                                                                 Informations non disponible
-                                                                @endempty
-                                                 {{$entreprise->decision_du_comite_phase1}}
+                                            @else
+                                                    {{$entreprise->decision_du_comite_phase1}}
+                                             @endempty
                                         </span></p>
                                     </div>
-                            </div>
+                                @if($entreprise->projet)
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-6 control-label labdetail"><span class="">Decision du comité sur projet: </span> </p>
+                                                <p class="col-md-6" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->projet->statut)
+                                                                    Informations non disponible
+                                                @else               
+                                                     {{$entreprise->projet->statut}}
+                                                @endempty
+                                            </span></p>
+                                        </div>
+                                @if($entreprise->projet->statut=='selectionné')
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-6 control-label labdetail"><span class="">Date de demande de KYC: </span> </p>
+                                                <p class="col-md-6" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->projet->statut)
+                                                                    Informations non disponible
+                                                @else          
+                                                     {{format_date($entreprise->date_demande_kyc)}}
+                                                @endempty
+                                            </span></p>
+                                        </div>
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-6 control-label labdetail"><span class="">Date de validation du KYC: </span> </p>
+                                                <p class="col-md-6" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->date_realisation_kyc)
+                                                                    Informations non disponible
+                                                @else          
+                                                     {{ format_date($entreprise->date_realisation_kyc)}}
+                                                @endempty
+                                            </span></p>
+                                        </div>
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-6 control-label labdetail"><span class="">Resultat du KYC: </span> </p>
+                                                <p class="col-md-6" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->resultat_kyc)
+                                                                    Informations non disponible
+                                                @else
+                                                     {{$entreprise->resultat_kyc}}
+                                             @endempty
+                                            </span></p>
+                                        </div>
+                                        <div  id="condanation" class="form-group">
+                                            <p class="col-md-6 control-label labdetail"><span class="">Date de signature de l'accord bénéficiare: </span> </p>
+                                                <p class="col-md-6" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->date_de_signature_accord_beneficiaire)
+                                                                    Informations non disponible
+                                                                   
+                                            @else
+                                                     {{ format_date($entreprise->date_de_signature_accord_beneficiaire)}} 
+                                            @endempty
+                                            </span></p>
+                                        </div>
+                                @endif
+                            @endif
+                                </div>
                         </div>
                         <div style="clear:bot"></div>
                                 </div>
@@ -1279,9 +1409,9 @@
 
 
 
-@section('modalSection')
+
 {{-- modal de transmission --}}
-<div id="modal-confirm-etape" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+{{-- <div id="modal-confirm-etape" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
@@ -1305,6 +1435,64 @@
                 <!-- END Modal Body -->
             </div>
         </div>
+</div> --}}
+<div id="modal-decision-de-ugp" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-check"></i> Avis de l'UGP</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id_entreprise" id="id_entreprise1">
+                <div class="form-group">
+                  <label for="">Entrez les observations :</label>
+                  <textarea id="observation" name="observation" placeholder="Observation" id="" cols="60" rows="10" onchange="activerbtn('btn_desactive','observation')" aria-describedby="helpId"></textarea>
+                </div>
+            <div class="form-group form-actions">
+                <div class="text-right">
+                    <button  class="btn btn-md btn-danger btn_desactive" onclick="save_avis_ugp('inéligible');" disabled>Inéligible</button>
+                    <button class="btn btn-md btn-success btn_desactive" onclick="save_avis_ugp('éligible');" disabled>Eligible</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div> 
+<div id="modal-note-critere-qualitatif-de-ugp" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-check"></i> Notation</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="entreprise" id="entreprise" value="{{ $entreprise->id }}">
+                <div class="form-group">
+                    <label class=" control-label" for="val_username">Note critère quantitatif</label>
+                        <div class="input-group">
+                            <input type="number" id="" name="date_de_formalisation" class="form-control"  disabled value="{{ $entreprise->noteTotale }}" >
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label class=" control-label" for="val_username">Note critère quantitatif</label>
+                        <div class="input-group">
+                            <input type="number" id="note_qualitatif" max="100" name="Entre la note qualitatif de l'UGP sur 100" class="form-control"   onchange="activerbtn('btn_valider_note','note_qualitatif')"  >
+                        </div>
+                </div>
+                <p id="note_total"></p>
+            <div class="form-group form-actions">
+                <div class="text-right">
+                    <button  class="btn btn-md btn-danger btn_valider_note" onclick="save_note_qualitatif();"  disabled>Valider</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
 </div>
 
 
@@ -1332,7 +1520,8 @@
 
 <!-- debut Modal Valider Avocat général. -->
 
-@stop
+
+
 <script>
      function recupererentreprise_id(id_entreprise,conforme){
             document.getElementById("id_entreprise").setAttribute("value", id_entreprise);
@@ -1363,6 +1552,22 @@
                 url: url,
                 type:'GET',
                 data: {id_entreprise: id_entreprise, observation:observation, avis:avis} ,
+                error:function(){alert('error');},
+                success:function(){
+                    $('#modal-confirm-rejet').hide();
+                    location.reload();
+                }
+            });
+
+    }
+    function save_note_qualitatif(){
+        var id_entreprise= $("#entreprise").val();
+        var note_qualitatif= $("#note_qualitatif").val();
+        var url = "{{ route('souscription.savenote_qualitatif') }}";
+        $.ajax({
+                url: url,
+                type:'GET',
+                data: {id_entreprise: id_entreprise, note_qualitatif:note_qualitatif} ,
                 error:function(){alert('error');},
                 success:function(){
                     $('#modal-confirm-rejet').hide();
@@ -1410,5 +1615,10 @@
                 }
             });
             });
+    }
+   function calculer_total(){
+    var note_quantitatif= parseInt($("#note_quantitatif").val());
+    var note_quanlitatif= parseInt($("#note_quanlitatif").val());
+
     }
 </script>

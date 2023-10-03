@@ -9,7 +9,7 @@
             <div class="block">
                 <!-- Form Validation Example Title -->
                 <div class="block-title">
-                    <h2>Liste <strong> des bénéficiaires affiliés à la {{ $banque->nom }}</strong></h2>
+                    <h2>Liste <strong> {{ $banque->nom }}</strong></h2>
                     <input type="hidden" id="banque" value="{{ $banque->id }}">
                     <a   onclick="history.back()" style="margin-left: 10px;" class="btn btn-danger pull-right">Fermer</a>
                         <a  onclick="desaffilier_un_beneficiaire_ala_banque();" class="btn btn-success pull-right"><span></i></span>Enlever de la liste</a>

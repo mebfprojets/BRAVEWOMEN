@@ -85,6 +85,10 @@ class SouscriptionPolicy
     {
         return $this->getPermission($user,6);
     }
+    public function lister_les_mouvements_financiers(User $user)
+    {
+        return $this->getPermission($user,26);
+    }
     public function listerprevalidablesouscription(User $user)
     {
         return $this->getPermission($user,5);
@@ -104,6 +108,9 @@ class SouscriptionPolicy
      public function listerFormation(User $user){
         return $this->getPermission($user, 18);
      }
+     public function listerTouteLesFormation(User $user){
+        return $this->getPermission($user, 28);
+     }
      public function modifierFormation(User $user){
         return $this->getPermission($user, 19);
      }
@@ -112,6 +119,12 @@ class SouscriptionPolicy
      }
      public function tableauDebord(User $user){
         return $this->getPermission($user, 20);
+     }
+     public function tableauDebordUgp(User $user){
+        return $this->getPermission($user, 55);
+     }
+     public function acceder_aux_decisions_sur_le_dossier(User $user){
+        return $this->getPermission($user, 56);
      }
      public function avisqualitative_ugp(User $user){
         return $this->getPermission($user, 22);
@@ -125,6 +138,10 @@ class SouscriptionPolicy
      public function acceder_souscriptions(User $user){
         return $this->getPermission($user, 25);
      }
+     public function donner_avis_membre_comite(User $user){
+        return $this->getPermission($user, 27);
+     }
+ 
     /**
      * Determine whether the user can permanently delete the model.
      *

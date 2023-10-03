@@ -11,11 +11,15 @@
         "cviebrock/eloquent-sluggable": "^8.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.4",
+        "laracasts/flash": "^3.2",
         "laravel/framework": "^8.75",
         "laravel/jetstream": "^2.6",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "livewire/livewire": "^2.5"
+        "livewire/livewire": "^2.5",
+        "maatwebsite/excel": "^3.1",
+        "phpoffice/phpexcel": "^1.8",
+        "spatie/simple-excel": "^2.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

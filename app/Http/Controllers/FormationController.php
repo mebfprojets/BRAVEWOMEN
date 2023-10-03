@@ -30,7 +30,10 @@ class FormationController extends Controller
         }
         return redirect()->back();
     }
-
+    public function liste_formation(){
+        $formations = Formation::all();
+        return view("formations.allsessions", compact("formations"));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -63,7 +66,8 @@ class FormationController extends Controller
             "date_fin"=>$request->date_fin,
             "zone_concernee"=>Auth::user()->zone,
        ]);
-       return redirect()->route("formation.index");
+        flash("Formation créée avec success !!!")->success();
+        return redirect()->route("formation.index");
         }
         return redirect()->back();
     }
@@ -76,7 +80,18 @@ class FormationController extends Controller
      */
     public function show(Formation $formation)
     {
-        //
+        
+        $participants= ParticipantFormation::where('formation_id', $formation->id)->get('entreprise_id');
+        $id_participants=[];
+        $i=0;
+        foreach($participants as $participant){
+            $id_participants[$i]=$participant->entreprise_id;
+            $i++;
+
+        }
+        $participants = Entreprise::whereIn('id',$id_participants)->get();
+   
+        return view("formations.show", compact('formation','participants'));
     }
 
     /**
@@ -92,8 +107,11 @@ class FormationController extends Controller
             $type_formations= Valeur::where("parametre_id",30)->get();
         // $participants = ParticipantFormation::where("formation_id", $formation->id)->get();
             return view("formations.update", compact("type_formations", "formation"));
+        }else{
+            flash("Vous n'avez pas le droit d'effectuer cette opération. Contactez l'administrateur !!!")->error();
+            return redirect()->back();
         }
-        return redirect()->back();
+        
     }
 
     /**
@@ -110,6 +128,9 @@ class FormationController extends Controller
         if ($request->hasFile('listedepresence')) {
             $urllistedepresence= $request->listedepresence->store('public/listedepresenceformation');
         }
+        else{
+            $urllistedepresence= "";
+        }
             $formation->update([
                 "libelle"=>$request->libelle,
                 "type"=>$request->type_formation,
@@ -117,9 +138,13 @@ class FormationController extends Controller
                 "date_fin"=>$request->date_fin,
                 'url_liste_presence'=>$urllistedepresence,
         ]);
+        flash("Modification effectuée avec success !!!")->success();
         return redirect()->route("formation.index");
     }
-    return redirect()->back();
+    else{
+        flash("Vous n'avez pas le droit de modifier une formation.Bien vouloir contacter l'administrateur")->error();
+        return redirect()->back();
+    }
     }
 
     /**
@@ -132,11 +157,9 @@ class FormationController extends Controller
     {
         //
     }
-    public function ajouter_participants(Formation $formation){
+    public function ajouter_participants(Formation $formation, Request $request){
         if (Auth::user()->can('formation.modifier'))
         {
-            //$entreprises_retenues = Entreprise::where("decision_du_comite_phase1", "retenu")->where('region', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
-            //Recuperer la liste des entreprises déjà proprammées pour la formation
             $formation_programmees= ParticipantFormation::all();
             $id_entreprises=[];
             $i=0;
@@ -147,15 +170,33 @@ class FormationController extends Controller
             $i++;
         }
     }
+    if($request->typeentreprise=='mpme'){
     // Recuperer la liste des entreprises rétenues pour la formation 
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->where('region', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
-        //dans liste des entreprises retenues exclure la liste des entreprises qui sont deja programmées pour une session
-        $entreprises_retenues= $entreprises->except($id_entreprises);
-        $participants = ParticipantFormation::where("formation_id", $formation->id)->get();
-        return view("formations.ajouterParticipant", compact("formation","entreprises_retenues", "participants") );
-        }
-        return redirect()->back();
+    //dans liste des entreprises retenues exclure la liste des entreprises qui sont deja programmées pour une session
+    } else{
+        $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',"!=",null)->where('region', Auth::user()->zone)->orWhere('region_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+       
     }
+        $entreprises_retenues= $entreprises->except($id_entreprises);
+        //dd( count($entreprises_retenues));
+
+// if(count($entreprises_retenues)>0){
+    $participants = ParticipantFormation::where("formation_id", $formation->id)->get();
+    return view("formations.ajouterParticipant", compact("formation","entreprises_retenues", "participants") );
+//  }
+//  else{
+//      flash("Il n'ya pas des entreprise disponible")->error();
+//      return redirect()->back();
+//  }
+  }
+else{
+    flash("Vous n'a pas l'autorisation d'effectuer cette action bien vouloir consulter l'administrateur")->error();
+    return redirect()->back();
+}
+        
+        
+}
     //Fonction des Participants à une session de formation des AOP 
     public function selectionnerParticipantAlaSessionAOP(Formation $formation){
         if (Auth::user()->can('formation.modifier'))
@@ -172,7 +213,7 @@ class FormationController extends Controller
             $i++;
         }
     }
-    // Recuperer la liste des entreprises rétenues pour la formation 
+        // Recuperer la liste des entreprises rétenues pour la formation 
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',1)->orderBy('updated_at', 'desc')->get();
         //dans liste des entreprises retenues exclure la liste des entreprises qui sont deja programmées pour une session
         $entreprises_retenues= $entreprises->except($id_entreprises);

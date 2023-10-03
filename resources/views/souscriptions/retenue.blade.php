@@ -14,9 +14,13 @@
             <thead>
                 <tr>
                     <th class="text-center">N°</th>
+                    <th class="text-center">Phase de souscription</th>
                     <th class="text-center" style="width:10px;" >Code promoteur</th>
                     <th class="text-center">Entreprise</th>
-                    <th class="text-center">Télephone </th>
+                    <th class="text-center">Nom & Prénom</th>
+                    <th class="text-center">Niveau d'instruction</th>
+                    <th class="text-center">Zone</th>
+                  
                     <th class="text-center">Télephone </th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -31,23 +35,36 @@
                         @endphp
 
                     <tr>
+                        
+
                        <td class="text-center" style="width: 10%">{{ $i }}</td>
+                       <td class="text-center" style="width: 10%">
+                                @if ($entreprise->phase_de_souscription ==2 )
+                                    Phase 2
+                                @else
+                                    Phase 1
+                                @endif
+                        </td>
                         <td class="text-center" style="width: 5%;" >
                             {{ $entreprise->promotrice->code_promoteur }} {{-- <a href="{{ route("promoteur.edit", $entreprise->promotrice->slug) }}">{{ $entreprise->promotrice->code_promoteur }} </a> --}}
                         </td>
                         <td class="text-center">
-                             {{ $entreprise->denomination }}
+                            {{ $entreprise->denomination }}
+                       </td>
+                        <td class="text-center" style="width: 5%;" >
+                            {{ $entreprise->promotrice->nom }} {{ $entreprise->promotrice->prenom }} {{-- <a href="{{ route("promoteur.edit", $entreprise->promotrice->slug) }}">{{ $entreprise->promotrice->code_promoteur }} </a> --}}
                         </td>
+                        <td class="text-center" style="width: 5%;" >
+                            {{getlibelle($entreprise->promotrice->niveau_instruction)  }} {{-- <a href="{{ route("promoteur.edit", $entreprise->promotrice->slug) }}">{{ $entreprise->promotrice->code_promoteur }} </a> --}}
+                        </td>
+                        <td class="text-center" style="width: 5%;" >
+                            {{getlibelle($entreprise->region)  }}
+                        </td>
+                        
                         <td class="text-center">{{ $entreprise->promotrice->telephone_promoteur }}</td>
-                        <td class="text-center">{{ $entreprise->telephone_entreprise }}</td>
-
-                        {{-- <td class="text-center">{{ $entreprise->secteur_activite }}</td> --}}
-                        {{-- <td class="text-center">
-                            <a href="{{ route("projet.edit",$entreprise->projet->id) }}">Detail sur le projet</a>
-                        </td> --}}
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
                                 {{-- <a href="#modal-ajouter-a-session" data-toggle="modal" onclick="confirmChangeStatus({{$entreprise->id}})" title="Valider" class="btn btn-xs btn-success"><i class="fa fa-check"></i></a> --}}
                             </div>
                         </td>

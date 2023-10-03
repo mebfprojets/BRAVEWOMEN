@@ -1084,6 +1084,7 @@ a.sidebar-title:focus {
 .widget {
     background-color: #ffffff;
     margin-bottom: 10px;
+    
 }
 
 .widget .widget-extra-full,
@@ -4114,6 +4115,9 @@ p, .table, .alert, .carousel {
         font-size: 42px;
         padding: 10px;
     }
+    .test{
+        font-size: 250px !important;
+    }
 }
 
 /* Large devices, Desktops (>1199px) */
@@ -4158,4 +4162,7 @@ only screen and (min-device-pixel-ratio: 1.5) {
     #main-container {margin: 0 !important;}
     .block, .block.full {border: none !important; padding: 0 !important;}
     .block-title {margin: 0 0 20px !important;}
+}
+.bg-success{
+    background-color: #27ae60;
 }

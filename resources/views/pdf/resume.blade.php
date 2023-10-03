@@ -71,6 +71,10 @@ table {
                 <td>{{ $promoteur->prenom }}</td>
             </tr>
             <tr>
+                <td>Fonction</td>
+                <td>{{ $promoteur->fonction }}</td>
+            </tr>
+            <tr>
                 <td>Date de naissance</td>
                 <td>{{ $promoteur->datenais }}</td>
             </tr>
@@ -95,6 +99,10 @@ table {
                 <td>{{ getlibelle($promoteur->region_residence)  }} {{ getlibelle($promoteur->province_residence)  }} {{ getlibelle($promoteur->commune_residence)  }} {{ getlibelle($promoteur->arrondissement_residence)  }}</td>
             </tr>
             <tr>
+                <td>Situation de résidence</td>
+                <td>{{ getlibelle($promoteur->region_residence)  }} {{ getlibelle($promoteur->province_residence)  }} {{ getlibelle($promoteur->commune_residence)  }} {{ getlibelle($promoteur->arrondissement_residence)  }}</td>
+            </tr>
+            <tr>
                 <td>Niveau d’instruction</td>
                 <td>{{ getlibelle($promoteur->niveau_instruction) }}</td>
             </tr>
@@ -111,7 +119,7 @@ table {
         </td>
             </tr>
             <tr>
-                <td>Nombre d’années d’expérience dans le domaine d’activités</td>
+                <td>Nombre d’années d’expériences en tant que responsable : </td>
                 <td>{{ $promoteur->nombre_annee_experience }}</td>
             </tr>
             <tr>
@@ -126,7 +134,11 @@ table {
                 <td>{{ $entreprise->denomination }}</td>
             </tr>
             <tr>
-                <td>Location de l'entreprise</td>
+                <td>Catégorie d'entreprise</td>
+                <td>{{ $entreprise->aopOuleader }}</td>
+            </tr>
+            <tr>
+                <td>Localisation de l'entreprise</td>
                 <td>{{ getlibelle($entreprise->region)  }} {{ getlibelle($entreprise->province)  }} {{ getlibelle($entreprise->commune)  }} {{ getlibelle($entreprise->arrondissement)  }}</td>
             </tr>
             <tr>
@@ -153,7 +165,7 @@ table {
                 <td>Formalisation de l’entreprise</td>
                 <td>
                     @if($entreprise->formalise==1)
-                     Oui le {{ $entreprise->date_de_formalisation }} sous le numéro RCCM : {{ $entreprise->num_rccm }}
+                     Oui le {{ $entreprise->date_de_formalisation }} avec un : {{ $entreprise->type_document_de_formalisation }} numéro: {{ $entreprise->num_rccm }}
                      @else
                       Non
                      @endif

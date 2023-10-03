@@ -37,12 +37,10 @@ class recepisseMail extends Mailable
         $id_promo = $this->id_promoteur;
         $promoteur= Promotrice::where("id", $id_promo)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
-        $projet= $entreprise->projet;
-        $chef_de_zone= User::where("zone",$entreprise->region)->first();
-        $contact_chef_de_zone= $chef_de_zone->telephone ;
+      
         $data["email"] = $promoteur->email_promoteur;
         $this->email= $promoteur->email_promoteur;
-        $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','projet', 'contact_chef_de_zone'));
+        $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise',));
         $details['email'] = $promoteur->email;
         $details['nom'] = $promoteur->nom;
         $details['prenom'] = $promoteur->prenom;

@@ -4,8 +4,8 @@
     <head>
         <meta charset="utf-8">
 
-        <title>BraveWomen - Subscription</title>
-
+        <title>BraveWomen - Plateforme</title>
+      
         <meta name="description" content="ProUI is a Responsive Bootstrap Admin Template created by pixelcave and published on Themeforest.">
         <meta name="author" content="pixelcave">
         <meta name="robots" content="noindex, nofollow">
@@ -14,20 +14,21 @@
         <!-- Icons -->
         <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
         <link rel="shortcut icon" href="{{ asset("img/favicon.ico") }}">
-        <link rel="apple-touch-icon" href="img/icon57.png" sizes="57x57">
-        <link rel="apple-touch-icon" href="img/icon72.png" sizes="72x72">
-        <link rel="apple-touch-icon" href="img/icon76.png" sizes="76x76">
-        <link rel="apple-touch-icon" href="img/icon114.png" sizes="114x114">
-        <link rel="apple-touch-icon" href="img/icon120.png" sizes="120x120">
-        <link rel="apple-touch-icon" href="img/icon144.png" sizes="144x144">
-        <link rel="apple-touch-icon" href="img/icon152.png" sizes="152x152">
-        <link rel="apple-touch-icon" href="img/icon180.png" sizes="180x180">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="57x57">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="72x72">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="76x76">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="114x114">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="120x120">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="144x144">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="152x152">
+        <link rel="apple-touch-icon" href="{{ asset("img/favicon.ico")}}"  sizes="180x180">
         <!-- END Icons -->
 
         <!-- Stylesheets -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
    crossorigin=""/>
+
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
         <!-- Related styles of various icon packs and plugins -->
@@ -35,7 +36,6 @@
 
         <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
         <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-
         <!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
 
         <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
@@ -44,9 +44,10 @@
 
         <!-- Modernizr (browser feature detection library) -->
         <script src=" {{ asset('js/vendor/modernizr.min.js') }}"></script>
+         <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" /> 
     </head>
-    <body>
-        <div id="page-wrapper">
+    <body style="height: 100%">
+        <div id="page-wrapper" >
             <!-- Preloader -->
             <!-- Preloader functionality (initialized in js/app.js) - pageLoading() -->
             <!-- Used only if page preloader is enabled from inc/config (PHP version) or the class 'page-loading' is added in #page-wrapper element (HTML version) -->
@@ -60,18 +61,28 @@
             <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
 
                     @include('partials.admin._navbar')
-                <!-- END Main Sidebar -->
-
-                <!-- Main Container -->
+               
                 <div id="main-container">
                     @include('partials.admin.header')
 
                     <div id="page-content">
                         <div class="row">
+                            @include('flash::message')
+                            
+
                             @yield('content')
+                            <div id='loader'>
+                                <div style="margin-top:200px; margin-left:50%;">
+                                    <img  src="/img/loading-gif.gif" alt="" width="200"  center>
+                                    <p style="color:green; font-size:18px; font-weight:600"> .... Chargement en cours</p>
+                                </div>
+                                    
+                            </div>
+                           
                             {{-- <script src="//code.jquery.com/jquery.js"></script>
 	                            @include('flashy::message')--}}
                         </div>
+                        
                         <!-- END Dashboard 2 Content -->
                     </div>
                     <!-- END Page Content -->
@@ -101,12 +112,7 @@
                         <form  id="form-validation" action="{{route('updateByUser',Auth::user()->id)}}" method="get"  class="form-horizontal form-bordered">
                             <fieldset>
                                 <legend>Infos personnelles</legend>
-                                {{-- <div class="form-group">
-                                    <label class="col-md-4 control-label">Login</label>
-                                    <div class="col-md-8">
-                                        <p class="form-control-static">{{ Auth::user()->login}}</p>
-                                    </div>
-                                </div> --}}
+                               
                                 <div class="form-group">
                                         <label class="col-md-4 control-label" for="user-settings-email">Email</label>
                                         <div class="col-md-8">
@@ -160,31 +166,7 @@
             </div>
         </div>
         <!-- END User Settings -->
-        <div id="modal-decision-de-ugp" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header text-center">
-                        <h2 class="modal-title"><i class="fa fa-check"></i> Avis de l'UGP</h2>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="id_entreprise" id="id_entreprise1">
-                        <div class="form-group">
-                          <label for="">Entrez les observations :</label>
-                          <textarea id="observation" name="observation" placeholder="Observation" id="" cols="60" rows="10" onchange="activerbtn('btn_desactive','observation')" aria-describedby="helpId"></textarea>
-                        </div>
-                    <div class="form-group form-actions">
-                        <div class="text-right">
-                            <button  class="btn btn-md btn-danger btn_desactive" onclick="save_avis_ugp('inéligible');" disabled>Inéligible</button>
-                            <button class="btn btn-md btn-success btn_desactive" onclick="save_avis_ugp('éligible');" disabled>Eligible</button>
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
-                        </div>
-                    </div>
-                </div>
-                    <!-- END Modal Body -->
-                </div>
-            </div>
-        </div>
+        
       <div id="modal-confirm-ugp" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -341,7 +323,7 @@
         <script src={{ asset("js/modules/exporting.js") }}></script>
         <script src={{ asset("js/modules/export-data.js") }}></script>
         <script src="{{ asset('js/pages/ecomDashboard.js') }}"></script>
-        <script src={{ asset("datatables/js/datatables.js") }}></script>
+        <script src={{ asset("datatables/js/datatables.js") }}></script> 
         <script src="{{ asset("js/pages/formsWizard.js") }}"></script>
         <script src="{{ asset('js/app.js') }}"></script>
         <script>$(function(){ FormsWizard.init(); });</script>
@@ -353,6 +335,167 @@
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
     <script src="{{ asset("js/scriptmap.js") }}"></script>
+    <script>
+        $('div.alert').not('.alert-important').delay(2000).fadeOut(350);
+    </script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    @yield('script_additionnel')
+    <script>
+           function recuperer_id(id,valeur){
+            document.getElementById(id).setAttribute("value", valeur);     
+    }
+    </script>
+    <script>
+        function loadfunction(){
+          //  alert('oko');
+            $('#loader').show();
+        }
+        $(function() {
+            $(".loaddata").click(function() {
+               
+                $('#loader').show();
+            });
+        });
+        </script>
+    <script>
+        
+    $( document ).ready(function() {
+            var url = "{{ route('all.activity') }}";
+              $.ajax({
+                  url: url,
+                 type: 'GET',
+                 dataType: 'json',
+                  error:function(data){alert("Erreur");},
+                   success: function (donnee) {
+        console.log(donnee);
+            var group= new Array();
+            var items = new vis.DataSet();
+                for(var i=0; i<donnee.length; i++)
+                    {
+                        group.push({
+                            id: donnee[i].id,
+                            content: donnee[i].numero+'. '+donnee[i].libelle+' '+donnee[i].taux + '%',
+                    })  
+                }
+                var groups = new vis.DataSet(group);
+                for(var i=0; i<donnee.length; i++)
+                    {
+                        var start = new Date(donnee[i].date_debut);
+                        var end = new Date(donnee[i].date_fin);
+                        items.add({
+                            id: donnee[i].id,
+                            group: donnee[i].id,
+                            start: start,
+                            end: end,
+                            className: 'p1',
+                            content: ''
+                        });
+                    }
+                    var now = Date.now();
+                    var options = {
+                        stack: true,
+    maxHeight: 240,
+    horizontalScroll: true,
+    verticalScroll: true,
+    zoomKey: "ctrlKey",
+    start: Date.now() - 1000 * 60 * 60 * 24 * 3, // minus 3 days
+    end: Date.now() + 1000 * 60 * 60 * 24 * 60, // plus 1 months aprox.
+    orientation: {
+        axis: "both",
+        item: "top",
+    },
+
+                        };
+                            var content = document.getElementById('activity_timeline');
+                            timeline = new vis.Timeline(content, null, options);
+                            timeline.setGroups(groups);
+                            timeline.setItems(items);
+                } 
+             });
+            
+            });
+    </script>
+    <script type="text/javascript">
+         google.charts.load('current', {'packages':['timeline']});
+         google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart(){
+
+        var url = "{{ route('activity.liste') }}";
+              $.ajax({
+                  url: url,
+                 type: 'GET',
+                 dataType: 'json',
+                  error:function(data){alert("Erreur");},
+                   success: function (donnee) {
+        console.log(donnee);
+        var data = new google.visualization.DataTable(donnee);
+        var container = document.getElementById('timeline');
+        var chart = new google.visualization.Timeline(container);
+                chart.draw(data);
+
+    }
+              });
+
+    }
+           
+    
+    //   google.charts.load('current', {'packages':['timeline']});
+    //   google.charts.setOnLoadCallback(drawChart);
+    //   function drawChart() {
+    //     var container = document.getElementById('timeline');
+    //     var chart = new google.visualization.Timeline(container);
+    //     var dataTable = new google.visualization.DataTable();
+    
+    //     dataTable.addColumn({ type: 'string', id: 'President' });
+    //     dataTable.addColumn({ type: 'date', id: 'Start' });
+    //     dataTable.addColumn({ type: 'date', id: 'End' });
+    //     dataTable.addRows([
+    //       [ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+    //       [ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+    //       [ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+    
+    //     chart.draw(dataTable);
+    //   }
+    </script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+     $("input[id^='upload_file']").each(function() {
+         var id = parseInt(this.id.replace("upload_file", ""));
+         $("#upload_file" + id).change(function() {
+             if ($("#upload_file" + id).val() != "") {
+                 $("#moreImageUploadLink").show();
+             }
+         });
+     });
+ });
+ </script>
+ <script>
+     $(document).ready(function() {
+     var upload_number = 2;
+     $('#attachMore').click(function() {
+     //alert('oko');
+         //add more file
+         var moreUploadTag = '';
+         moreUploadTag += '<div class="element"><label for="upload_file"' + upload_number + '>Joindre une image '  + '</label>';
+         moreUploadTag += '<input type="file" accept=" .jpeg, .png, .JPG"  id="upload_file' + upload_number + '" name="image' + upload_number + '"/>';
+         moreUploadTag += ' <a href="javascript:del_file(' + upload_number + ')" style="cursor:pointer;" onclick="return confirm("Are you really want to delete ?")">Supprimer ' + '</a></div>';
+         $('<dl id="delete_file' + upload_number + '">' + moreUploadTag + '</dl>').fadeIn('slow').appendTo('#moreImageUpload');
+     $('#champ_nombre_dimage').val(upload_number)
+     upload_number++;
+    
+     });
+ });
+ function del_file(eleId) {
+     var ele = document.getElementById("delete_file" + eleId);
+     ele.parentNode.removeChild(ele);
+ }
+ </script>
+
+
+
 <script>
       $("#depassement_de_subvention").hide();
     ('.avis_ugp').hide();
@@ -524,31 +667,7 @@ function initMap()
     });
     }
     </script>
-    <script>
-        function valider_montant(entreprise_id, type_montant){
-              $(function(){
-                 //alert(type_montant);
-                  var montant_subvention= $("#montant_subvention").val();
-                  var url = "{{ route('valider_montant') }}";
-                  $.ajax({
-                      url: url,
-                      type:'GET',
-                      data: {montant: montant_subvention, type_montant:type_montant, id_entreprise: entreprise_id} ,
-                      error:function(){alert('error');},
-                      success:function(data){
-                         if(data == 2){
-                            $("#depassement_de_subvention").show();
-                            $("#valider_subvention").prop('disabled', true);
-                         }else{
-                            $("#depassement_de_subvention").hide();
-                            $("#valider_subvention").prop('disabled', false);
-                         }
-                        
-                      }
-                  });
-                  });
-          }
-      </script>
+    
 <script>
 function selectionner(){
     var selec=[];
@@ -768,6 +887,28 @@ language: {
 });
 
                    });
+</script>
+
+{{-- Fonction Pour controler la date de paiement des factures --}}
+<script>
+      $(document).ready(function(){
+    var date_validate= $('#facture_date_de_validation').val();
+    var startd= new Date(date_validate);
+    $('.datepaiement_facture').datepicker({
+            autoclose: true,
+            startDate: startd,
+            endDate: new Date(),
+});
+//Bloquer la saisie de la date
+$(".datepaiement_facture").keydown(false);
+
+$('.input_banque').datepicker({
+    endDate: new Date(),
+});
+
+
+});
+    
 </script>
 
 

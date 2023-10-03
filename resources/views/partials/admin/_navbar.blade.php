@@ -16,191 +16,396 @@
                 <div class="sidebar-user-name">
                     {{ Auth::user()->prenom }}
                 </div>
-
             </div>
 <hr>
             <ul class="sidebar-nav">
-
-                @can('tableau.debord', Auth::user()) 
+        @can('dashboard_bank', Auth::user())
+            <li>
+                <a href="{{ route("dashboad_banque") }}" class="@yield('dashboad_bank')"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Tableau de bord bank</span></a>
+            </li>
+        @endcan
+        @can('lister_client_bank', Auth::user())
+            <li class="@yield('dashboard')">
+                <a href="{{ route( "banque.beneficiaires") }}" class="@yield('beneficiaires_bank')"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Mes Clients</span></a>
+            </li>
+        @endcan
+            @can('tableau.debord', Auth::user()) 
                 <li class="@yield('dashboard')">
-                    <a href="{{ route("dashboard") }}"><i class="sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-dashboard"></i><span class="sidebar-nav-mini-hide"> Tableau de bord</span></a>
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Tableau de bord</span></a>
+                        <ul>
+                            <li class="@yield('dashboard_view') ">
+                                <a href="{{ route("dashboad_pricipale") }}" ><i class="fa fa-eye sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Aperçu</span></a>
+                            </li>
+                         @can('dashboard.ugp', Auth::user()) 
+                            <li class="@yield('activite_dashbord')">
+                                <a href="{{ route("activite.liste") }}"><i class="fa fa-tasks sidebar-nav-icon"></i>Activites UGP</span></a>
+                            </li>
+                            <li class="@yield('budget_dashbord')">
+                                <a href="{{ route("budget.liste") }}" ><i class="fa fa-money sidebar-nav-icon"></i>Budget UGP</span></a>
+                            </li>
+                        @endcan
+                            <li class="@yield('dash.banque_perform')">
+                                <a href="{{ route("dash.banque_perform") }}" ><i class="fa fa-money sidebar-nav-icon"></i>Activites Banques </span></a>
+                            </li>
+                            <li class="@yield('dashboard_detail')">
+                                <a href="{{ route("dashboard") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Plus Detaillé</span></a>
+                            </li>
+                        </ul>
                 </li>
             @endcan 
+                
             @can('acceder_souscriptions', Auth::user())
-                <li class="@yield('pme')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-vcard"></i></i><span class="sidebar-nav-mini-hide"> MPME</span></a>
-                    <ul>
+            <li class="@yield('souscription')">
+                <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-folder sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Souscriptions</span></a>
+                <ul>
+                    <li class="@yield('pme')">
+                        <a href="#" class="sidebar-nav-submenu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-vcard"></i></i><span class="sidebar-nav-mini-hide"> MPME</span></a>
+                        <ul>
                         @can('souscription.liste', Auth::user())
                                 <li class="@yield('souscription_enregistre')">
-                                    <a href="{{ route("souscription.terminee") }}?typeentreprise=mpme"><i class="gi gi-disk_save"></i> Enregistrées</a>
+                                    <a href="{{ route("souscription.terminee") }}?typeentreprise=mpme" onclick="loadfunction()"> Enregistrées</a>
                                 </li>
-                            @endcan
-                            
+                        @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('souscription_par_zone')">
-                                <a href="{{ route("souscription__reparties_par_zone") }}"> <i class="hi hi-map-marker"></i> Par Zone</a>
+                                <a href="{{ route("souscription__reparties_par_zone") }}"> Par Zone</a>
                             </li>
                         @endcan
-			@can('souscription.liste', Auth::user())
+			        @can('souscription.liste', Auth::user())
                             <li class="@yield('souscription_soumis_aucomite')">
-                                    <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=mpme"> <i class="gi gi-filter"></i> Préanalysés</a>
+                                    <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=mpme"  onclick="loadfunction()"> Bénéficiares data</a>
                             </li>
-                        @endcan
+                    @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('souscription_soumis_aucomite')">
-                                    <a href="{{ route("soumises_au_comite_technique") }}?typeentreprise=mpme"> <i class="gi gi-filter"></i> En Attente d'Analyse</a>
+                                    <a href="{{ route("soumises_au_comite_technique") }}?typeentreprise=mpme"> En Attente d'Analyse</a>
                             </li>
                         @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('analyse_par_le_comite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=mpme "> <i class="gi gi-filter"></i> Analysées</a>
+                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=mpme "> Analysées</a>
                             </li>
                         @endcan
                        @can('souscription.listerRetenues', Auth::user())
                             <li class="@yield('souscription_retenue')">
-                                    <a href="{{ route("souscription_retenue") }}?typeentreprise=mpme"> <i class="gi gi-check"></i> Retenues </a>
+                                    <a href="{{ route("souscription_retenue") }}?typeentreprise=mpme"> Retenues </a>
                             </li>
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('pme_retenu_par_zone')">
-                                    <a href="{{ route("souscription_retenue_par_zone") }}?typeentreprise=mpme"> <i class="gi gi-check"></i> Retenues Par Zone</a>
+                                    <a href="{{ route("souscription_retenue_par_zone") }}?typeentreprise=mpme"> Retenues Par Zone</a>
                             </li>
                         @endcan
                         <li class="@yield('souscription_retenue')">
-                            <a href="{{ route("souscription.rechercher") }}"> <i class="gi gi-check"></i> Rechercher</a>
+                            <a href="{{ route("souscription.rechercher") }}"> Rechercher</a>
                         </li>
                     </ul>
                 </li>
               
                 <li class="@yield('aop')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-vcard"></i></i><span class="sidebar-nav-mini-hide"> AOP/Leader</span></a>
+                    <a href="#" class="sidebar-nav-submenu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-vcard"></i></i><span class="sidebar-nav-mini-hide"> AOP/Leader</span></a>
                     <ul>    
                             @can('souscription.liste', Auth::user())
                             <li class="@yield('aop_enregistre')">
-                                <a href="{{ route("souscription.terminee") }}?typeentreprise=aop"><i class="gi gi-disk_save"></i> Enregistrés</a>
+                                <a href="{{ route("souscription.terminee") }}?typeentreprise=aop" onclick="loadfunction()"> Enregistrés</a>
                             </li>
                         @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('aop_soumis_aucomite')">
-                                    <a href="{{ route("soumises_au_comite_technique") }}?typeentreprise=aop"> <i class="gi gi-filter"></i> En Attente d'Analyse</a>
+                                    <a href="{{ route("soumises_au_comite_technique") }}?typeentreprise=aop"> En Attente d'Analyse</a>
                             </li>
                         @endcan
                         @can('aop.soumis_au_comite', Auth::user())
                             <li class="@yield('aop_soumis_aucomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> <i class="gi gi-filter"></i>Attente d'Analyse</a>
+                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> Attente d'Analyse</a>
                             </li>
                         @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('aop_analyse_par_lecomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> <i class="gi gi-filter"></i> Soumises au Comité</a>
+                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> Soumises au Comité</a>
                             </li>
                         @endcan
                        @can('souscription.listerRetenues', Auth::user())
                             <li class="@yield('aop_retenu')">
-                                    <a href="{{ route("aop.retenu") }}?typeentreprise=aop"> <i class="gi gi-check"></i> Retenues </a>
+                                    <a href="{{ route("aop.retenu") }}?typeentreprise=aop"> Retenues </a>
+                            </li>
+                            <li class="@yield('aop_post_analyse') loaddata">
+                                <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=aop" onclick="loadfunction()"> Bénéficiaires data</a>
                             </li>
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('aop_retenue_par_zone')">
-                                    <a href="{{ route("souscription_retenue_par_zone") }}?typeentreprise=aop"> <i class="gi gi-check"></i> Retenues Par Zone</a>
-                            </li>
-                        @endcan
-                    </ul>
-                </li> 
-            @endcan
-                <li class="@yield('finacement')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-money"></i><span class="sidebar-nav-mini-hide"> Financement</span></a>
-                    <ul>
-                        @can('souscription.liste', Auth::user())
-                                <li class="@yield('souscription_enregistre')">
-                                    <a href="{{ route("financement.enregistres") }}"><i class="gi gi-disk_save"></i> Enregistrées</a>
-                                </li>
-                            @endcan  
-                        @can('souscription.listerParZone', Auth::user())
-                            <li class="@yield('souscription_par_zone')">
-                                <a href="{{ route("souscription__reparties_par_zone") }}"> <i class="hi hi-map-marker"></i> Par Zone</a>
-                            </li>
-                        @endcan
-                        @can('souscription.soumis_au_comite', Auth::user())
-                            <li class="@yield('souscription_soumis_aucomite')">
-                                    <a href="{{ route("soumises_au_comite_technique") }}"> <i class="gi gi-filter"></i> En Attente d'Analyse</a>
-                            </li>
-                        @endcan
-                        @can('souscription.soumis_au_comite', Auth::user())
-                            <li class="@yield('souscription_analysee_par_lecomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}"> <i class="gi gi-filter"></i> Soumises au Comité</a>
-                            </li>
-                        @endcan
-                       @can('souscription.listerRetenues', Auth::user())
-                            <li class="@yield('souscription_retenue')">
-                                    <a href="{{ route("souscription_retenue") }}"> <i class="gi gi-check"></i> Retenues </a>
-                            </li>
-                        @endcan
-                        @can('souscription.listerParZone', Auth::user())
-                            <li class="@yield('souscription_retenue')">
-
-                                    <a href="{{ route("souscription_retenue_par_zone") }}"> <i class="gi gi-check"></i> Retenues Par Zone</a>
+                                    <a href="{{ route("souscription_retenue_par_zone") }}?typeentreprise=aop"> Retenues Par Zone</a>
                             </li>
                         @endcan
                     </ul>
                 </li>
+                @can('formation.all', Auth::user())
+                <li class="@yield('formation')">
+                    <a href="#" class="sidebar-nav-submenu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-hand_up"></i></i><span class="sidebar-nav-mini-hide"> Formations</span></a>
+                    <ul>
+                  @can('formation.listerFormation', Auth::user())
+                     <li class="@yield('formation')">
+                        <a href="{{ route('formation.index') }}"> Mes séances</a>
+                    </li>
+                @endcan
+                @can('formation.all', Auth::user())
+                    <li class="@yield('all_formation')">
+                        <a href="{{ route('formation.all') }}"> Toutes les séances</a>
+                    </li>
+                 @endcan
+                    
+                    </ul>
+                    {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
+                </li> 
+                @endcan
+             </ul>
+            </li>
+            <li class="@yield('pca')">
+                <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide "></i><i class="fa fa-wrench sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Selection PCA</span></a>
+                <ul>
+                    <li class="@yield('pca_mpme')">
+                        <a href="#" class="sidebar-nav-submenu"><i class="fa fa-angle-left sidebar-nav-indicator"></i>MPME</a>
+                        <ul>
+                            @can('projet.view', Auth::user())
+                            <li class="@yield('all')">
+                                <a href="{{ route("projet.index") }}?type_entreprise=mpme"> Plan enregistrés</a>
+                            </li>
+                            @endcan
+                            @can('lister_pca_chef_de_zone', Auth::user())
+                                <li class="@yield('liste_analyse')">
+                                    <a href="{{ route("projet.liste") }}?statut=soumis&type_entreprise=mpme"> A analyser</a>
+                                </li>
+                            @endcan
+                            @can('lister_chef_de_projet', Auth::user())
+                                <li class="@yield('analyse')">
+                                    <a href="{{ route("projet.liste") }}?statut=analyse&type_entreprise=mpme"> A analyser</a>
+                                </li>
+                            @endcan
+                            @can('souscription.soumis_au_comite', Auth::user())
+                            <li class="@yield('soumis_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=soumis_au_comite&type_entreprise=mpme"> Avis UGP favorable</a>
+                            </li>
+                            <li class="@yield('a_affecter_au_membre_du_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=a_affecter_au_membre_du_comite&type_entreprise=mpme"> Affectés au comité</a>
+                            </li>
+                            <li class="@yield('analyse_par_le_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=analyse_par_le_comite&type_entreprise=mpme"> Décision du comité</a>
+                            </li>
+                            <li class="@yield('liste_dattente')">
+                                <a href="{{ route("pca.lister_liste_dattente") }}?type_entreprise=mpme"> Liste d'attente</a>
+                            </li>
+                            @endcan
+                            @can('projet.view', Auth::user())
+                            <li class="@yield('selectionnes')">
+                                <a href="{{ route("pca.selectionneparzone") }}?type_entreprise=mpme"> Projets retenus</a>
+                            </li>
+                            @endcan 
+                            @can('souscription.liste', Auth::user())
+                                <li class="@yield('kyc')">
+                                    <a  href="{{ route('liste_demande_kyc') }}?type_entreprise=mpme"> Demandes de KYC</a>
+                                </li>
+                            @endcan
+                            {{-- @can('suivre_execution_pca', Auth::user())
+                                <li class="@yield('asuivre')">
+                                    <a  href="{{ route('projet.asuivre') }}?type_entreprise=mpme"> Exécution PCA</a>
+                                </li>
+                                <li class="@yield('acquisition')">
+                                    <a href="{{ route("acquisition.create") }}"> Acquisition</a>
+                                </li>
+                            @endcan --}}
+                        </ul>
+                    </li>
+                    <li class="@yield('pca_aop')">
+                        <a href="#" class="sidebar-nav-submenu"><i class="fa fa-angle-left sidebar-nav-indicator"></i> AOP/LEADER</a>
+                        <ul>
+                            @can('projet.view', Auth::user())
+                            <li class="@yield('all')">
+                                <a href="{{ route("projet.index") }}?type_entreprise=aop"> Plan enregistrés</a>
+                            </li>
+                            @endcan
+                            @can('lister_pca_chef_de_zone', Auth::user())
+                                <li class="@yield('liste_analyse')">
+                                    <a href="{{ route("projet.liste") }}?statut=soumis&type_entreprise=aop"> A analyser</a>
+                                </li>
+                            @endcan
+                            @can('lister_chef_de_projet', Auth::user())
+                                <li class="@yield('analyse')">
+                                    <a href="{{ route("projet.liste") }}?statut=analyse&type_entreprise=aop">  A analyser</a>
+                                </li>
+                            @endcan
+                            @can('souscription.soumis_au_comite', Auth::user())
+                            <li class="@yield('soumis_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=soumis_au_comite&type_entreprise=aop">  Avis UGP favorable</a>
+                            </li>
+                            <li class="@yield('a_affecter_au_membre_du_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=a_affecter_au_membre_du_comite&type_entreprise=aop">  Affectés au comité</a>
+                            </li>
+                            <li class="@yield('analyse_par_le_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=analyse_par_le_comite&type_entreprise=aop">  Décision du comité</a>
+                            </li>
+                            <li class="@yield('liste_dattente')">
+                                <a href="{{ route("pca.lister_liste_dattente") }}?type_entreprise=aop"> Liste d'attente</a>
+                            </li>
+                            @endcan
+                            @can('projet.view', Auth::user())
+                            <li class="@yield('selectionnes')">
+                                <a href="{{ route("pca.selectionneparzone") }}?type_entreprise=aop">  Projets retenus</a>
+                            </li>
+                            @endcan 
+                            @can('souscription.liste', Auth::user())
+                                <li class="@yield('kyc')">
+                                    <a  href="{{ route('liste_demande_kyc') }}?type_entreprise=aop"></i> Demandes de KYC</a>
+                                </li>
+                            @endcan
+                            
+                        </ul>
+                    </li>
+                   
+                </ul>
+            </li>
+                
+            @endcan
+   
+            @can('lister_les_mouvements_financiers', Auth::user())
+            
                 <li class="@yield('finacement')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-group"></i><span class="sidebar-nav-mini-hide"> Impacts</span></a>
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide"> Exécution PCA</span></a>
+                    <ul>
+                        @can('suivre_execution_pca', Auth::user())
+                                <li class="@yield('acquisition')">
+                                    <a href="{{ route("acquisition.create") }}">  Acquisitions</a>
+                                </li>
+                                <li class="@yield('prestataire')">
+                                    <a href="{{ route("prestataire.index") }}">Prestataires </a>
+                                </li>
+                                <li class="@yield('suivi_physique_mpme')">
+                                    <a  href="{{ route('projet.asuivre') }}?type_entreprise=mpme"> Suivi Physique MPME</a>
+                                </li>
+                                <li class="@yield('suivi_physique_aop')">
+                                    <a  href="{{ route('projet.asuivre') }}?type_entreprise=aop"></i> Suivi Physique AOP</a>
+                                </li>
+                                
+                        @endcan
+                        @can('souscription.liste', Auth::user())
+                                <li class="@yield('souscription_enregistre')">
+                                    <a href="{{ route('banque.beneficiaires') }}"> Mouvements financiers</a>
+                                </li>
+                        @endcan  
+                        @can('lister_all_devis', Auth::user())
+                            <li class="@yield('devis')">
+                                <a href="{{ route("devi.index") }}"> Devis Réçus</a>
+                            </li>
+                        @endcan
+                        @can('lister_devis_soumis', Auth::user())
+                             <li class="@yield('devis_analyse')">
+                                <a href="{{ route("devi.de_mazone") }}">  Devis à analyser</a>
+                            </li> 
+                        @endcan
+                        {{-- @can('lister_all_devis', Auth::user())
+                            <li class="@yield('suivi_devis')">
+                                <a href="{{ route("devis.listerASuivre") }}">  Exécution devis</a>
+                            </li>
+                        @endcan --}}
+                        @can('lister_devis_transmis_au_pm', Auth::user())
+                            <li class="@yield('devis_analyse')">
+                                <a href="{{ route("devi.aanalyse") }}?statut=transmis_au_chef_de_projet"> Devis à analyser</a>
+                            </li>
+                        @endcan
+                        @can('lister_all_devis', Auth::user())
+                        <li class="@yield('facture')">
+                            <a href="{{ route("facture.index") }}"> Factures Réçues</a>
+                        </li>
+                        @endcan
+                        @can('lister_devis_soumis', Auth::user())
+                            <li class="@yield('facture_analyse')">
+                                <a href="{{ route("facture.mazone") }}"> Factures à analyser</a>
+                            </li>
+                       @endcan
+                       @can('lister_devis_transmis_au_pm', Auth::user())
+                        <li class="@yield('facture_analyse')">
+                                <a href="{{ route("facture.aanalyse") }}?statut=transmis_au_chef_de_projet"> Facture à analyser</a>
+                        </li>
+                      @endcan
+                      @can('facture.payer', Auth::user())
+                        <li class="@yield('facture_analyse')">
+                                <a href="{{ route("facture.a_payer_de_par_banque") }}"> Factures à payer</a>
+                        </li>
+                      @endcan
+                       
+                    </ul>
+                </li>
+
+                {{-- <li class="@yield('finacement')">
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-group sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide"> Impacts</span></a>
                     <ul>
                         @can('souscription.liste', Auth::user())
                                 <li class="@yield('souscription_enregistre')">
-                                    <a href="{{ route("souscription.terminee") }}"><i class="gi gi-disk_save"></i> Enregistrées</a>
+                                    <a href="{{ route("souscription.terminee") }}"> Enregistrées</a>
                                 </li>
                             @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('souscription_par_zone')">
-                                <a href="{{ route("souscription__reparties_par_zone") }}"> <i class="hi hi-map-marker"></i> Par Zone</a>
+                                <a href="{{ route("souscription__reparties_par_zone") }}">  Par Zone</a>
                             </li>
                         @endcan
 
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('souscription_soumis_aucomite')">
-                                    <a href="{{ route("soumises_au_comite_technique") }}"> <i class="gi gi-filter"></i> En Attente d'Analyse</a>
+                                    <a href="{{ route("soumises_au_comite_technique") }}"> En Attente d'Analyse</a>
                             </li>
                         @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('souscription_analysee_par_lecomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}"> <i class="gi gi-filter"></i> Soumises au Comité</a>
+                                    <a href="{{ route("souscription.analyseParComite") }}"> Soumises au Comité</a>
                             </li>
                         @endcan
                        @can('souscription.listerRetenues', Auth::user())
                             <li class="@yield('souscription_retenue')">
-                                    <a href="{{ route("souscription_retenue") }}"> <i class="gi gi-check"></i> Retenues </a>
+                                    <a href="{{ route("souscription_retenue") }}"> Retenues </a>
                             </li>
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('souscription_retenue')">
-
-                                    <a href="{{ route("souscription_retenue_par_zone") }}"> <i class="gi gi-check"></i> Retenues Par Zone</a>
+                                    <a href="{{ route("souscription_retenue_par_zone") }}"> Retenues Par Zone</a>
                             </li>
                         @endcan
                     </ul>
+                </li> --}}
+                @endcan
+            
+           @can('formation.all', Auth::user())
+                <li class="@yield('gestion_projet')">
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Gestion du projet</span></a>
+                    <ul>
+                  @can('formation.listerFormation', Auth::user())
+                     <li class="@yield('activite')">
+                        <a href="{{ route('activites.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Activités</a>
+                    </li>
+                @endcan
+                @can('formation.all', Auth::user())
+                <li class="@yield('budget')">
+                    <a href="{{ route('budgets.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Budget</a>
                 </li>
-
-             @can('formation.listerFormation', Auth::user())
-                <li class="@yield('formation')">
-                    <a href="{{ route('formation.index') }}"> <i class="gi gi-leaf"></i> Formations</a>
+                 @endcan
+                    </ul>
                     {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
-                </li>
+                </li> 
             @endcan
-        @can('souscription.liste', Auth::user())
+           
+        {{-- @can('souscription.liste', Auth::user())
             <li class="@yield('document')">
-                <a href="{{ route('formation.index') }}"> <i class="hi hi-folder-open"></i> Documents</a>
+                <a href="{{ route('formation.index') }}"> <i class="hi hi-folder-open sidebar-nav-icon"></i> Documents</a>
             </li>
-        @endcan 
-        
+        @endcan  --}}
+        {{-- @can('formation.listerFormation', Auth::user())
             <li class="@yield('document')">
                 <a href="{{ route('banque.beneficiaires') }}"> <i class="hi hi-folder-open"></i> Bénficiaires</a>
             </li>
-    
+        @endcan --}}
                 @can('role.view', Auth::user())
                 <li class="@yield('administration')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings"></i></i><span class="sidebar-nav-mini-hide"> Administration</span></a>
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide"> Administration</span></a>
                     <ul>
                     @can('parametre.view', Auth::user())
                         <li class="@yield('administration-parametre')">
@@ -211,6 +416,9 @@
                          <li class="@yield('administration-banque')">
                              <a href="{{ route('banque.index') }}">Banques partenaires</a>
                          </li>
+                         <li class="@yield('administration-coach')">
+                            <a href="{{ route('coach.index') }}">Coachs</a>
+                        </li>
                      @endcan
                         @can('valeur.view', Auth::user())
                             <li class="@yield('administration-valeur')">
@@ -224,6 +432,18 @@
                                 <a href="{{ route("role.index") }}">Roles </a>
                             </li>
                         @endcan
+                        @can('role.view', Auth::user())
+                         
+                        <li class="@yield('administration-prestataire')">
+                            <a href="{{ route("grille.index") }}">Grille evaluation </a>
+                        </li>
+                        <li class="@yield('administration-indicateur')">
+                            <a href="{{ route("indicateur.index") }}">Indicateur </a>
+                        </li>
+                        <li class="@yield('administration-impact')">
+                            <a href="{{ route("impact.index") }}">Charger les données de l'impact </a>
+                        </li>
+                    @endcan 
                         {{-- @endcan --}}
                         {{-- @can('user.view', Auth::user()) --}}
                         @can('user.view', Auth::user())
@@ -231,12 +451,15 @@
                                 <a href="{{ route("user.index") }}">Utilisateurs</a>
                             </li>
                          @endcan
-                         
                         <li class="@yield('administration-permission')">
                             <a href="{{ route("permissions.index") }}">Permissions</a>
                         </li>
+                        <li class="@yield('administration-permission')">
+                            <a href="{{ route("form.import") }}">Import donnée géo</a>
+                        </li>
                     </ul>
                 </li>
+                
                 @endcan
 
             </ul>

@@ -141,7 +141,7 @@
                              </div>
                         </div>
                 @endif
-                @if($user->banque_id)
+                {{-- @if($user->banque_id) --}}
                     <div class="form-group{{ $errors->has('banques') ? ' has-error' : '' }} banque" >
                         <label class="col-md-4 control-label" for="banque">Compte banque : </label>
                         <div class="col-md-6">
@@ -163,7 +163,7 @@
                                     @endif
                              </div>
                         </div>             
-                @endif
+               
                     </fieldset>
                     {{-- <div class="form-group">
                             <label class="col-sm-4">Activer</label>

@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('souscription', 'active')
 @section($active_principal, 'active')
 @section($active, 'active')
 @section('content')
@@ -19,6 +20,7 @@
                     <th class="text-center">Nom & Prenom</th>
                     <th class="text-center">Télephone</th>
                     <th class="text-center">Entreprise</th>
+                    <th class="text-center">Secteur d'activité</th>
                     <th class="text-center">Score</th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -52,7 +54,10 @@
                            {{ $entreprise->denomination }}
                         </td>
                         <td class="text-center" style="width: 5%;">
-                           {{ $entreprise->noteTotale }}
+                           {{ getlibelle($entreprise->secteur_activite) }}
+                        </td>
+                        <td class="text-center" style="width: 5%;">
+                           {{ $entreprise->noteTotale + $entreprise->note_critere_qualitatif }}
                         </td>
                         {{-- <td class="text-center">{{ $entreprise->secteur_activite }}</td> --}}
                         {{-- <td class="text-center">
@@ -62,6 +67,8 @@
                             <div class="btn-group">
                                 {{-- <a href="" data-toggle="tooltip" title="Editer" class="btn btn-md btn-default"><i class="fa fa-pencil"></i></a> --}}
                                 <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route("resume_souscription.print",$entreprise->promotrice) }}" data-toggle="tooltip" title="Imprimer le resumé de la souscription" class="btn btn-md btn-primary"><i class="fa fa-print"></i></a>
+
                                 {{-- @if(Auth::user()->zone== $entreprise->region)
                                     <a href="{{ route("generer.recepisse", $entreprise->promotrice->slug) }}" data-toggle="tooltip" title="Imprimer le recepissé" class="btn btn-md btn-default"><i class="fa fa-print"></i></a>
                                     <a href="#modal-confirm-send_synthese" onclick="delConfirm({{ $entreprise->id }});" data-toggle="modal" title="Envoyer la fiche de synthèse" class="btn btn-md btn-primary"><i class="fa fa-paper-plane"></i></a>
@@ -74,7 +81,7 @@
                                     <a href="#modal-confirm-rejet" data-toggle="modal" onclick="confirmChangeStatus1({{$entreprise->id}}, {{ Auth::user()->id }})" title="rejeter" class="btn btn-md btn-danger"><i class="fa fa-times"></i></a>
                                     <a href="#modal-confirm-changestatus" data-toggle="modal" onclick="confirmChangeStatus1({{$entreprise->id}}, {{ Auth::user()->id }})" title="Valider" class="btn btn-md btn-success"><i class="fa fa-check"></i></a>
                                 @endcan --}}
-                                <a href="{{ route("generer.recepisse", $entreprise->promotrice->slug) }}" data-toggle="tooltip" title="Modifier la souscription" class="btn btn-md btn-default"><i class="hi hi-edit"></i></a>
+                                {{-- <a href="{{ route("generer.recepisse", $entreprise->promotrice->slug) }}" data-toggle="tooltip" title="Modifier la souscription" class="btn btn-md btn-default"><i class="hi hi-edit"></i></a> --}}
                              
                                     {{-- @if($entreprise->conforme== null)
                                     @can('avisqualitative_ugp', Auth::user())

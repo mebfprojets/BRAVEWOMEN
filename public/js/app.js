@@ -733,7 +733,8 @@ var App = function() {
 }();
 
 $( function() {
-    $( ".datepicker" ).datepicker({
+    $(".datepicker").datepicker({
+     endDate: new Date(),
       changeMonth: true,
       changeYear: true,
       monthNames: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],

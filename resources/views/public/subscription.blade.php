@@ -277,6 +277,7 @@
                         </div>
                         @endforeach
                     </div>
+                    <hr>
                     <div class="row">
                         <div class="offset-md-1 col-md-10">
                             <div class="form-group">

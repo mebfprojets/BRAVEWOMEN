@@ -36,7 +36,7 @@ class PromotriceController extends Controller
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $nb_annee_experience=Valeur::where("parametre_id", env('PARAMETRE_TRANCHE_EXPERIENCE'))->get();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-       // dd($proportiondedepences);
+       
         $annees=Valeur::where('parametre_id',16 )->get();
         return view("public.subscription", compact("regions", "niveau_instructions","nb_annee_experience","proportiondedepences","annees"));
     }
@@ -50,7 +50,6 @@ class PromotriceController extends Controller
     public function store(Request $request)
     {
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-       
          $annees=Valeur::where('parametre_id',16 )->get();
         $this->email = $request->email_promoteur;
         $this->nom = $request->nom_promoteur;
@@ -219,13 +218,13 @@ class PromotriceController extends Controller
             }
             elseif($promoteur->suscriptionaopleader_etape==1 || $promoteur->suscriptionaopleader_etape==null ){
                
-                //return view("validateStep1", compact("promoteur"));
+              
                 return view("validateStep1aop", compact("promoteur"));
             }
             else{
-                //dd('oko');
+             
                 return view("validateStep1aop", compact("promoteur"));
-               // return view("validateStep2",compact("promoteur"));
+               
             }
         }
     }

@@ -53,8 +53,8 @@
                     
                        </fieldset>
                             <div class="col-md-8 col-md-offset-4" style="margin-top:20px">
-                                <input type="reset" class="btn btn-sm btn-warning"  value="Annuler">
-                                    <input type="submit" id=""  class="btn btn-sm btn-success"  value="Valider">
+                                <input type="reset" class="btn btn-md btn-warning"  value="Annuler">
+                                <input type="submit" id=""  class="btn btn-md btn-succes"  value="Valider">
                             </div>            <!-- END Form Buttons -->
                          </form>
                      </div>

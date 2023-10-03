@@ -42,7 +42,6 @@
                                                                     <option value="{{ $region->id  }}" {{ old('region') == $region->id ? 'selected' : '' }}>{{ $region->libelle }}</option>
                                                             @endforeach
                                                         </select>
-
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label" for="province_residence">Province de l'AOP<span class="text-danger">*</span></label>
@@ -171,11 +170,9 @@
                                                     <input type="text" id="" name="date_de_formalisation" class="form-control datepicker" data-date-format="dd-mm-yyyy" placeholder="Date de formalisation de l'entreprise .." value="{{old('date_de_formalisation')}}" >
                                                 </div>
                                         </div>
-                                        
-                                        
                                         <div class="entreformalise form-group{{ $errors->has('docrccm') ? ' has-error' : '' }}">
                                             <label class=" control-label" for="docrccm">Joindre une copie du document</label>
-                                                <input class="form-control" type="file" id="docrccm" accept=".pdf, .jpeg, .png" name="docrccm"  placeholder="Charger une copie du RCCM" required>
+                                                <input class="form-control" type="file" id="docrccm"  onchange="VerifyUploadSizeIsOK('docrccm');" accept=".pdf, .jpeg, .png" name="docrccm"  placeholder="Charger une copie du RCCM" required>
                                             @if ($errors->has('docrccm'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->first('docrccm') }}</strong>
@@ -194,7 +191,7 @@
                                         </div>
                                         <div class="aggrementdoc form-group{{ $errors->has('docagrement') ? ' has-error' : '' }}">
                                             <label class=" control-label" for="docagrement">Joindre le document exigé</label>
-                                                <input class="form-control" type="file" id="docagrement" accept=".pdf, .jpeg, .png" name="docagrement"  placeholder="Joindre une copie de l'agrement" required>
+                                                <input class="form-control" type="file" id="docagrement" onchange="VerifyUploadSizeIsOK('docagrement');" accept=".pdf, .jpeg, .png" name="docagrement"  placeholder="Joindre une copie de l'agrement" required>
                                             @if ($errors->has('docagrement'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->first('docagrement') }}</strong>
@@ -304,14 +301,7 @@
                                 </div>
                                     <div class="offset-md-1 col-md-5">
                                         
-                                        {{-- <div class="form-group">
-                                            <label class=" control-label" for="">Quelles sont les activités verticales développées? <span data-toggle="tooltip" title="Les activités verticales sont des activités réalisées par l’entreprise leader ou l’AOP vers les entreprises"><i class="fa fa-info-circle"></i></span> </label>
-                                            <select id="example-chosen-multiple" name="activites_verticales[]" class="select-chosen" data-placeholder="Selectionner les activités verticales .." style="width: 250px;" multiple>
-                                                @foreach ($activites_verticales as $activites_verticale)
-                                                <option value="{{ $activites_verticale->id }}">{{ $activites_verticale->libelle }}</option>
-                                                @endforeach
-                                            </select>
-                                            </div> --}}
+                                       
                                             <div class="form-group">
                                                 <label class=" control-label" for="">Cocher les activités verticales ménées par l'AOP au profit des membres? <span data-toggle="tooltip" title="Les activités verticales sont des activités réalisées par l’entreprise leader ou l’AOP vers les entreprises"><i class="fa fa-info-circle"></i></span> </label>
                                                     @foreach ($activites_verticales as $activites_verticale)
@@ -320,7 +310,7 @@
                                                     </div>
                                                     @endforeach
                                                 </select>
-                                                </div>
+                                            </div>
                                           
                                         {{-- <div class="form-group">
                                             <label class=" control-label" for="">Pensez-vous investir dans quelles activités verticales? <span data-toggle="tooltip" title="Dans quelles activités verticales pensez vous investir dans les trois prochaines années?"><i class="fa fa-info-circle"></i></span></label>
@@ -377,7 +367,7 @@
                                     <label class="col-md-4 control-label" for="unite_de_mesure">Unité de mesure<span class="text-danger">*</span><span data-toggle="tooltip" title="Préciser l'unité(tonne, nombre de plat, nombre de tête d'animaux, ...) de mesure de la quantite de produit vendus?"><i class="fa fa-info-circle"></i></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <input type="text"  name="unite_de_mesure" value="" class="form-control" placeholder=" renseigner l'unite de mesure" autofocus required title="Ce champ est obligatoire.">
+                                            <input type="text"   name="unite_de_mesure" value="" class="form-control" placeholder=" renseigner l'unite de mesure" autofocus required title="Ce champ est obligatoire.">
                                         </div>
                                     </div>
                                 </div>
@@ -387,7 +377,7 @@
                                         <label class="col-md-4 control-label" for="val_email">En {{ $annee->libelle }}<span class="text-danger">*</span></label>
                                         <div class="col-md-6">
                                             <div class="input-group">
-                                                <input type="number" min=0 id="num_rccm" name="{{ $rentabilite_critere->id }}{{$annee->id }}" value="{{old('{!! $rentabilite_critere->id !!}{!! $annee->id !!}')}}" class="form-control" placeholder=" Saisir la quantité" autofocus required title="Ce champ est obligatoire.">
+                                                <input type="number" min=0 id="num_rccm" name="{{ $rentabilite_critere->id }}{{$annee->id }}" value="{{old('{!! $rentabilite_critere->id !!}{!! $annee->id !!}')}}" class="form-control" placeholder=" Saisir le {{ getlibelle($rentabilite_critere->libelle)  }}" autofocus required title="Ce champ est obligatoire.">
                                             </div>
                                         </div>
                                     </div>

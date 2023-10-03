@@ -1,7 +1,9 @@
 @extends('layouts.admin')
 @section('formation', 'active')
 {{-- @section('formation-sessions', 'active') --}}
+
 @section('content')
+
 <div class="col-md-6" id="listecandidat">
         <!-- Basic Form Elements Title -->
 
@@ -39,7 +41,10 @@
         </table>
         </div>
     </div>
+
+
     </div>
+
     <div class="col-md-6" id="decochercandidat">
         <div class="block">
             <!-- Form Validation Example Title -->
@@ -76,6 +81,8 @@
     </table>
 </div>
 </div>
+<a onclick="history.back()" class="btn btn-danger pull-right" style="float: right;"><span><i class="fa fa-times"></i></span> Fermer la page</a>
+
 </div>
 @endsection
 @section('modalSection')

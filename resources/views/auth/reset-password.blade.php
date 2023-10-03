@@ -102,13 +102,7 @@
                                         <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Changer le mot de passe</button>
                                     </div>
                                 </div>
-                                {{-- <div class="flex items-center justify-end mt-4">
-                                    @if (Route::has('password.request'))
-                                        <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                                          Mot de passe oublié?
-                                        </a>
-                                    @endif
-                                </div> --}}
+                                
                                 <div class="form-group">
                                     <div class="col-xs-12 text-center">
                                         <a href="javascript:void(0)" id="link-reminder-login"><small>Mot de passe oublié?</small></a>

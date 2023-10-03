@@ -14,8 +14,7 @@
           </div>
           <div class="row bravedesc">
               <p style="text-align: justify; margin-bottom:40px;">
-                  Le Gouvernement du Burkina Faso a signé en avril 2021 un accord avec la Banque Islamique de Développement (BID) pour l’implémentation d’un programme d’assistance à la résilience des entreprises à valeur ajoutée de femmes au Burkina Faso dénommé « BRAVE Women Burkina », le projet BRAVE Women Burkina s’inscrit dans un programme « Business Resilience Assistance for adding-Value Enterprises for Women (BRAVE Women) » initié par la Société Islamique pour le Développement du Secteur Privé (SID), la branche en charge du secteur privé de la Banque Islamique de Développement (BID). Il vise à offrir une assistance technique et financière aux entreprises détenues/dirigées par des femmes dans des environnements fragiles.
-Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds fiduciaire multi-donateurs hébergé par le Groupe de la Banque mondiale, le programme est implémenté au Burkina Faso par la Maison de l’Entreprise du Burkina Faso (MEBF).
+                Le Gouvernement du Burkina Faso a signé en avril 2021 un accord avec la Banque Islamique de Développement (BID) pour l’implémentation d’un programme d’assistance à la résilience des entreprises à valeur ajoutée de femmes au Burkina Faso dénommé « BRAVE Women Burkina ». Le projet BRAVE Women Burkina s’inscrit dans un programme « Business Resilience Assistance for adding-Value Enterprises for Women (BRAVE Women) » initié par la Société Islamique pour le Développement du Secteur Privé (SID), la branche en charge du secteur privé de la BID. Il vise à offrir une assistance technique et financière aux entreprises détenues/dirigées par des femmes dans des environnements fragiles. Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds fiduciaire multi-donateurs hébergé par le Groupe de la Banque mondiale, le programme est implémenté au Burkina Faso par la Maison de l’Entreprise du Burkina Faso (MEBF).
               </p>
             </div>
           <div class="faq-list row">
@@ -24,7 +23,7 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                   <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse" data-bs-target="#faq-list-1">COMPOSANTE 1 : RENFORCEMENT DES CAPACITÉS DE RÉSILIENCE DES ENTREPRISES <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="faq-list-1" class="collapse show" data-bs-parent=".faq-list">
                     <p>
-                      Renforcement des capacités de résilience des entreprises à travers la formation d'entreprises qualifiées (entreprises détenues et ou dirigées par des femmes) sur la gestion des crises et de préparer des plans de continuité des activités
+                      Renforcement des capacités de résilience des entreprises à travers la formation d'entreprises qualifiées (entreprises détenues et ou dirigées par des femmes) sur la gestion des affaires et la résilience face aux crises et l’appui à l’élaboration des Plans de Continuité des Activités (PCA).
                     </p>
                   </div>
                 </li>
@@ -32,7 +31,7 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                   <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed">COMPOSANTE 2: SOUTIEN FINANCIER SOUS FORME DE SUBVENTIONS A COUTS PARTAGES <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
                     <p>
-                      Soutien financier sous forme de subventions à coûts partagés par l’appui aux entreprises détenues ou dirigées par des femmes avec une allocation minimale de 5 000 dollars et une allocation maximale de 15 000 dollars par entreprise bénéficiaire, à investir principalement dans les biens d’immobilisation dont l'entreprise a besoin.
+                      Soutien financier sous forme de subventions à coûts partagés par l’appui aux entreprises détenues ou dirigées par des femmes avec une allocation minimale de 5 000 $US et une allocation maximale de 15 000 $US par entreprise bénéficiaire, à investir principalement dans les biens d’immobilisation dont l'entreprise a besoin.
                     </p>
                   </div>
                 </li>
@@ -40,7 +39,7 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                   <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">COMPOSANTE 3 : RESILIENCE DES CHAINES DE VALEURS <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
                     <p>
-                      Résilience des chaines de valeurs sous forme de soutien aux entreprises leaders et associations/coopératives burkinabè (pas nécessairement détenues/dirigées par une femme) pour la protection et l’amélioration des chaînes de valeur vitales qui auront un impact positif et un effet multiplicateur sur de nombreuses autres MPME (détenues/dirigées par des femmes) de la chaîne, jusqu’à hauteur de 50 000 $US.
+                      Résilience des chaines de valeurs sous forme de soutien aux entreprises leaders, Associations et Organisations Professionnelles (AOP) burkinabè (pas nécessairement détenues/dirigées par une femme) pour la protection et l’amélioration des chaînes de valeur vitales qui auront un impact positif et un effet multiplicateur sur de nombreuses autres MPME (détenues/dirigées par des femmes) de la chaîne, à hauteur de 50 000 $US.
                     </p>
                   </div>
                 </li>
@@ -260,6 +259,7 @@ Financé par le Women Enterpreneurs Finance Initiative (We-Fi) qui est un fonds 
                   <label for="name">Message</label>
                   <textarea class="form-control" name="message" rows="10" required></textarea>
                 </div>
+                <div class="g-recaptcha" data-sitekey="6Lfkm9MiAAAAAGeYLF8Ls17qhJAJpQ7R3Q0UAV_n"></div>
                 <div class="my-3">
                   <div class="loading">Loading</div>
                   <div class="error-message"></div>

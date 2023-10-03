@@ -10,9 +10,7 @@
                     <!-- Form Validation Example Title -->
                     <div class="block-title">
                         <h2> Créer une <strong>Session de Formation</strong></h2>
-
                             <a href="{{ route('formation.create') }}" class="btn btn-success pull-right"><span><i class="fa fa-plus"></i></span>Session de Formation</a>
-
                     </div>
 <div class="table-responsive">
     <table class="table table-vcenter table-condensed table-bordered listepdf">
@@ -35,10 +33,11 @@
                     <td class="text-center">
                             <div class="btn-group">
                              {{-- @can('formation.update', Auth::user()) --}}
-                                <a href="{{ route('formation.edit',$formation) }}" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ route('formation.edit',$formation) }}" data-toggle="tooltip" title="Edit" class="btn btn-lg btn-default"><i class="fa fa-pencil"></i></a>
                             {{-- @endcan --}}
-                            <a href="{{ route('ajouter.participants',$formation) }}" data-toggle="tooltip" title="Gérer les participants" class="btn btn-xs btn-default"><i class="fa fa-plus"></i></a>
-                            <a href="{{ route('listedepresence.telecharger',$formation) }}"  data-toggle="tooltip" title="Télécharger la liste de présence" class="btn btn-xs btn-success"><i class="fa fa-file"></i></a>
+                            <a href="{{ route('ajouter.participants',$formation) }}?typeentreprise=mpme" data-toggle="tooltip" title="Ajouter des MPME" class="btn btn-lg btn-default"><i class="fa fa-plus"></i></a>
+                            <a href="{{ route('ajouter.participants',$formation) }}?typeentreprise=aop" data-toggle="tooltip" title="Ajouter des AOP" class="btn btn-lg btn-default"><i class="fa fa-plus"></i></a>
+                            <a href="{{ route('listedepresence.telecharger',$formation) }}"  data-toggle="tooltip" title="Télécharger la liste de présence" class="btn btn-lg btn-success"><i class="fa fa-file"></i></a>
                                 {{-- <a href="#modal-lister-participant" onclick="idConfirm({{ $formation->id }});" data-toggle="modal" title="Lister les participants" class="btn btn-xs btn-success"><i class="fa fa-times"></i></a> --}}
                             </div>
                     </td>

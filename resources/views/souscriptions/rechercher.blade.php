@@ -20,6 +20,7 @@
                             <option></option>
                             <option value="all">TOUT</option>
                             <option value="null">MPME</option>
+                            <option value="aop">AOP/Leader</option>
                             <option value="aop">AOP</option>
                             <option value="leader">Leader</option>
                         </select>

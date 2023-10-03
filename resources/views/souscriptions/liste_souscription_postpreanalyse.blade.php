@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('souscription', 'active')
 @section($active_principal, 'active')
 @section($active, 'active')
 @section('content')
@@ -19,20 +20,77 @@
                     <th class="text-center">Région</th>
                     <th class="text-center">Province</th>
                     <th class="text-center">Commune</th>
+                    <th class="text-center">Village</th>
                     <th class="text-center">Nom & Prénom</th>
-                    <th class="text-center">Genre</th>
-                    <th class="text-center">Téléphone</th>
+                     <th class="text-center">Situation résident</th> 
+                    <th class="text-center">Contacts</th>
                     <th class="text-center">Nom de l'entreprise</th>
-                    <th class="text-center">forme juridique</th>
                     <th class="text-center">Secteur d'activité</th>
+		            <th class="text-center">nbre de membre en 2019</th>
+		            <th class="text-center">nbre de membre en 2020</th>
+		            <th class="text-center">nbre de membre en 2021</th>
+                    <th class="text-center">nbre entreprise partenaire en 2019</th>
+		            <th class="text-center">nbre entreprise partenaire en 2020</th>
+		            <th class="text-center">nbre entreprise partenaire en 2021</th>
+                    <th class="text-center">pourcentage de femme membre en 2019</th>
+		            <th class="text-center">pourcentage de femme membre en 2020</th>
+		            <th class="text-center">pourcentage de femme membre en 2021</th>
+		            <th class="text-center">nbre de produits/services vendus.2019</th>
+                    <th class="text-center">nbre de produits/services vendus.2020</th>
+                    <th class="text-center">nbre de produits/services vendus.2021</th>
+		            <th class="text-center">nbre Nouveaux produits/services lancés.2019</th>
+                    <th class="text-center">nbre Nouveaux produits/services lancés.2020</th>
+                    <th class="text-center">nbre Nouveaux produits/services lancés.2021</th>
                     <th class="text-center">Cf.aff.2019</th>
                     <th class="text-center">Cf.aff.2020</th>
                     <th class="text-center">Cf.aff.2021</th>
+                    <th class="text-center">Bénéfice.2019</th>
+                    <th class="text-center">Bénéfice.2020</th>
+                    <th class="text-center">Bénéfice.2021</th>
+                    <th class="text-center">nbre client.2019</th>
+                    <th class="text-center">nbre client.2020</th>
+                    <th class="text-center">nbre client.2021</th>
+                    <th class="text-center">nbre Nouveaux marchés.2019</th>
+                    <th class="text-center">nbre Nouveaux marchés.2020</th>
+                    <th class="text-center">nbre Nouveaux marchés.2021</th>
+
+                    <th class="text-center">nbre innovation.2019</th>
+                    <th class="text-center">nbre innovation.2020</th>
+                    <th class="text-center">nbre innovation.2021</th>
+                    <th class="text-center">Salaire annuel.2019</th>
+                    <th class="text-center">Salaire annuel.2020</th>
+                    <th class="text-center">Salaire annuel.2021</th>
+                    <th class="text-center">Membre d'une association</th>
+                    <th class="text-center">Proportion des depenses en education en 2019</th>
+                    <th class="text-center">Proportion des depenses en education en 2020</th>
+                    <th class="text-center">Proportion des depenses en education en 2021</th>
+                    <th class="text-center">Proportion des depenses en santé en 2019</th>
+                    <th class="text-center">Proportion des depenses en santé en 2020</th>
+                    <th class="text-center">Proportion des depenses en santé en 2021</th>
+                    <th class="text-center">Proportion des depenses en bien 2019</th>
+                    <th class="text-center">Proportion des depenses en bien 2020</th>
+                    <th class="text-center">Proportion des depenses en bien 2021</th>
+                    <th class="text-center">Effectif permanent Homme en 2019</th>
+                    <th class="text-center">Effectif permanent Homme en 2020</th>
+                    <th class="text-center">Effectif permanent Homme en 2021</th>
+                    <th class="text-center">Effectif permanent femme en 2019</th>
+                    <th class="text-center">Effectif permanent femme en 2020</th>
+                    <th class="text-center">Effectif permanent femme en 2021</th>
+                    <th class="text-center">Effectif temporaire Homme en 2019</th>
+                    <th class="text-center">Effectif temporaire Homme en 2020</th>
+                    <th class="text-center">Effectif temporaire Homme en 2021</th>
+                    <th class="text-center">Effectif temporaire femme en 2019</th>
+                    <th class="text-center">Effectif temporaire femme en 2020</th>
+                    <th class="text-center">Effectif temporaire femme en 2021</th>
+
+                    {{-- <th class="text-center">Score qualitatif</th>--}}
+                    <th class="text-center">Niveau de resilience</th> 
                     <th class="text-center">Score</th>
-                    <th class="text-center">Conformité</th>
-                    <th class="text-center">Décision UGP</th>
-                    <th class="text-center">Observation UGP</th>
-                
+                    <th class="text-center">Affecté par Covid</th>
+                    <th class="text-center">Description de l'éffet Covid</th>
+                    <th class="text-center">Affecté par la securité</th>
+                    <th class="text-center">Description de l'éffet sécurité</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -65,48 +123,229 @@
                                         <td class="text-center" style="width: 5%;" >
                                             {{ getlibelle($entreprise->commune) }}
                                         </td>
+                                        <td class="text-center" style="width: 5%;" >
+                                            {{ getlibelle($entreprise->arrondissement) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;" >
+                                            @if($entreprise->promotrice->situation_residence=1)
+                                            Resident
+                                            @else
+                                                Déplacé
+                                            @endif
+                                        </td>
+                                        
                                         <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->nom }} {{ $entreprise->promotrice->prenom }}</td>
-                                        <td class="text-center" style="width: 5%;">
+                                        {{-- <td class="text-center" style="width: 5%;">
                                            @if($entreprise->promotrice->genre==1)
                                                 Féminin
                                             @else
                                             Masculin
                                         @endif
-                                        </td>
-                                        <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->telephone_promoteur }}</td>
+                                        </td> --}}
+                                        <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->telephone_promoteur }} / {{ $entreprise->telephone_entreprise }}/ {{ $entreprise->email_entreprise }}</td>
                                         <td class="text-center" style="width: 5%;">
                                             {{-- <a href="{{ route("entreprise.edit", $entreprise) }}"> {{ $entreprise->denomination }} </a> --}}
                                            {{ $entreprise->denomination }}
                                         </td>
-                                        <td class="text-center" style="width: 5%;">
-                                           {{ getlibelle($entreprise->forme_juridique) }}
-                                        </td>
+                                       
                                         <td class="text-center" style="width: 5%;">
                                             {{ getlibelle($entreprise->secteur_activite) }}
                                         </td>
-                                        @foreach ( $entreprise->chiffredaffaires as $chiffredaffaire )
                                         <td class="text-center" style="width: 5%;">
-                                            {{ $chiffredaffaire->quantite }}
-                                         </td>
-                                        @endforeach
-                                        <td class="text-center" style="width: 5%;">
-                                            {{ $entreprise->noteTotale }}
+                                            {{ return_quantite_indicateur($entreprise->id,7098,46) }}
                                         </td>
                                         <td class="text-center" style="width: 5%;">
-                                             @if($entreprise->conforme==1)
-                                                Conforme
-                                            @elseif ($entreprise->conforme==2)
-                                            Non conforme 
+                                            {{ return_quantite_indicateur($entreprise->id,7098,47) }}
+                                        </td> <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7098,48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7100,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7100,47) }}
+                                        </td> <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7100,48) }}
+                                        </td>
+                                        
+                                        
+					                    <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,41,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,41,47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,41,48) }}
+                                        </td>
+					<td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,6715,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,6715,47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,6715,48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,42,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,42,47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,42,48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,43,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,43,47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,43,48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7078,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7078,47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7078,48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,env('VALEUR_NOMBRE_NOUVEAU_MARCHE'),46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,env('VALEUR_NOMBRE_NOUVEAU_MARCHE'),47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,env('VALEUR_NOMBRE_NOUVEAU_MARCHE'),48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,6713,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,6713,47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,6713,48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,env("VALEUR_SALAIRE_MOYEN_ANNUEL"),46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,env("VALEUR_SALAIRE_MOYEN_ANNUEL"),47) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,env("VALEUR_SALAIRE_MOYEN_ANNUEL"),48) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            @if($entreprise->promotrice->membre_ass==1)
+                                                Oui
                                             @else
-                                            Non renseigné
+                                                Non
                                             @endif
                                         </td>
+					 <td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_EDUCATION"),46) }}
+                                        </td>
+					 <td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_EDUCATION"),47) }}
+                                        </td>
+
                                         <td class="text-center" style="width: 5%;">
-                                            {{ $entreprise->decision_ugp }}
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_EDUCATION"),48) }}
+                                        </td>
+
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_SANTE"),46)}}
+                                        </td>
+					 <td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_SANTE"),47) }}
+                                        </td>
+
+					 <td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_SANTE"),48) }}
+                                        </td>
+
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_BIEN"),46) }}
+                                        </td>
+					<td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_BIEN"),47) }}
+                                        </td>
+					<td class="text-center" style="width: 5%;">
+                                            {{ return_proportion_depense($entreprise->promotrice->id,env("VALEUR_PROPORTION_BIEN"),48) }}
+                                        </td>
+
+
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_effectif_homme($entreprise->id,env("VALEUR_EFFECTIF_PERMANENENT"),46) }}
+                                        </td>
+					 <td class="text-center" style="width: 5%;">
+                                            {{ return_effectif_homme($entreprise->id,env("VALEUR_EFFECTIF_PERMANENENT"),47) }}
+                                        </td>
+  					<td class="text-center" style="width: 5%;">
+                                            {{ return_effectif_homme($entreprise->id,env("VALEUR_EFFECTIF_PERMANENENT"),48) }}
+                                        </td>
+  					<td class="text-center" style="width: 5%;">
+                                            {{ return_effectif_femme($entreprise->id,env("VALEUR_EFFECTIF_PERMANENENT"),46) }}
+                                        </td>
+					 <td class="text-center" style="width: 5%;">
+                                            {{ return_effectif_femme($entreprise->id,env("VALEUR_EFFECTIF_PERMANENENT"),47) }}
+                                        </td>
+
+					<td class="text-center" style="width: 5%;">
+                                            {{ return_effectif_femme($entreprise->id,env("VALEUR_EFFECTIF_PERMANENENT"),48) }}
+                                        </td>
+					<td class="text-center" style="width: 5%;">
+
+                                            {{ return_effectif_homme($entreprise->id,env("VALEUR_EFFECTIF_TEMPORAIRE"),46) }}
+                                        </td>
+ 					
+					<td class="text-center" style="width: 5%;">
+
+                                            {{ return_effectif_homme($entreprise->id,env("VALEUR_EFFECTIF_TEMPORAIRE"),47) }}
+                                        </td>
+                                       <td class="text-center" style="width: 5%;">
+
+                                            {{ return_effectif_homme($entreprise->id,env("VALEUR_EFFECTIF_TEMPORAIRE"),48) }}
+                                        </td>
+ 
+					<td class="text-center" style="width: 5%;">
+
+                                            {{ return_effectif_femme($entreprise->id,env("VALEUR_EFFECTIF_TEMPORAIRE"),46) }}
                                         </td>
                                         <td class="text-center" style="width: 5%;">
-                                            {{ $entreprise->observation_ugp }}
+                                            {{ return_effectif_femme($entreprise->id,env("VALEUR_EFFECTIF_TEMPORAIRE"),47) }}
+                                 	</td>
+                                       <td class="text-center" style="width: 5%;">
+
+                                            {{ return_effectif_femme($entreprise->id,env("VALEUR_EFFECTIF_TEMPORAIRE"),48) }}
                                         </td>
+
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ getlibelle($entreprise->niveau_resilience)}}
+                                       </td>
+                                        <td class="text-center" style="width: 5%;">
+                                             {{ $entreprise->note_critere_qualitatif +  $entreprise->noteTotale }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ getlibelle($entreprise->affecte_par_covid) }}
+                                       </td>
+                                       <td class="text-center" style="width: 5%;">
+                                         {{ $entreprise->description_effect_covid }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ getlibelle($entreprise->affecte_par_securite) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ $entreprise->description_effet_securite }}
+                                        </td>
+                                       
+                                        
                                     </tr>
                 @endforeach
             </tbody>

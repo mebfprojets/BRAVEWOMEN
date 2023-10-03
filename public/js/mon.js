@@ -3,7 +3,6 @@
     $('#autre_occupation').hide();
     $('#autre_formation').hide();
     $('#autre_niveau_instruction').hide();
- //   $('#autre_forme_juridique').hide();
     $('#systeme_suivi').hide();
     $('#autre_clientele_ciblee').hide();
     $('#autre_techno_utilisee_dans_le_projet').hide();
@@ -20,17 +19,38 @@
     $('#description_innovation').hide();
     $("#structure_rep").hide();
     $("#banque").hide();
-    //$(".chaine_de_valeur").hide();
-
-
-
+    
+    function empty_input_file(input) {
+        $('#'+ input).val('');
+}
 function cout(){
   var cout_investissement= $('#cout_investissement').val();
     var fonderoulement= $('#fonderoulement').val();
     var cout_total= parseInt(cout_investissement) + parseInt(fonderoulement);
    $('#cout_total').attr("value",cout_total);
 }
-
+function deux_somme_complementaire(montant1, montant2, somme){
+    var valmontant1=$("#"+montant1).val();
+    var valsomme= $("#"+somme).val();
+    //console.log(valsomme/2 == valmontant1);
+    if(valsomme/2 == valmontant1 ){
+        var restant= valsomme - valmontant1;
+        $("#"+montant2).val(restant);
+        format_montant(montant2);
+        format_montant(montant1);
+        format_montant(somme);
+     
+    }
+    else{
+       
+        console.log("Attention le montant de la subvention ne doit pas être supérieur au coût du projet et la subvention doit être la moitié du coût total!!!");
+        $("#"+montant1).val(' ');
+        $("#"+somme).val(' ');
+        $("#"+montant2).val(' ');
+      
+    }
+ 
+  }
     function afficher(){
         var formalise=$('#formalise').val();
         if(formalise==1){
@@ -135,19 +155,29 @@ function cout(){
         }
         
     }
-function VerifyUploadSizeIsOK()
+function VerifyUploadSizeIsOK(docsize)
 {
-   /* Attached file size check. Will Bontrager Software LLC, https://www.willmaster.com */
-   var UploadFieldID = "docidentite";
+    
+   var UploadFieldID = docsize;
    var MaxSizeInBytes = 2097152;
    var fld = document.getElementById(UploadFieldID);
+   var val= fld.value;
+   var ext = val.split(".");
+   console.log(fld);
+    ext = ext[ext.length-1].toLowerCase();   
+   var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
+if (arrayExtensions.lastIndexOf(ext) == -1) {
+    alert("Ce type de fichier n'est pas autorisé. Seul les extensions : jpg, jpeg, png et pdf sont autorisés");
+    $('#'+ docsize).val('');
+}
    if( fld.files && fld.files.length == 1 && fld.files[0].size > MaxSizeInBytes )
    {
       alert("La taille de la copie des pièce jointes ne doit pas exceder " + parseInt(MaxSizeInBytes/1024/1024) + "MB");
+      $('#'+ docsize).val('');
       return false;
    }
    return true;
-} // function VerifyUploadSizeIsOK()
+} 
 //function pour rendre le boutton de rejet desactivé tant que le champ raison n'est pas renseigné
 function activerLeBouttonRejet(raison_du_rejet,btnrejet){
     var autre= $('#'+raison_du_rejet).val(); 
@@ -159,10 +189,38 @@ function activerLeBouttonRejet(raison_du_rejet,btnrejet){
         $('#'+btnrejet).prop('disabled', true);
     }
 }
+function format_montant(id){
+    //alert(id);
+var val= $('#'+id).val();
+$('#montant_devi_cache').val(val);
+var index = val.indexOf("XOF");
+if(index !== -1){
+    newval= val;
+}
+else{
+    var val1= val.split(" ").join("");
+    // var newval= new Intl.NumberFormat('fr', {unitDisplay: 'long'}).format(val1);
+     var newval= new Intl.NumberFormat('fr', {
+     style: 'currency',
+   currency: 'XOF',
+     }).format(val1);
+}
+
+$('#'+id).val(newval);
+}
+function calculer_pourcentage(id_avance, id_montant_devis, id_montant_devi_cache,avance_exige_div){
+montant_devis= $('#'+ id_montant_devi_cache).val();
+montant_devis=montant_devis.replace('F CFA', '');
+var montant_avance=  $('#'+id_avance).val();
+var pourcentage= (parseInt(montant_avance)/parseInt(montant_devis))*100;
+var p= "<p style='color:red'> Soit " + pourcentage+ " % du montant total de la prestation</p>";
+$('#'+avance_exige_div).append(p);
+format_montant(id_avance);
+
+}
+
 $('input.CurrencyInput').on('blur', function() {
     var mnt= ($('.CurrencyInput').val());
-    // $('.montant').attr('value', mnt);
-    //alert($('.montant').val());
     const value = this.value.replace(/,/g, '');
     this.value = parseFloat(value).toLocaleString('en-US', {
       style: 'decimal',
@@ -184,7 +242,10 @@ function formatNumber(n) {
   // format number 1000000 to 1,234,567
   return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 }
-
+function affectervaleur_a_unchamp(id_du_champ,valeur_affectee){
+   // alert(id_du_champ);
+    document.getElementById(id_du_champ).setAttribute("value", valeur_affectee);
+}
 function formatCurrency(input, blur) {
   // appends $ to value, validates decimal side
   // and puts cursor back in right position.
@@ -202,12 +263,12 @@ function formatCurrency(input, blur) {
   var caret_pos = input.prop("selectionStart");
     
   // check for decimal
-  if (input_val.indexOf(".") >= 0) {
+  if (input_val.indexOf(" ") >= 0) {
 
     // get position of first decimal
     // this prevents multiple decimals from
     // being entered
-    var decimal_pos = input_val.indexOf(".");
+    var decimal_pos = input_val.indexOf(" ");
 
     // split number by decimal point
     var left_side = input_val.substring(0, decimal_pos);
@@ -225,10 +286,10 @@ function formatCurrency(input, blur) {
     }
     
     // Limit decimal to only 2 digits
-    right_side = right_side.substring(0, 2);
+    right_side = right_side.substring(0, 0);
 
     // join number by .
-    input_val =  left_side + "." + right_side;
+    input_val =  left_side + " " + right_side;
 
   } else {
     // no decimal entered
@@ -242,15 +303,17 @@ function formatCurrency(input, blur) {
     //   input_val += ".00";
     // }
   }
-  
   // send updated string to input
   input.val(input_val);
-
   // put caret back in the right position
   var updated_len = input_val.length;
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);
 }
+ function recharger_page_precedente(){
+    window.history.back();
+    location.reload(); 
+ }
 
 
 

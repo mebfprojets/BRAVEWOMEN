@@ -13,7 +13,7 @@
 
         <!-- Icons -->
         <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
-        <link rel="shortcut icon" href="img/favicon.png">
+        <link rel="shortcut icon" href= "{{ asset("img/favicon.ico") }}">
         <link rel="apple-touch-icon" href="img/icon57.png" sizes="57x57">
         <link rel="apple-touch-icon" href="img/icon72.png" sizes="72x72">
         <link rel="apple-touch-icon" href="img/icon76.png" sizes="76x76">
@@ -51,7 +51,7 @@
                     <div id="login-alt-container">
                         <!-- Title -->
                         <h1 class="push-top-bottom">
-                            <img src="{{ asset("assets/img/ brave-logo.png") }}" alt="" width="100" height="100"> <strong>PLATEFORME BRAVE WOMEN</strong><br>
+                            <img src="{{ asset("assets/img/brave-logo.png") }}" alt="" width="100" height="100"> <strong>PLATEFORME BRAVE WOMEN</strong><br>
                             <small>Bienvenue sur la plateforme BRAVE WOMEN Burkina!</small>
                         </h1>
                         <!-- END Title -->
@@ -107,13 +107,7 @@
                                         <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Se connecter</button>
                                     </div>
                                 </div>
-                                {{-- <div class="flex items-center justify-end mt-4">
-                                    @if (Route::has('password.request'))
-                                        <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                                          Mot de passe oublié?
-                                        </a>
-                                    @endif
-                                </div> --}}
+  
                                 <div class="form-group">
                                     <div class="col-xs-12 text-center">
                                         <a href="javascript:void(0)" id="link-reminder-login"><small>Mot de passe oublié?</small></a>

@@ -257,9 +257,9 @@ NOTE: use percentage font sizes or else old IE chokes
 */
 
 .fc-state-default {
-    background-color: #6ad2eb;
+    background-color: #327149;
     color: #ffffff;
-    border: 1px solid #1bbae1;
+    border: 1px solid #327149;
 }
 
 .fc-state-hover,
@@ -267,18 +267,18 @@ NOTE: use percentage font sizes or else old IE chokes
 .fc-state-active,
 .fc-state-disabled {
     color: #ffffff;
-    background-color: #1bbae1;
+    background-color: #327149;
 }
 
 .fc-state-hover {
     text-decoration: none;
-    background-color: #1bbae1;
+    background-color: #327149;
 }
 
 .fc-state-down,
 .fc-state-active {
-    background-color: #1bbae1;
-    border-color: #1593b3;
+    background-color: #327149;
+    border-color: #327149;
     outline: 0;
 }
 
@@ -561,7 +561,7 @@ temporary rendered events).
 
 .fc-event,
 .fc-event-dot {
-    background-color: #5ccdde; /* default BACKGROUND color */
+    background-color: #327149; /* default BACKGROUND color */
 }
 
 /* overpower some of bootstrap's and jqui's styles on <a> tags */
@@ -1904,7 +1904,7 @@ MIT License
     cursor: default;
 }
 .chosen-container .chosen-results li.highlighted {
-    background-color: #1bbae1;
+    background-color: #327149;
     color: #fff;
 }
 .chosen-container .chosen-results li.no-results {
@@ -1967,8 +1967,8 @@ MIT License
     margin: 7px 0 6px 5px;
     padding: 2px 20px 2px 5px;
     background: #f9fafc;
-    border: 1px solid #1bbae1;
-    background-color: #1bbae1;
+    border: 1px solid #327149;
+    background-color: #327149;
     color: #ffffff;
     font-weight: 600;
     font-size: 12px;
@@ -2405,7 +2405,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 .datepicker table tr td.active:hover,
 .datepicker table tr td.active.disabled,
 .datepicker table tr td.active.disabled:hover {
-    background-color: #1bbae1;
+    background-color: #327149;
     color: #ffffff;
 }
 .datepicker table tr td.active:hover,
@@ -2428,7 +2428,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 .datepicker table tr td.active:hover[disabled],
 .datepicker table tr td.active.disabled[disabled],
 .datepicker table tr td.active.disabled:hover[disabled] {
-    background-color: #1bbae1;
+    background-color: #327149;
 }
 .datepicker table tr td.active:active,
 .datepicker table tr td.active:hover:active,
@@ -2462,7 +2462,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 .datepicker table tr td span.active:hover,
 .datepicker table tr td span.active.disabled,
 .datepicker table tr td span.active.disabled:hover {
-    background-color: #006dcc;
+    background-color: #327149;
     color: #ffffff;
 }
 .datepicker table tr td span.active:hover,
@@ -2485,7 +2485,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 .datepicker table tr td span.active:hover[disabled],
 .datepicker table tr td span.active.disabled[disabled],
 .datepicker table tr td span.active.disabled:hover[disabled] {
-    background-color: #1bbae1;
+    background-color: #327149;
 }
 .datepicker table tr td span.active:active,
 .datepicker table tr td span.active:hover:active,
@@ -5001,7 +5001,7 @@ Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
 }
 .bootstrap-timepicker-widget table td a:hover {
     text-decoration: none;
-    background-color: #1bbae1;
+    background-color: #327149;
     color: #ffffff;
 }
 .bootstrap-timepicker-widget table td a i {
@@ -5048,7 +5048,7 @@ div.tagsinput {
 
 div.tagsinput span.tag {
     border: 1px solid #1bbae1;
-    background-color: #1bbae1;
+    background-color: #327149;
     color: #ffffff;
     font-weight: 600;
     border-radius: 2px;
@@ -5329,12 +5329,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 .slider-selection {
     position: absolute;
-    background-color: #1bbae1;
+    background-color: #327149;
     border-radius: 4px;
 }
 
 .slider-selection.tick-slider-selection {
-    background-color: #1bbae1;
+    background-color: #327149;
 }
 
 .slider-track-low,
@@ -5427,7 +5427,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 }
 
 .input-slider-info .slider-selection {
-    background-color: #2980b9;
+    background-color: #327149;
 }
 
 .input-slider-success .slider-selection {
@@ -5449,7 +5449,7 @@ http://ricostacruz.com/nprogress
 }
 
 #nprogress .bar {
-    background-color: #1bbae1;
+    background-color: #327149;
     position: fixed;
     z-index: 1050;
     top: 0;
@@ -5850,7 +5850,7 @@ http://ricostacruz.com/nprogress
     padding-left: 6em;
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #5897fb;
+    background-color: #327149;
     color: white;
 }
 .select2-container--default .select2-results__group {
@@ -5869,7 +5869,7 @@ http://ricostacruz.com/nprogress
     background-repeat: repeat-x;
 }
 .select2-container--classic .select2-selection--single:focus {
-    border: 1px solid #5897fb;
+    border: 1px solid #167f2d;
 }
 .select2-container--classic .select2-selection--single .select2-selection__rendered {
     color: #444;
@@ -5925,7 +5925,7 @@ http://ricostacruz.com/nprogress
     right: auto;
 }
 .select2-container--classic.select2-container--open .select2-selection--single {
-    border: 1px solid #5897fb;
+    border: 1px solid #17880a;
 }
 .select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow {
     background: transparent;
@@ -6044,7 +6044,7 @@ http://ricostacruz.com/nprogress
     color: grey;
 }
 .select2-container--classic .select2-results__option--highlighted[aria-selected] {
-    background-color: #3875d7;
+    background-color: #327149;
     color: white;
 }
 .select2-container--classic .select2-results__group {
@@ -6053,7 +6053,7 @@ http://ricostacruz.com/nprogress
     padding: 6px;
 }
 .select2-container--classic.select2-container--open .select2-dropdown {
-    border-color: #5897fb;
+    border-color: #137a16;
 }
 .select2-container .select2-selection--single {
     height: 34px;
@@ -6093,7 +6093,7 @@ http://ricostacruz.com/nprogress
     color: #fff;
     font-size: 13px;
     font-weight: 600;
-    background-color: #1bbae1;
+    background-color: #327149;
     border: none;
     border-radius: 3px;
 }
@@ -6108,7 +6108,7 @@ http://ricostacruz.com/nprogress
     border-color: #dbe1e8;
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #1bbae1;
+    background-color: #327149;
 }
 .select2-container--default .select2-search--inline .select2-search__field {
     padding-right: 0;

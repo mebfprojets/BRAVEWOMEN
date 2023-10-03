@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('souscription', 'active')
 @section($active_principal, 'active')
 @section($active, 'active')
 
@@ -42,14 +43,14 @@
                            {{ $entreprise->denomination }}
                         </td>
                         <td class="text-center" style="width: 5%;">
-                            {{ $entreprise->noteTotale }}
+                            {{ $entreprise->noteTotale  + $entreprise->note_critere_qualitatif}} 
                         </td>
                          
                         <td class="text-center" style="width: 7%;">
                             <div class="btn-group">
                                 {{-- <a href="" data-toggle="tooltip" title="Editer" class="btn btn-md btn-default"><i class="fa fa-pencil"></i></a> --}}
                                 <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
-                                <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Générer en Excel" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
+                                {{-- <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Générer en Excel" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a> --}}
 
                                 @if(Auth::user()->zone== $entreprise->region)
                                     <a href="{{ route("generer.recepisse", $entreprise->promotrice->slug) }}" data-toggle="tooltip" title="Imprimer le recepissé" class="btn btn-md btn-default"><i class="fa fa-print"></i></a>

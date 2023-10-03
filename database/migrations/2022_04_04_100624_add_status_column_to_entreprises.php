@@ -14,7 +14,7 @@ class AddStatusColumnToEntreprises extends Migration
     public function up()
     {
         Schema::table('entreprises', function (Blueprint $table) {
-           $table->integer("status")->default(0);
+           $table->integer("status")->default(0);  //statut=1 si la souscription a abouti cad promotrice, entreprise,projet
         });
     }
 

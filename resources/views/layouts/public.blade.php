@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Brave Woman</title>
+  <title>Brave Women</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -45,12 +45,7 @@
 
   <!-- Modernizr (browser feature detection library) -->
   <script src="{{ asset("js/vendor/modernizr.min.js") }}"></script>
-  <!-- =======================================================
-  * Template Name: OnePage - v4.7.0
-  * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+
 </head>
 
 <body>
@@ -69,18 +64,17 @@
             </li>
             <li class="dropdown"><a href="#"><span>SOUSCRIRE</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
-                  <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
+                  {{-- <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
                       <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li> 
-                      {{-- <li><a href="#modal-Fin-souscription" data-toggle="modal">S'ENREGISTRER</a></li> --}}
-                      {{-- <li><a href="#modal-soumettre-PCA" data-toggle="modal">SOMETTRE LE PCA</a></li> --}}
+
                       <li><a href="#modal-soumettre-devis" data-toggle="modal">SOUMETTRE DEVIS</a></li>
                     </ul>
-                  </li>
+                  </li> --}}
                   <li class="dropdown"><a href="#"><span>AOP/LEADER</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
                       <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li>
-                      <li><a href="#modal-soumettre-PCA" data-toggle="modal">SOUMETTRE LE PCA</a></li>
+                      <li><a href="#" data-toggle="modal">SOUMETTRE LE PCA</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -90,7 +84,8 @@
               <li><a class="nav-link scrollto @yield('active_result')" href="#modal-consulter-resultat" data-toggle="modal">RESULTAT</a></li>
               @if(auth()->guest())
                 <li><a class="getstarted scrollto" href="#modal-user-create" data-toggle="modal">Créer un compte</a></li>
-                <li><a class="getstarted scrollto" href="#modal-user-connexion" data-toggle="modal">Se Connecter</a></li>
+                {{-- <li><a class="getstarted scrollto" href="#modal-user-connexion" data-toggle="modal">Se Connecter</a></li> --}}
+                <li><a class="getstarted scrollto" href="{{ route('login') }}" >Se Connecter</a></li>
             @else
                 {{-- <li><a class="getstarted scrollto" href="#modal-user-connexion" data-toggle="modal">Se Déconnecter</a> --}}
             <li>
@@ -106,9 +101,6 @@
             @endif
 
 
-              {{-- <li><a class="nav-link scrollto @yield('active_comment')" href="{{ route("commentsouscrire") }}">COMMENT SOUSCRIRE?</a></li> --}}
-              {{-- <li><a class="nav-link scrollto" href="#contact">NOS CONTACTER </a></li> --}}
-
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
           </nav><!-- .navbar -->
@@ -118,14 +110,16 @@
         <!-- ======= About Section ======= -->
 
     <div class="container ">
-
+        
+        @include('flash::message')
             <div class="section-title">
               <h2>@yield("section-title")</h2>
             </div>
 
             <div class="row @yield("class")">
-                @include('message')
+                @include('flash::message')
                     @yield("main-content")
+                    
             </div>
 
     </div>
@@ -190,10 +184,12 @@
                     @csrf
                     <fieldset>
                         <legend></legend>
+                    <p style="background-color:red; display:none" id="alert_pass">Bien vouloir vérifier la conformité du mot de passe</p>
+
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="user_name">Code promoteur:</label>
                             <div class="col-md-8">
-                                <input type="text" id="code_promoteur_cpt_promo" name="code_promoteur" class="form-control" onchange="afficher_le_formulaire_cpt_promoteur();">
+                                <input type="text" id="code_promoteur_cpt_promo" name="code_promoteur" class="form-control" onkeyup="afficher_le_formulaire_cpt_promoteur();">
                             </div>
                             <p id="code_incorrect" style="color:red; display:none"> Code incorrect ou compte déja créer avec ce code. Bien vouloir verifier </p>
                         </div>
@@ -208,20 +204,20 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="user-settings-password">Mot de Passe</label>
                         <div class="col-md-8">
-                            <input type="password" id="val_password" name="password" class="form-control" placeholder="SVP entrez un mot de passe complexe">
+                            <input type="password" id="val_password_promo" name="password" class="form-control" placeholder="SVP entrez un mot de passe complexe">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="user-settings-repassword">Confirmer le Nouveau Mot de Passe</label>
                         <div class="col-md-8">
-                            <input type="password" id="val_confirm_password" name="password_confirmation" class="form-control" placeholder="Et confirmer le ...">
+                            <input type="password" id="val_confirm_password_promo" name="password_confirmation" class="form-control" onchange="verifiedpass();" placeholder="Et confirmer le ...">
                         </div>
                     </div>
                 </fieldset>
                     <div class="form-group form-actions create_compte_promoteur" >
                         <div class="col-xs-12 text-right">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                            <button type="submit" id="save_compte" class="btn btn-sm btn-primary">Enregistrer</button>
                         </div>
                     </div>
                
@@ -464,7 +460,7 @@
                 <p>La souscription se fait en trois étapes à savoir :
                     <ol>
                         <li style="color: red">Enregistrement des informations sur le promoteur</li>
-                        <p> A cette étape, le promoteur est invité à remplir le formulaire, à prendre connaissance des conditions et obligations et à les accepter, pour pouvoir enregistrer les données.
+                        <p> A cette étape, le promoteur ou le responsable est invité à remplir le formulaire, à prendre connaissance des conditions et obligations et à les accepter, pour pouvoir enregistrer les données.
                             A la fin de la première étape, un code promoteur est généré et envoyé à l'adresse email renseigné par le promoteur.
                             Ce code qui peut aussi être copié directement sur l’interface, sera utilisé pour poursuivre la souscription.</p>
                         <li style="color: red">Enrgistrement des informations sur l'entreprise</li>
@@ -511,24 +507,7 @@
         </div>
     </div>
 </div>
-{{-- <div id="choix_type_entreprise" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 class="modal-title"><i class="gi gi-pen"></i> Choisir la catégorie d'entreprise</h3>
-            </div>
-            <div class="modal-body">
-            <input type="hidden" id="code_promoteur" name="promoteur_code" value="">
-                <a href="{{ route('entrepriseaopl.new') }}?typeentreprise=aop" class="btn btn-primary" onclick="get_promoteur_code('prom_code')"> Association AOP</a>
-                <a href="{{ route('entrepriseaopl.new') }}?typeentreprise=leader" class="btn btn-primary" onclick="get_promoteur_code('prom_code')">Entreprise Leader</a>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
+
   <!-- Vendor JS Files -->
   <script src="{{ asset("assets/vendor/purecounter/purecounter.js") }}"></script>
   <script src="{{ asset("assets/vendor/aos/aos.js") }}"></script>
@@ -547,10 +526,28 @@
   <script src="{{ asset("js/pages/formsWizard.js") }}"></script>
   <script>$(function(){ FormsWizard.init(); });</script>
   <script src="{{ asset("js/mon.js") }}"></script>
+  <script src={{ asset("datatables/js/datatables.js") }}></script>
   <script src="{{ asset("assets/js/main.js") }}"></script>
   <script src="{{ asset("js/pages/login.js") }}"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script>$(function(){ Login.init(); });</script>
-
+  <script type="text/javascript">
+    $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+ </script>
+ <script>
+    function verifiedpass(){
+       var password = $('#val_password_promo').val(); 
+      var  confirm_password = $('#val_confirm_password_promo').val();
+    if(password != confirm_password){
+        $('#alert_pass').show();
+        $('#save_compte').hide();
+    }
+    else{
+        $('#alert_pass').hide();
+        $('#save_compte').show();
+    }
+    }
+ </script>
 <script>
 function afficher_le_formulaire_cpt_promoteur(){
     var code_promoteur = $('#code_promoteur_cpt_promo').val();
@@ -583,6 +580,40 @@ function afficher_le_formulaire_cpt_promoteur(){
                 document.getElementById("code_promoteur").setAttribute("value", val);
             });
 }
+$(function() {
+                  $('.listepdf').DataTable({
+                        responsive: true,
+                        dom: '<"html5buttons"B>lTfgtip',
+                            buttons: [
+                                {extend: 'csv'},
+                                {extend: 'excel'},
+                                {extend: 'pdf'},
+                                {extend: 'print',
+                                text:'Imprimer',
+                                }
+                            ],
+language: {
+    "search": '',
+    sLengthMenu: "Lignes _MENU_ ",
+    sInfo: "_START_ à _END_ de _TOTAL_",
+    sPageFirst: "Premier",
+    sPagePrevious: "Précédent",
+    sPageNext: "Suivant",
+    sPageLast: "Dernier",
+    "zeroRecords": "Aucun résultat trouvé",
+    "infoEmpty": "Aucun enregistrement disponible",
+    "infoFiltered": "(filtré à partir de _MAX_ enregistrements au total)",
+    "paginate": {
+        "first": "<i class='fa fa-angle-double-left'></i>",
+        "previous":"<i class='fa fa-angle-left' ></i>",
+        "next":"<i class='fa fa-angle-right'></i>",
+        "last":"<i class='fa fa-angle-double-right'></i>"
+    }
+}
+
+});
+
+                   });
 </script>
 
   <script type="text/javascript">
@@ -715,7 +746,7 @@ function dateDiff(date1, date2){
                         $('#palette1').show();
                             for (var x = 0; x < data.length; x++) { 
                           var rout= '{{ route("add.planDeContinute",":id")}}';
-                           var rout = rout.replace(':id', data[x]['id_entreprise']);
+                          var rout = rout.replace(':id', data[x]['id_entreprise']);
                           p = '<p>' + 'Votre entreprise' +' '+ data[x]['denomination'] +' '+'est'+' ' + '<a href="'+rout+'" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-primary">Soummettre le plan de continuté des affaire</a>';
                           $('#palette1').append(p);
                          
@@ -754,6 +785,31 @@ function dateDiff(date1, date2){
     }
 </script>
   <script>
+    //foncion permettant de convertir un montant en franc CFA
+      function format_montant(id){
+          //alert(id);
+    var val= $('#'+id).val();
+    $('#montant_devi_cache').val(val);
+    
+       var val1= val.split(" ").join("");
+       // var newval= new Intl.NumberFormat('fr', {unitDisplay: 'long'}).format(val1);
+        var newval= new Intl.NumberFormat('fr', {
+        style: 'currency',
+    currency: 'XOF',
+    //currencySign: 'accounting'
+        }).format(val1);
+    $('#'+id).val(newval);
+}
+function calculer_pourcentage(id_avance, id_montant_devis, id_montant_devi_cache,avance_exige_div){
+    montant_devis= $('#'+ id_montant_devi_cache).val();
+  montant_devis=montant_devis.replace('F CFA', '');
+  var montant_avance=  $('#'+id_avance).val();
+  var pourcentage= (parseInt(montant_avance)/parseInt(montant_devis))*100;
+  var p= "<p style='color:red'> Soit " + pourcentage+ " % du montant total de la prestation</p>";
+  $('#'+avance_exige_div).append(p);
+  format_montant(id_avance);
+
+}
       function changeValue(parent, child, niveau)
         {
             var idparent_val = $("#"+parent).val();
@@ -776,6 +832,7 @@ function dateDiff(date1, date2){
             });
         }
   </script>
+  
 </body>
 
 </html>

@@ -15,20 +15,18 @@ class CreateProjetsTable extends Migration
     {
         Schema::create('projets', function (Blueprint $table) {
             $table->id();
-            $table->text("objectif");
-            $table->integer("innovation");
-            $table->text("desc_innovation");
-            $table->text("produit_propose");
-            $table->string("technologie_actuel");
-            $table->string("technologie_projet");
-            $table->integer("source_apros");
-            $table->integer("nature_clientele");
-            $table->double("cout_investissement");
-            $table->double("fond_roulement");
-            $table->double("cout_total");
-            $table->double("apport_perso");
-            $table->string("entreprise_id");
-            $table->double("subvention_demandee");
+            $table->string('slug')->unique();
+            $table->integer('coach_id')->nullable();
+            $table->integer('zone_affectation')->nullable();
+            $table->string('statut')->nullable();
+            $table->text('motif_du_rejet_de_lanalyse')->nullable();
+            $table->text('observations')->nullable();
+            $table->integer("entreprise_id");
+            $table->string("titre_du_projet");
+            $table->text("objectifs");
+            $table->text("activites_menees");
+            $table->text("atouts_promoteur");
+            $table->text("innovation");
             $table->timestamps();
         });
     }

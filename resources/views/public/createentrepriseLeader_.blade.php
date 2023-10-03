@@ -146,7 +146,7 @@
                                         </div>
                                         <div class="entreformalise form-group{{ $errors->has('docrccm') ? ' has-error' : '' }}">
                                             <label class=" control-label" for="docidentite">Joindre une copie du RCCM</label>
-                                                <input class="form-control" type="file" id="docrccm" accept=".pdf, .jpeg, .png" name="docrccm"  placeholder="Charger une copie du RCCM" required>
+                                                <input class="form-control" type="file" id="docrccm" accept=".pdf, .jpeg, .png" name="docrccm" onchange="VerifyUploadSizeIsOK('docrccm');"  placeholder="Charger une copie du RCCM" required>
                                             @if ($errors->has('docrccm'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->first('docrccm') }}</strong>
@@ -184,7 +184,7 @@
                                         
                                         <div class="aggrementdoc form-group{{ $errors->has('docagrement') ? ' has-error' : '' }}">
                                             <label class=" control-label" for="docagrement">Joindre le document exigé</label>
-                                                <input class="form-control" type="file" id="docagrement" accept=".pdf, .jpeg, .png" name="docagrement"  placeholder="Joindre une copie de l'agrement" required>
+                                                <input class="form-control" type="file" onchange="VerifyUploadSizeIsOK('docagrement');" id="docagrement" accept=".pdf, .jpeg, .png" name="docagrement"  placeholder="Joindre une copie de l'agrement" required>
                                             @if ($errors->has('docagrement'))
                                                 <span class="help-block">
                                                     <strong>{{ $errors->first('docagrement') }}</strong>

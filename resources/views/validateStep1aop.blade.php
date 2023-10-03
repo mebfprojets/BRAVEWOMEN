@@ -28,6 +28,7 @@
         <input type="hidden" name="entreprise" value="{{ $entreprise}}">
         <a href="{{ route("entrepriseaopl.new",$promoteur->code_promoteur) }}?entreprise={{ $entreprise}}" class="btn btn-success">Poursuivre</a>
         <a href="#modal-complete-souscription" data-toggle="modal" class="btn btn-danger">Suspendre</a>
+
     @elseif ($promoteur->suscriptionaopleader_etape == null)
         <p> Bien vouloir compléter les informations vous concernant avant de continuer </p>
         <a href="{{ route("completeresponsableaop.view",$promoteur->code_promoteur) }}" class="btn btn-success">Completer</a>

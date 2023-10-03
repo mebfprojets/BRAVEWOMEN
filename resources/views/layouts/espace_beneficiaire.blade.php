@@ -1,313 +1,308 @@
-@extends("layouts.public")
-@section("main-content")
-@section("class", "content")
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="col-lg-4 ">
-    <div class="block" style="border-right: 1px solid rgb(197, 194, 194);">
-        <!-- Customer Info Title -->
-        <div class="block-title">
-            <h2><i class="fa fa-file-o"></i> <strong>Promotrice</strong> </h2>
-        </div>
-        <div class="block-section text-center">
-            <a href="javascript:void(0)">
-                <img src="{{ asset('img/placeholders/avatars/avatar4@2x.jpg') }}" alt="avatar" class="img-circle">
-            </a>
-            <h3>
-                <strong>{{ Auth::user()->name }} {{ Auth::user()->prenom }}</strong><br><small></small>
-            </h3>
-        </div>
-        <table class="table table-borderless table-striped table-vcenter">
-            <tbody>
-                <tr>
-                    <td class="text-right" style="width: 50%;"><strong>Code</strong></td>
-                    <td>{{ Auth::user()->code_promoteur }}</td>
-                </tr>
-                
-            </tbody>
-        </table>
-        <!-- END Customer Info -->
-        <div class="row">
-        <nav class ="navbar bg-light">
-            <ul class ="nav navbar-nav">
-            <li class ="nav-item" >
-            <a class ="nav-link"  href="{{ route('profil.beneficiaire') }}"><span><i class="gi gi-user"></i></span> Mon Profil </a>
-            </li>
-            <li class ="nav-item">
-                <a class ="nav-link text-right" href="#"><span><i class="gi gi-user"></i></span> Details sur entreprise </a>
-            </li>
-            <li class ="nav-item">
-                <a class ="nav-link" href="#"><span><i class="gi gi-user"></i></span> Situation financiaire </a>
-            </li>
-            <li class ="nav-item">
-                <a class ="nav-link" href="#"><span><i class="gi gi-user"></i></span> Me Deconnecter </a>
-            </li>
+    @include("partials.beneficiaire.__entete")
+
+<body>
+  <section id="container">
+    <!-- **********************************************************************************************************************************************************
+        TOP BAR CONTENT & NOTIFICATIONS
+        *********************************************************************************************************************************************************** -->
+    <!--header start-->
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="index.html" class="logo">ESPACE BENEFICICIAIRE <b><span></span></b></a>
+      <!--logo end-->
+      {{-- <div class="nav notify-row" id="top_menu">
+        <!--  notification start -->
+        <ul class="nav top-menu">
+          <!-- settings start -->
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-tasks"></i>
+              <span class="badge bg-theme">4</span>
+              </a>
+            <ul class="dropdown-menu extended tasks-bar">
+              <div class="notify-arrow notify-arrow-green"></div>
+              <li>
+                <p class="green">You have 4 pending tasks</p>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <div class="task-info">
+                    <div class="desc">Dashio Admin Panel</div>
+                    <div class="percent">40%</div>
+                  </div>
+                  <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                      <span class="sr-only">40% Complete (success)</span>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <div class="task-info">
+                    <div class="desc">Database Update</div>
+                    <div class="percent">60%</div>
+                  </div>
+                  <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                      <span class="sr-only">60% Complete (warning)</span>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <div class="task-info">
+                    <div class="desc">Product Development</div>
+                    <div class="percent">80%</div>
+                  </div>
+                  <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                      <span class="sr-only">80% Complete</span>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <div class="task-info">
+                    <div class="desc">Payments Sent</div>
+                    <div class="percent">70%</div>
+                  </div>
+                  <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
+                      <span class="sr-only">70% Complete (Important)</span>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li class="external">
+                <a href="#">See All Tasks</a>
+              </li>
             </ul>
-            </nav>
-        
-        </div>
-        {{-- <a  href="#modal-user-data" data-toggle="modal" class="btn btn-primary">Modifier mes données</a> --}}
-    </div>
-</div>
-<div class="col-md-8">
-    @yield('content_space')
-    </div> 
-    <div> 
-</div>
-@endsection
-<div id="modal-user-data" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-pencil"></i> Modifier mes données</h2>
-            </div>
-            <!-- END Modal Header -->
+          </li>
+          <!-- settings end -->
+          <!-- inbox dropdown start-->
+          <li id="header_inbox_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-envelope-o"></i>
+              <span class="badge bg-theme">5</span>
+              </a>
+            <ul class="dropdown-menu extended inbox">
+              <div class="notify-arrow notify-arrow-green"></div>
+              <li>
+                <p class="green">You have 5 new messages</p>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="photo"><img alt="avatar" src="img/ui-zac.jpg"></span>
+                  <span class="subject">
+                  <span class="from">Zac Snider</span>
+                  <span class="time">Just now</span>
+                  </span>
+                  <span class="message">
+                  Hi mate, how is everything?
+                  </span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="photo"><img alt="avatar" src="img/ui-divya.jpg"></span>
+                  <span class="subject">
+                  <span class="from">Divya Manian</span>
+                  <span class="time">40 mins.</span>
+                  </span>
+                  <span class="message">
+                  Hi, I need your help with this.
+                  </span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="photo"><img alt="avatar" src="img/ui-danro.jpg"></span>
+                  <span class="subject">
+                  <span class="from">Dan Rogers</span>
+                  <span class="time">2 hrs.</span>
+                  </span>
+                  <span class="message">
+                  Love your new Dashboard.
+                  </span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="photo"><img alt="avatar" src="img/ui-sherman.jpg"></span>
+                  <span class="subject">
+                  <span class="from">Dj Sherman</span>
+                  <span class="time">4 hrs.</span>
+                  </span>
+                  <span class="message">
+                  Please, answer asap.
+                  </span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">See all messages</a>
+              </li>
+            </ul>
+          </li>
 
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <form  id="form-validation" action="{{route('updateprofilbeneficiaire',$promotrice)}}" method="get"  class="form-horizontal form-bordered">
-                    <fieldset>
-                        <legend>Infos personnelles</legend>
-                    
-                        <div class="row">
-                            <div class="col-lg-5">
-                                      <fieldset>
-                                             <legend>Informations générales</legend>
-                                                     <div class="form-group">
-                                                         <label class="control-label" for="nom_promoteur">Nom <span class="text-danger">*</span></label>
-                                                         <div class="input-group">
-                                                             <input type="text" id="nom_promoteur" name="nom_promoteur" class="form-control" style="width: 100%;" value="{{$promotrice->nom}}" placeholder="Entrez votre nom" title="Ce champ est obligatoire" required >
-                                                             @if ($errors->has('nom'))
-                                                                     <span class="help-block">
-                                                                          <strong>{{ $errors->first('nom_promoteur') }}</strong>
-                                                                     </span>
-                                                             @endif
-                                                         </div>
-                                                 </div>
-                                                 <div class="form-group">
-                                                     <label class="control-label" for="val_username">Prénom (s) <span class="text-danger">*</span></label>
-                                                         <div class="input-group">
-                                                             <input type="text" id="prenom_promoteur" name="prenom_promoteur" class="form-control" value="{{$promotrice->prenom}}" placeholder="Entrez le prenom.." required="Ce champ est obligatoire">
-                                                         </div>
-                                                 </div>
-                                                 <div class="form-group">
-                                                     <label class="control-label" for="val_username">Date de naissance<span class="text-danger">*</span></label>
-                                                         <div class="input-group">
-                                                             <input type="text" id="datenais_promoteur" name="datenais_promoteur" value="{{format_date($promotrice->datenais)}}" class="form-control datepicker" data-date-format="dd-mm-yyyy" placeholder="Entrer votre date de naissance.." required="Ce champ est obligatoire">
-                                                         </div>
-                                                 </div>
-                                                 <div class="form-group">
-                                                     <label class=" control-label" for="example-chosen">Genre<span class="text-danger">*</span></label>
-                                                         <select id="genre" name="genre" class="select-select2" data-placeholder="Choisir le genre" style="width: 100%;" required="Ce champ est obligatoire" title="Ce champ est obligatoire">
-                                                             <option></option>
-                                                             <option value="1" @if($promotrice->genre==1)
-                                                                 selected
-                                                             @endif>Féminin</option>
-                                                             <option value="2"  @if($promotrice->genre==2)
-                                                                selected
-                                                            @endif>Masculin</option>
-                                                         </select>
-                                                 </div>
-                                                 <div class="form-group">
-                                                     <label class=" control-label" for="val_username">Télephone Principal:<span class="text-danger">*</span><span data-toggle="tooltip" title="Ce numéro de téléphone ne sera pas utilise pour d'autre souscription"><i class="fa fa-info-circle"></i></span></label>
-                                                         <div class="input-group">
-                                                             <input type="text" id="telephone_promoteur" name="telephone_promoteur" class="form-control masked_phone" value="{{format_date($promotrice->telephone_promoteur)}}" placeholder="Votre numéro de télephone" required="Ce champ est obligatoire">
-                                                         </div>
-                                                         @if ($errors->has('telephone_promoteur'))
-                                                         <span class="help-block text-danger">
-                                                              <strong>Un promoteur a déja été enregistré avec ce numéro de telephone</strong>
-                                                         </span>
-                                                     @endif
-                                                 </div>
-                                                 <div class="form-group">
-                                                     <label class=" control-label" for="val_username">Mobile (WhatsApp)</label>
-                                                         <div class="input-group">
-                                                             <input type="text" id="mobile_promoteur" name="mobile_promoteur" value="{{format_date($promotrice->mobile_promoteur )}}" class="form-control masked_phone" placeholder="Votre numéro de télephone WhatsApp " >
-                                                         </div>
-                                                 </div>
-                                                 <div class="form-group">
-                                                     <label class=" control-label" for="val_email">Email <span class="text-danger">*</span><span data-toggle="tooltip" title="Cet adresse sera utilisé pour les notifications sur votre dossier par email "><i class="fa fa-info-circle"></i></span></label>
-                                                         <div class="input-group">
-                                                             <input type="email" id="email_promoteur" name="email_promoteur" class="form-control" value="{{Auth::user()->email}}" placeholder="test@example.com" required="Ce champ est obligatoire" >
-                                                         </div>
-                                                 </div>
-                                                 </fieldset>
-                                                     </div>
-                                                     <div class="offset-md-1 col-lg-5">
-                                                        <fieldset>
-                                                             <legend>Référence du document d’identité</legend>
-                                                             <div class="form-group select-list">
-                                                                 <label class=" control-label" for="example-chosen">Type<span class="text-danger">*</span></label>
-                                                                     <select id="type_identite_promoteur" name="type_identite_promoteur" data-placeholder="Choisir type identite" class="select-select2" style="width: 100%;" required>
-                                                                         <option></option>
-                                                                         <option value="1" @if($promotrice->ype_identite ==1)
-                                                                             selected
-                                                                         @endif >CNIB</option>
-                                                                         <option value="2" @if($promotrice->ype_identite ==2)
-                                                                            selected
-                                                                        @endif>Passport</option>
-                                                                     </select>
-                                                             </div>
-                                                             <div class="form-group">
-                                                                 <label class=" control-label" for="">Numéro <span class="text-danger">*</span></label>
-                                                                 <div class="input-group">
-                                                                     <input type="text" id="numero_identite" name="numero_identite" value="{{ $promotrice->numero_identite }}" class="form-control" placeholder="numéro.." required>
-                                                                 </div>
-                                                                 @if ($errors->has('numero_identite'))
-                                                                     <span class="help-block text-danger">
-                                                                          <strong>Un promoteur a déja été enregistré avec ce numéro d'identité</strong>
-                                                                     </span>
-                                                                 @endif
-                                                         </div>
-                                                         <div class="form-group">
-                                                             <label class=" control-label" for="">Date d'établissement <span class="text-danger">*</span></label>
-                                                         <div class="input-group">
-                                                             <input type="text" id="date_identification" value="{{ format_date($promotrice->date_etabli_identite) }}" name="date_identification" class="form-control datepicker" data-date-format="dd-mm-yyyy" placeholder="mm/dd/yy"required>
-                                                     </div>
-                                            </div>
-                                             <div class="form-group{{ $errors->has('docidentite') ? ' has-error' : '' }}">
-                                                 <label class=" control-label" for="docidentite">Joindre une copie<span class="text-danger">*</span></label>
-                                                     <input class="form-control" type="file" name="docidentite" id="docidentite" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie du document d'identification" >
-                                                 @if ($errors->has('docidentite'))
-                                                     <span class="help-block">
-                                                         <strong>{{ $errors->first('docidentite') }}</strong>
-                                                     </span>
-                                                 @endif
-                                         </div>
-                                         <legend>Compétence</legend>
-                                         <div class="form-group">
-                                            <label class=" control-label" for="example-chosen">Niveau d'instruction<span class="text-danger">*</span></label>
-                                                <select id="niveau_instruction" name="niveau_instruction"  value="{{old("region_promoteur")}}"  class="select-select2" data-placeholder="Selectionnez votre région de residence .." style="width: 100%;" required>
-                                                    <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                                                    @foreach ($niveau_instructions as  $niveau_instruction )
-                                                            <option value="{{ $niveau_instruction->id  }}" {{ old('niveau_instruction') == $niveau_instruction->id ? 'selected' : '' }}
-                                                                @if($promotrice->niveau_instruction ==$niveau_instruction->id)
-                                                                    selected
-                                                                @endif>{{ $niveau_instruction->libelle }}</option>
-                                                    @endforeach
-                                                </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class=" control-label" for="example-chosen">Formation (s) en rapport avec l’activité<span class="text-danger">*</span><span data-toggle="tooltip" title="Comment vous vous êtes formé sur l'activité que vous menez comme activité de l'entreprise "><i class="fa fa-info-circle"></i></span></label>
-                                                <select id="formation_activite" name="formation_activite" class="select-select2" data-placeholder="Le mode de formation en relation avec l'activite" style="width: 100%;" required onchange="afficherautre('formation_activite',  2 ,'domaine_formation');">
-                                                    <option></option>
-                                                    <option value="1" @if($promotrice->formation_en_rapport_avec_activite==1)
-                                                        selected
-                                                    @endif>Apprentissage sur le tas</option>
-                                                    <option value="2" @if($promotrice->formation_en_rapport_avec_activite==2)
-                                                        selected
-                                                    @endif>Formation Formelle</option>
-                                                    <option value="3"@if($promotrice->formation_en_rapport_avec_activite==3)
-                                                        selected
-                                                    @endif>Aucun</option>
-                                                </select>
-                                        </div>
-                                        <div class="form-group" id="domaine_formation">
-                                            <label class="control-label" for="">Précisez le domaine ou thème</label>
-                                            <div class="input-group">
-                                                <input type="text"  name="domaine_formation" class="form-control" data-placeholder=""="Précisez le domaine de formation " value="{{old("domaine_formation")}}" >
-                                                <span class="input-group-addon"><i class="gi gi-learning"></i></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class=" control-label" for="">Expérience <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <input type="text" id="expérience" name="nombre_annee_experience" value="{{ $promotrice->nombre_annee_experience  }}" class="form-control" placeholder="nombre d'expérience.." required>
-                                            </div>
-                                            @if ($errors->has('numero_identite'))
-                                                <span class="help-block text-danger">
-                                                     <strong>Un promoteur a déja été enregistré avec ce numéro d'identité</strong>
-                                                </span>
-                                            @endif
-                                    </div>
-                                         </fieldset> 
-                                         </div>
-                                     </div>
-                    <div class="row">
-                        <legend>Lieu de residence</legend>
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label class=" control-label" for="example-chosen">Region<span class="text-danger">*</span></label>
-                                    <select id="region_residence" name="region_residence"  value="{{old("region_promoteur")}}" onchange="changeValue('region_residence', 'province_residence', {{ env('PARAMETRE_ID_PROVINCE') }});" class="select-select2" data-placeholder="Selectionnez votre région de residence .." style="width: 100%;" required>
-                                        <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                                        @foreach ($regions as $region )
-                                                <option value="{{ $region->id  }}" {{ old('region_residence') == $region->id ? 'selected' : '' }}
-                                                    @if($promotrice->region_residence==$region->id)
-                                                        selected
-                                                    @endif>{{ $region->libelle }}</option>
-                                        @endforeach
-                                    </select>
-                            </div>
-                            <div class="form-group">
-                                <label class=" control-label" for="example-chosen">Province<span class="text-danger">*</span></label>
-                                    <select id="province_residence" name="province_residence" class="select-select2"  onchange="changeValue('province_residence', 'commune_residence', {{ env('PARAMETRE_ID_COMMUNE') }});" data-placeholder="Selectionnez votre province de residence .." style="width: 100%" required>
-                                        <option value="{{$promotrice->province_residence }}" selected >{{ getlibelle($promotrice->province_residence ) }}</option>
-                                        {{-- <option  value="{{ old('province_residence') }}" {{ old('province_residence') == old('province_residence') ? 'selected' : '' }}>{{ getlibelle(old('province_residence')) }}</option><!-- Required for data-placeholder attribute to work with Chosen plugin --> --}}
-                                    </select>
-                            </div>
-                        </div>
-                        <div class=" offset-md-1 col-md-5">
-                            <div class="form-group">
-                                <label class=" control-label" for="example-chosen">Commune/Ville<span class="text-danger">*</span></label>
-                                    <select id="commune_residence" name="commune_residence"  class="select-select2" value="{{old("commune_residence")}}" data-placeholder="Selectionnez votre commune de residence .." onchange="changeValue('commune_residence', 'arrondissement_residence', {{ env('PARAMETRE_ID_ARRONDISSEMENT') }});" style="width: 100%;" required>
-                                        <option value="{{$promotrice->commune_residence }}" selected>{{ getlibelle($promotrice->commune_residence) }}</option>
-
-                                        {{-- <option value="{{ old('commune_residence') }}" {{ old('commune_residence') == old('commune_residence') ? 'selected' : '' }}>{{ getlibelle(old('commune_residence')) }}</option> --}}
-                                    </select>
-                            </div>
-                            <div class="form-group">
-                                <label class=" control-label" for="arrondissement_resident">Secteur/Village<span class="text-danger">*</span></label>
-                                    <select id="arrondissement_residence" class="select-select2" value="{{old("arrondissement_residence")}}" name="arrondissement_residence"  data-placeholder="Selectionnez votre village ou secteur de residence .." onchange="changeValue('arrondissement_residence', 'secteur_residence', {{ env('PARAMETRE_ID_SECTEUR') }});" style="width: 100%;" required>
-                                        <option value="{{$promotrice->arrondissement_residence }}" selected>{{ getlibelle($promotrice->arrondissement_residence) }}</option>
-                                       
-                                        {{-- <option value="{{ old('arrondissement_residence') }}" {{ old('arrondissement_residence') == old('arrondissement_residence') ? 'selected' : '' }}>{{ getlibelle(old('arrondissement_residence')) }}</option> --}}
-                                    </select>
-                            </div>
-                            <div class="form-group">
-                                <label class=" control-label" for="example-chosen">Situation résidence<span class="text-danger">*</span></label>
-                                    <select id="example-chosen" name="situation_residence" class="select-select2" value="{{old("situation_residence")}}"  data-placeholder="Quelle est votre situation de residence .." style="width: 100%;" required>
-                                        <option></option>
-                                        <option value="1" {{ old('situation_residence') == 1 ? 'selected' : '' }}>Resident</option>
-                                        <option value="2" {{ old('situation_residence') == 2 ? 'selected' : '' }}>Déplacé</option>
-                                    </select>
-                            </div>
-                        </div>
-                    </div>
-                        
-                        
-                   
-                        
-                    </fieldset>
-                    <fieldset>
-                        <legend>Changer le mot de passe</legend>
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="user-old-password">Ancien mot de Passe</label>
-                            <div class="col-md-8">
-                                <input type="password" id="user-old-password" name="old_password" class="form-control" placeholder="SVP entrez votre actuel mot de passe">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="user-settings-password">Nouveau Mot de Passe</label>
-                            <div class="col-md-8">
-                                <input type="password" id="val_password" name="password" class="form-control" placeholder="SVP entrez un mot de passe complexe">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="user-settings-repassword">Confirmer le Nouveau Mot de Passe</label>
-                            <div class="col-md-8">
-                                <input type="password" id="val_confirm_password" name="password_confirmation" class="form-control" placeholder="Et confirmer le ...">
-                            </div>
-                        </div>
-                    </fieldset>
-                    <div class="form-group form-actions">
-                        <div class="col-xs-12 text-right">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
-                        </div>
-                    </div>
+          <li id="header_notification_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-bell-o"></i>
+              <span class="badge bg-warning">7</span>
+              </a>
+            <ul class="dropdown-menu extended notification">
+              <div class="notify-arrow notify-arrow-yellow"></div>
+              <li>
+                <p class="yellow">You have 7 new notifications</p>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                  Server Overloaded.
+                  <span class="small italic">4 mins.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-warning"><i class="fa fa-bell"></i></span>
+                  Memory #2 Not Responding.
+                  <span class="small italic">30 mins.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                  Disk Space Reached 85%.
+                  <span class="small italic">2 hrs.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-success"><i class="fa fa-plus"></i></span>
+                  New User Registered.
+                  <span class="small italic">3 hrs.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">See all notifications</a>
+              </li>
+            </ul>
+          </li>
+          <!-- notification dropdown end -->
+        </ul>
+        <!--  notification end -->
+      </div> --}}
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+            
+          <li><a class="logout" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                             document.getElementById('logout-form').submit();">
+                    Se Deconnecter
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
                 </form>
-            </div>
-            <!-- END Modal Body -->
+            </li>
+        </ul>
+      </div>
+    </header>
+    <!--header end-->
+    <!-- **********************************************************************************************************************************************************
+        MAIN SIDEBAR MENU
+        *********************************************************************************************************************************************************** -->
+    <!--sidebar start-->
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion">
+          <p class="centered"><a href="profile.html"><img src="{{ asset("img/logo-bravebf4.PNG") }}" class="img-circle" width="80"></a></p>
+          <h5 class="centered">{{ Auth::user()->name }} {{ Auth::user()->prenom }}</h5>
+          <li class="mt">
+            <a class="@yield('profil')" href="{{ route("profil.beneficiaire") }}">
+              <i class="fa fa-dashboard"></i>
+              <span>Mon Profil</span>
+              </a>
+          </li>
+          <li class="sub">
+            <a class="@yield('pca')" href="{{ route('projet.create') }}">
+              <i class="fa fa-dashboard"></i>
+              <span>Soumettre mon Projet</span>
+              </a>
+          </li>
+      @if(kyc_entreprise_is_valide(Auth::user()->code_promoteur) )
+        <li class="sub-menu">
+            <a class="@yield('devis')" href="{{ route("profil.mesdevis") }}">
+              <i class="fa fa-desktop"></i>
+              <span> Mes Devis</span>
+              </a>
+          </li>
+          
+          <li>
+            <a href="inbox.html">
+              <i class="fa fa-envelope"></i>
+              <span> Ma Situation Financiaire</span>
+              <span class="label label-theme pull-right mail-info"></span>
+              </a>
+          </li>
+      @endif
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class=" fa fa-bar-chart-o"></i>
+              <span>Me déconnecter</span>
+              </a>
+            
+          </li>
+        </ul>
+        <!-- sidebar menu end-->
+      </div>
+    </aside>
+    <!--sidebar end-->
+    <!-- **********************************************************************************************************************************************************
+        MAIN CONTENT
+        *********************************************************************************************************************************************************** -->
+    <!--main content start-->
+    <section id="main-content">
+      <section class="wrapper site-min-height ">
+        @include('flash::message')
+            @yield("content")
+            
+      </section>
+    </section>
+    <!--main content end-->
+    <!--footer start-->
+    <footer class="site-footer">
+      <div class="text-center">
+        <p>
+          &copy; Tous droits réservés <strong>Brave women Burkina Faso</strong>
+        </p>
+        <div class="credits">
+          <!--
+            You are NOT allowed to delete the credit link to TemplateMag with free version.
+            You can delete the credit link only if you bought the pro version.
+            Buy the pro version with working PHP/AJAX contact form: https://templatemag.com/dashio-bootstrap-admin-template/
+            Licensing information: https://templatemag.com/license/
+          -->
+         </a>
         </div>
-    </div>
-</div>
+        <a href="index.html#" class="go-top">
+          <i class="fa fa-angle-up"></i>
+          </a>
+      </div>
+    </footer>
+    <!--footer end-->
+  </section>
+  @yield("modal")
+  @include("partials.beneficiaire.__footer")
+  
+</body>
+
+</html>

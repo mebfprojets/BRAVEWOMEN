@@ -78,13 +78,13 @@
                         <div class="content-header">
                             <ul class="nav-horizontal text-center">
                                 <li class="@yield("dashboardss")">
-                                    <a href="{{ route("dashboard") }}"><i class="fa fa-bar-chart"></i>Vue graphique</a>
+                                    <a href="{{ route("dashboard")}}?type_tableau_de_bord=dashboard"><i class="fa fa-bar-chart"></i>Vue graphique</a>
                                 </li>
                                 <li class="@yield("dashboardgeo")">
-                                    <a href="{{ route("dashboardgeo") }}"><i class="gi gi-google_maps"></i></i>Vue Cartographique</a>
+                                    <a href="{{ route("dashboard")}}?type_tableau_de_bord=geodashboard"><i class="gi gi-google_maps"></i></i>Vue Cartographique</a>
                                 </li>
                                 <li class="@yield("sousmenu")">
-                                    <a href="{{ route("dashboardliste") }}"><i class="gi gi-list"></i></i>Vue Liste</a>
+                                    <a href="{{ route("dashboard")}}?type_tableau_de_bord=dashboardliste"><i class="gi gi-list"></i></i>Vue Liste</a>
                                 </li>
 
                             </ul>
@@ -204,6 +204,7 @@
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-sm btn-primary" onclick="validerdossier();">OUI</button>
                         </div>
+                        
                     </div>
                     </div>
                     <!-- END Modal Body -->
@@ -286,18 +287,49 @@
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
     <script>
-        var map = L.map('map').setView([12.375118, -1.522078], 7);
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 13,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1Ijoic3RlcGhzYW4iLCJhIjoiY2wxeGo1N2xuMDNiMDNkbXFudW8xazNrZiJ9.fHt7ZUxVTOdt_pAc-ps6dg'
-    }).addTo(map);
+        var map = L.map('map').setView([12.35, -1.516667], 8);
+    //  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    //      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //      maxZoom: 13,
+    //     id: 'mapbox/streets-v11',
+    //     tileSize: 512,
+    //      zoomOffset: -1,
+    //      accessToken: 'pk.eyJ1Ijoic3RlcGhzYW4iLCJhIjoiY2wxeGo1N2xuMDNiMDNkbXFudW8xazNrZiJ9.fHt7ZUxVTOdt_pAc-ps6dg'
+    //  }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                     // Il est toujours bien de laisser le lien vers la source des données
+                     attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
+                     minZoom: 1,
+                    maxZoom: 20
+                }).addTo(map);
     </script>
     <script>
         function listedashbordlistdata(url) 
+        {   
+            //var url = "{{ route('entreprise_retenues') }}?typeentreprise=mpme";
+            var url = url;
+            $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    error:function(data){alert("Erreur");},
+                    success: function (data) {
+                        $('#datatable').dataTable().fnClearTable();
+                        $('#datatable').dataTable().fnDestroy();
+                        console.log(data);
+                        var options = '';
+                        for (var x = 0; x < data.length; x++) {
+                            var y= x + 1; 
+                            var rout= '{{ route("entreprise.view",":id")}}';
+                            var rout = rout.replace(':id', data[x]['id']);
+                            options +='<tr> <td > ' + y + '</td><td > ' + data[x]['region'] + '</td><td > ' + data[x]['province'] + '</td><td > ' + data[x]['commune'] + '</td><td > ' + data[x]['arrondissement'] + '</td><td > ' + data[x]['code_promoteur'] + '</td><td  width="30%"> ' + data[x]['denomination']  + '</td><td  width="10%"> ' + data[x]['secteur_activite'] + '</td><td  width="10%"> ' + data[x]['maillon_activite'] + '</td> <td  width="5%"><div class="btn-group"><a  onclick="detailvaleur(' + data[x]['id'] + ' ); "href="'+rout+'" data-toggle="tooltip" data-toggle="modal" title="Voir details" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a></div></td></tr>';
+                             }
+                       $('#tbadys').html(options); 
+                       makedatatable();
+                    }
+            });
+        }
+        function listepcadashbordlistdata(url) 
         {   
             //var url = "{{ route('entreprise_retenues') }}?typeentreprise=mpme";
             var url = url;
@@ -322,7 +354,6 @@
                     }
             });
         }
-        
     </script>
 
 <script>
@@ -424,6 +455,9 @@ function makedatatable(){
                             tooltip: {
                                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                             },
+                            credits:{
+                                enabled:false,
+                            },
                             plotOptions: {
                                 pie: {
                                     allowPointSelect: true,
@@ -434,6 +468,7 @@ function makedatatable(){
                                     }
                                 }
                             },
+                           
                             series: [{
                                 name: 'Nombre',
                                 colorByPoint: true,
@@ -477,6 +512,9 @@ function makedatatable(){
                             title: {
                                 text: 'Nombre de souscription par secteur dactivite'
                             },
+                            credits:{
+                                enabled:false,
+                            },
                             plotOptions: {
                                 pie: {
                                     allowPointSelect: true,
@@ -498,11 +536,126 @@ function makedatatable(){
 });   
 </script>
 <script language = "JavaScript">
-    function dashboardparsecteuractivite(){
+    function entreprise_aformer(type_entreprise, valeur_de_forme){
+        (type_entreprise=="mpme")?(categorie_entreprise="Les MPME"):(categorie_entreprise="Les Entreprises leaders et les AOP");
+        (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="Selectionnées pour la formation ");
         var url = "{{ route('souscriptionretenueparsecteuractivite') }}";
           $.ajax({
                             url: url,
                             type: 'GET',
+                            dataType: 'json',
+                            data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme },
+                            error:function(data){alert("Erreur");},
+                            success: function (donnee) {
+    var donnch= new Array();
+                            var secteur = new Array();
+                        for(var i=0; i<donnee.length; i++)
+                        {
+                          donnch.push({
+                                    name: donnee[i].secteur,
+                                    y:  parseInt(donnee[i].nombre)} )
+                        }
+                        for(var i=0; i<donnee.length; i++)
+                        {
+                                secteur[i] = donnee[i].secteur
+                        }
+                        Highcharts.chart('indicateur1', {
+                            chart: {
+                                type: 'column'
+                            },
+                            xAxis: {
+                                 categories: secteur
+                            },
+                            title: {
+                                text: categorie_entreprise + " " + former + " " + "regroupés par secteur d'activité"
+                            },
+                            credits:{
+                                enabled:false,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        //format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Nombre',
+                                colorByPoint: true,
+                                data: donnch
+                            }]
+                        });
+
+   
+                           
+}
+
+});
+var url = "{{ route('entreprise.preselectionneparzone') }}";
+$.ajax({
+                     url: url,
+                     type: 'GET',
+                    data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme},
+                     dataType: 'json',
+                     error:function(data){alert("Erreur");},
+                     success: function (donnee) {
+                            var donnch= new Array();
+                        for(var i=0; i<donnee.length; i++)
+                        {
+                          donnch.push({
+                                    name: donnee[i].region,
+                                    y:  parseInt(donnee[i].nombre)} )
+                        }
+                        Highcharts.chart('indicateur2', {
+                            chart: {
+                                plotBackgroundColor: null,
+                                plotBorderWidth: null,
+                                plotShadow: false,
+                                type: 'pie'
+                            },
+                            title: {
+                                text: categorie_entreprise + " " + former + " " +'regroupés par région'
+                            },
+                            tooltip: {
+                                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                            },
+                            credits:{
+                                enabled:false,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Nombre',
+                                colorByPoint: true,
+                                data: donnch
+                            }]
+                        });
+
+    }
+
+    });
+    }      
+</script>
+<script language = "JavaScript">
+    function dashboardaopenregistre(type_entreprise, statut){
+        var url = "{{ route('aopleader.enregistreparsecteuractivite') }}";
+        (type_entreprise=='mpme')?(type="des MPME"):(type="des AOP");
+
+          $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data:{type_entreprise:type_entreprise, statut:statut},
                             dataType: 'json',
                             error:function(data){alert("Erreur");},
                             success: function (donnee) {
@@ -526,7 +679,7 @@ function makedatatable(){
                                  categories: secteur
                             },
                             title: {
-                                text: 'Nombre de souscription par secteur dactivite'
+                                text:  "La repartition des"+ " " + type + " " + "enregistrés par secteur d'activité"
                             },
                             plotOptions: {
                                 pie: {
@@ -547,11 +700,12 @@ function makedatatable(){
 }
 
 });
-var url = "{{ route('mpeme.preselectionneparzone') }}";
+var url = "{{ route('aopleader.enregistreparzone') }}";
 $.ajax({
                      url: url,
                      type: 'GET',
                      dataType: 'json',
+                    data:{type_entreprise:type_entreprise, statut:statut},
                      error:function(data){alert("Erreur");},
                      success: function (donnee) {
                             var donnch= new Array();
@@ -569,7 +723,7 @@ $.ajax({
                                 type: 'pie'
                             },
                             title: {
-                                text: 'Nombre de souscription par région'
+                                text: "La repartition des"+ " " + type + " " + "enregistrés par localité"
                             },
                             tooltip: {
                                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -598,7 +752,8 @@ $.ajax({
 </script>
 
 <script language = "JavaScript">
-    function dashboardaopenregistre(){
+    function dashboardentreprise_aformer(type_entreprise){
+        //alert(type_entreprise);
         var url = "{{ route('aopleader.enregistreparsecteuractivite') }}";
           $.ajax({
                             url: url,
@@ -787,34 +942,24 @@ function initMap()
             dataType: 'json',
             error:function(data){alert("Erreur");},
             success: function (data) {
-                for(item of data){
-                    marker= L.marker([item.longitude, item.latitude]).addTo(map);
-                    marker.bindPopup("<b>"+item.denomination+"!</b><br>"+item.denomination).openPopup();
-                }
+               // alert(data.length)
+                for(var i=0; i<data.length; i++)
+                    {
+                        if(data[i].longitude){
+                            marker= L.marker([data[i].longitude, data[i].latitude]).addTo(map);
+                            marker.bindPopup("<b>"+'Denomination :'+data[i].denomination+"!</b><br>"+'Zone :'+data[i].region).openPopup();
+                        }
+                      
+                        
+                    }
+
+        
 
             }
     });
 }
 </script>
-<script>
-    function initMap()
-    {
-        var url = "{{ route('souscriptiongeopresenation') }}";
-        $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                error:function(data){alert("Erreur");},
-                success: function (data) {
-                    for(item of data){
-                        marker= L.marker([item.longitude, item.latitude]).addTo(map);
-                        marker.bindPopup("<b>"+item.denomination+"!</b><br>"+item.denomination).openPopup();
-                    }
 
-                }
-        });
-    }
-</script>
 <script>
 function selectionner(){
     var selec=[];

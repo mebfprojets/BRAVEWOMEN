@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Mail\NotifyMail;
 use App\Mail\recepisseMail;
 use App\Mail\resumeMail;
@@ -21,6 +19,8 @@ use App\Models\Promotrice;
 use App\Models\Proportion_de_depense_promotrice;
 use App\Models\User;
 use App\Models\Valeur;
+use Spatie\SimpleExcel\SimpleExcelWriter;
+use Spatie\SimpleExcel\SimpleExcelReader;
 //use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,7 @@ use PDF;
 class EntrepriseController extends Controller
 { public function __construct()
     {
-        $this->middleware('auth')->only(["show"]);
+        $this->middleware('auth')->only(["show","detaildocument"]);
     }
 
     /**
@@ -118,7 +118,7 @@ class EntrepriseController extends Controller
     }elseif($promoteur->etape_suscription2== 2 && $entreprise!= null){
         return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
     }
-  else{
+    else{
     return view("validateStep1", compact("promoteur"))->with('success','Item created successfully!');
     }
 
@@ -174,7 +174,8 @@ class EntrepriseController extends Controller
             'description_effet_securite'=>$request->description_effet_securite,
             'niveau_resilience'=>$request->niveau_resilience,
             'mobililise_contrepartie'=>$request->mobililise_contrepartie,
-            'status'=>0
+            'status'=>0,
+            'banque_choisi'=>0
         ]);
         if ($request->hasFile('docagrement')) {
             $docagrement= $request->docagrement->store('public/docagrement');
@@ -416,7 +417,7 @@ else{
         $this->email= $promoteur->email_promoteur;
         $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','contact_chef_de_zone'));
         //dd($promoteur);
-        Mail::to($this->email)->queue(new recepisseMail($promoteur->id));
+       // Mail::to($this->email)->queue(new recepisseMail($promoteur->id));
         return  $pdf->download('récépissé BRAVE WOMEN.pdf');
     }
     /**
@@ -434,11 +435,11 @@ else{
         $produit_vendus= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_PRODUIT_VENDU"))->get();
         $benefice_nets= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_BENEFICE_NET"))->get();
         $salaire_annuelles= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', env("VALEUR_SALAIRE_MOYEN_ANNUEL") )->get();
-        $nombre_nouveau_marche=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 6714 )->get();
+        $nombre_nouveau_marche=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', env("VALEUR_NOMBRE_NOUVEAU_MARCHE") )->get();
         $nombre_nouveau_produit=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 6715)->get();
         $nombre_total_client=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', env("VALEUR_NOMBRE_CLIENT") )->get();
         $nombre_innovation=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 6713 )->get();
-        $proportion_de_depense_education= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_BIEN") )->get();
+        $proportion_de_depense_education= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_EDUCATION"))->get();
         $proportion_de_depense_sante= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_SANTE"))->get();
         $proportion_de_depense_bien_materiel= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_BIEN"))->get();
         $decision_dossier_user=Decision::where(['entreprise_id'=>$entreprise->id, 'user_id'=>Auth::user()->id])->get();
@@ -450,12 +451,11 @@ else{
            $activite_horizontale_invests=  Entreprise_activite_invest::where('entreprise_id',$entreprise->id)->where('type','horizontale')->get();
            $nombre_de_pme_partenaires= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7100)->get();
            $montant_des_achats_aupres_des_mpme_des_femmes= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7102)->get();
-	   $nombre_de_pme_partenaires_de_la_zones= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7116)->get();
-	   $montant_obtenu_aupres_des_institutions_financiaires=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7102)->get();
-           if($entreprise->aopOuleader=='aop'){
+	       $nombre_de_pme_partenaires_de_la_zones= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7116)->get();
+	       $montant_obtenu_aupres_des_institutions_financiaires=Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7102)->get();
+           if($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader'){
             $nombre_membres= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7098)->get();
             $pourcentage_femmes= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7099)->get();
-            
                 return view("entreprise.detailaopleader",compact("nombre_de_pme_partenaires_de_la_zones","montant_obtenu_aupres_des_institutions_financiaires","montant_des_achats_aupres_des_mpme_des_femmes","nombre_de_pme_partenaires","nombre_membres","pourcentage_femmes","aStatuer","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises","activite_verticale_devs","activite_horizontale_devs","activite_verticale_invests","activite_horizontale_invests"));
            }
            else{
@@ -522,37 +522,34 @@ else{
     {
         $promoteur= Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         
-        $promoteur->update([
+       $promoteur->update([
             "suscriptionaopleader_etape"=>3
-        ]);
-        //Si le promoteur a enregistré deux entreprises et le la deuxième entreprise a un projet.
-        //Cela veut dire qu'il a créer deux entreprise et chaque entreprise à une projet
-        if($promoteur->entreprises->count()==2){
-            $promoteur->update([
-            //pour spécifier que le souscripteur a renseigné une deuxième entreprise
-                "etape_suscription2"=>3,
-            ]);
-        }
+       ]);
+    //     //Si le promoteur a enregistré deux entreprises et le la deuxième entreprise a un projet.
+    //     //Cela veut dire qu'il a créer deux entreprise et chaque entreprise à une projet
+    //     if($promoteur->entreprises->count()==2){
+    //         $promoteur->update([
+    //         //pour spécifier que le souscripteur a renseigné une deuxième entreprise
+    //             "etape_suscription2"=>3,
+    //         ]);
+    //     }
         $entreprise->update([
-            'description_du_projet'=> $request->description_projet,
-            'status'=>1
+           'description_du_projet'=> $request->description_projet,
+            'cout_projet'=> $request->cout_projet,
+            'montant_subvention'=> $request->subvention_demandee,
+             'status'=>1
         ]);
-           
-//$data["email"] = $entreprise->promoteur->email_promoteur;
-        $this->email= $entreprise->promotrice->email_promoteur;
-        
-        //$entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
-        
+            $this->email= $entreprise->promotrice->email_promoteur;
             $chef_de_zone= User::where("zone",$entreprise->region)->first();
-       if($chef_de_zone){
+        if($chef_de_zone){
             $contact_chef_de_zone= $chef_de_zone->telephone ;
-        }
+     }
         else{
-            $contact_chef_de_zone= env("NUMERO_SUPPORT");
+             $contact_chef_de_zone= env("NUMERO_SUPPORT");
         }
-        $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','contact_chef_de_zone'  ));
-        //Mail::to($this->email)->queue(new recepisseMail($request->promoteur));
-
+        $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
+        $data["email"] = $promoteur->email_promoteur;
+        $this->email= $promoteur->email_promoteur;
         Mail::to($this->email)->queue(new resumeMail($entreprise->promotrice->id));
         Mail::to($this->email)->queue(new recepisseMail($entreprise->promotrice->id));
         return view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
@@ -585,6 +582,7 @@ else{
     public function updatelocalisationentreprise(Request $request)
    {
        $entreprise = Entreprise::find($request->id);
+       
         $entreprise->update([
             'latitude'=>$request['longitude'],
             'longitude'=>$request['latitude'],
@@ -640,5 +638,63 @@ public function storePoportiondeDepensedupromoteur(Request $request){
         }
     }
     return redirect()->route("souscription__reparties_par_zone");
+}
+public function return_view(){
+    return view('entreprise.import');
+}
+public function chargerGeoData(Request $request){
+    $entreprises= Entreprise::all();
+    // 1. Validation du fichier uploadé. Extension ".xlsx" autorisée
+    $this->validate($request, [
+        'fichier' => 'bail|required|file|mimes:xlsx'
+    ]);
+
+    // 2. On déplace le fichier uploadé vers le dossier "public" pour le lire
+    $fichier = $request->fichier->move(public_path(), $request->fichier->hashName());
+
+    // 3. $reader : L'instance Spatie\SimpleExcel\SimpleExcelReader
+    $reader = SimpleExcelReader::create($fichier);
+     // On récupère le contenu (les lignes) du fichier
+    $rows = $reader->getRows();
+
+$ids=[];
+$i=0;
+foreach($rows as $row){
+    $datas[]= array('code_promoteur'=>$row['code_promoteur'], 'longitude'=>$row['longitude'],'latitude'=>$row['latitude']);
+
+}
+//dd($data);
+    foreach($entreprises as $entreprise){
+        foreach($datas as $data){
+           // dd($data['code_promoteur']);
+            if($entreprise->code_promoteur==$data['code_promoteur']){
+                //dd($entreprise->id);
+                $entreprise->update([
+                    'longitude'=>$data['longitude'],
+                    'latitude'=>$data['latitude']
+                ]);
+            }
+    }
+}
+
+    // $rows est une Illuminate\Support\LazyCollection
+
+    // 4. On insère toutes les lignes dans la base de données
+    
+    $status = TRUE;
+
+    // Si toutes les lignes sont insérées
+    if ($status) {
+
+        // 5. On supprime le fichier uploadé
+        $reader->close(); // On ferme le $reader
+      
+      //  unlink($fichier);
+
+        // 6. Retour vers le formulaire avec un message $msg
+        return back()->withMsg("Importation réussie !");
+
+    } else { abort(500); }
+
 }
 }

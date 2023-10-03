@@ -12,6 +12,8 @@ use App\Models\Piecejointe;
 use App\Models\Promotrice;
 use App\Models\Valeur;
 use Illuminate\Http\Request;
+use PDF;
+use App\Models\Proportion_de_depense_promotrice;
 
 class EntrepriseaopController extends Controller
 {
@@ -24,7 +26,7 @@ class EntrepriseaopController extends Controller
     }
     public function create(Request $request, $code)
     {
-       
+        //dd($promoteur->suscriptionaopleader_etape);
        $promoteur_code= $code;
         $cat_entreprise=$request->typeentreprise;
         $promoteur=Promotrice::where('code_promoteur',$code )->first();
@@ -63,12 +65,13 @@ class EntrepriseaopController extends Controller
         $type_document_formalisations=Valeur::where('parametre_id',env("PARAMETRE_TYPE_DOCUMENT_FORMALISATION") )->get();
     if($promoteur->suscriptionaopleader_etape==1){
         if($cat_entreprise=='aop'){
-            return view("public.createentrepriseAOP", compact("regions","cat_entreprise","activites_verticales","activites_horizotales","pourcentages","forme_juridiques_aop","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences",'type_document_formalisations'));
+            return view("public.createentrepriseAOP", compact('techno_utilisees',"regions","cat_entreprise","activites_verticales","activites_horizotales","pourcentages","forme_juridiques_aop","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences",'type_document_formalisations'));
         }else{
-            return view("public.createentrepriseLeader", compact("regions","cat_entreprise","activites_verticales","activites_horizotales","pourcentages","forme_juridiques_leader","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences",'type_document_formalisations'));
+            return view("public.createentrepriseLeader", compact('techno_utilisees',"regions","cat_entreprise","activites_verticales","activites_horizotales","pourcentages","forme_juridiques_leader","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences",'type_document_formalisations'));
         }
-    }elseif($promoteur->suscriptionaopleader_etape==2 && $entreprise!= null){
-        return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
+    }
+    elseif($promoteur->suscriptionaopleader_etape==2 && $entreprise!= null){
+        return view("public.projet", compact('techno_utilisees',"nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
     }
   else{
     return view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
@@ -139,6 +142,8 @@ class EntrepriseaopController extends Controller
             'aopOuleader'=>$request->cat_entreprise,
             'membre_ass'=>$request->membre_ass,
             'ass_de_entreprise_leader'=>$request->ass_de_entreprise_leader,
+            'banque_choisi'=>0,
+            'phase_de_souscription'=>2
         ]);
         if ($request->hasFile('docidentite')) {
             $urldocidentite= $request->docidentite->store('public/docidentification');
@@ -391,4 +396,25 @@ else{
     return view("validateStep2" );
        }
     }
+    public function print_resume_souscription(Promotrice $promotrice){
+        $promoteur= Promotrice::find($promotrice->id);
+       // dd($promotrice);
+        $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
+        $effectif_permanent_entreprises= Infoeffectifentreprise::where("entreprise_id",$entreprise->id)->where("effectif",env("VALEUR_EFFECTIF_PERMANENENT"))->get();
+        $effectif_temporaire_entreprises= Infoeffectifentreprise::where("entreprise_id",$entreprise->id)->where("effectif",env("VALEUR_EFFECTIF_TEMPORAIRE"))->get();
+        $chiffre_daffaire= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_CHIFFRE_D_AFFAIRE"))->get();
+        $produit_vendus= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_PRODUIT_VENDU"))->get();
+        $benefice_nets= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_BENEFICE_NET"))->get();
+        $benefice_nets= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_BENEFICE_NET"))->get();
+        $nombre_de_clients= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_NOMBRE_CLIENT"))->get();
+        $salaire_moyen_annuels= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_SALAIRE_MOYEN_ANNUEL"))->get();
+        $nombre_dinnovations= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_ID_NOMBRE_INNOVATION"))->get();
+        $nombre_nouveau_marches= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_ID_NOMBRE_NOUVEAU_MARCHE"))->get();
+        $proportion_de_depense_education= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_EDUCATION") )->get();
+        $proportion_de_depense_sante= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_SANTE"))->get();
+        $proportion_de_depense_bien_materiel= Proportion_de_depense_promotrice::where("promotrice_id",$entreprise->promotrice->id)->where('proportion_id',env("VALEUR_PROPORTION_BIEN"))->get();
+        $resume= PDF::loadView('pdf.resumeaop', compact('promoteur','entreprise','effectif_permanent_entreprises','benefice_nets','produit_vendus','chiffre_daffaire','effectif_temporaire_entreprises','nombre_de_clients','salaire_moyen_annuels','nombre_dinnovations','nombre_nouveau_marches','proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel'));
+        return  $resume->download('resumé BRAVE WOMEN.pdf');
+    }
+
 }

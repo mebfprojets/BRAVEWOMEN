@@ -2,7 +2,7 @@
 @section('active_souscription', 'active')
 @section('class', 'content')
 @section("main-content")
-<a href={{ asset('/img/Formulaire_de_candidature_type_BRAVE_WOMEN_aop.pdf') }} download="Formulaire BRAVE WOMEN Burkina.png">Télécharger formulaire type</a>
+<a href={{ asset('/img/Formulaire_de_candidature_type_BRAVE_WOMEN_aop.pdf') }} download="Formulaire BRAVE WOMEN Burkina.pdf">Télécharger formulaire type</a>
 <p style="background-color: rgb(231, 179, 179); color">Les champs marqués d'étoile en <span style="color:red; font-size:15px;">*</span> rouge sont obligatoires</p>
 <div class="block">
     <div class="block-title">
@@ -18,7 +18,7 @@
                                                         <div class="form-group">
                                                             <label control-label" for="nom_promoteur">Nom <span class="text-danger">*</span></label>
                                                             <div class="input-group">
-                                                                <input type="text" id="nom_promoteur" name="nom_promoteur" class="form-control" style="width: 100%;" value="{{old('nom_promoteur')}}" placeholder="Entrez votre nom" title="Ce champ est obligatoire" required >
+                                                                <input type="text" id="nom_promoteur" name="nom_promoteur" class="form-control" style="width: 100%;" value="{{old('nom_promoteur')}}" onchange="this.value = this.value.toUpperCase()" placeholder="Entrez votre nom" title="Ce champ est obligatoire" required >
                                                                 @if ($errors->has('nom'))
 										                                <span class="help-block">
 										                                     <strong>{{ $errors->first('nom_promoteur') }}</strong>
@@ -29,7 +29,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label" for="val_username">Prénom (s) <span class="text-danger">*</span></label>
                                                             <div class="input-group">
-                                                                <input type="text" id="prenom_promoteur" name="prenom_promoteur" class="form-control" value="{{old('prenom_promoteur')}}"placeholder="Entrez le prenom.." required="Ce champ est obligatoire">
+                                                                <input type="text" id="prenom_promoteur" name="prenom_promoteur" class="form-control" value="{{old('prenom_promoteur')}}"placeholder="Entrez le prenom.." required="Ce champ est obligatoire" onchange="this.value = this.value.charAt(0).toUpperCase()+ this.value.substr(1);">
                                                             </div>
                                                     </div>
                                                     <div class="form-group">
@@ -114,7 +114,7 @@
                                                             </div>
                                                             <div class="form-group{{ $errors->has('docidentite') ? ' has-error' : '' }}">
                                                                 <label class=" control-label" for="docidentite">Joindre une copie<span class="text-danger">*</span></label>
-                                                                    <input class="form-control" type="file" name="docidentite" id="docidentite" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie du document d'identification" required>
+                                                                    <input class="form-control" type="file" name="docidentite" id="docidentite" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('docidentite');"  placeholder="Charger une copie du document d'identification" required>
                                                                 @if ($errors->has('docidentite'))
                                                                     <span class="help-block">
                                                                         <strong>{{ $errors->first('docidentite') }}</strong>
@@ -122,10 +122,9 @@
                                                                 @endif
                                                         </div>
                                                            
-                                            
+    
                                             </fieldset>
                                             </div>
-
                                         </div>
                                     <div class="row">
                                     <fieldset>
