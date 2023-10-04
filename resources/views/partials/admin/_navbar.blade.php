@@ -461,7 +461,24 @@
                 </li>
                 
                 @endcan
-
+                @can('formation.all', Auth::user())
+                <li class="@yield('gestion_projet')">
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Documentation</span></a>
+                    <ul>
+                  @can('formation.listerFormation', Auth::user())
+                     <li class="@yield('activite')">
+                        <a href="{{ route('activites.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Activités</a>
+                    </li>
+                @endcan
+                @can('formation.all', Auth::user())
+                <li class="@yield('budget')">
+                    <a href="{{ route('budgets.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Budget</a>
+                </li>
+                 @endcan
+                    </ul>
+                    {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
+                </li> 
+            @endcan
             </ul>
         </div>
     </div>
