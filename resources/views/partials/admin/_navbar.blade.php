@@ -467,12 +467,12 @@
                     <ul>
                   @can('formation.listerFormation', Auth::user())
                      <li class="@yield('activite')">
-                        <a href="{{ route('activites.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Activités</a>
+                        <a href="{{ route('activites.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Typologie de document</a>
                     </li>
                 @endcan
                 @can('formation.all', Auth::user())
                 <li class="@yield('budget')">
-                    <a href="{{ route('budgets.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Budget</a>
+                    <a href="{{ route('budgets.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Documents</a>
                 </li>
                  @endcan
                     </ul>
