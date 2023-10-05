@@ -803,12 +803,10 @@ for($k=0; $k< count($region_concernes); $k++){
 }
 if($type_detail=='impact'){
     $nombre_demploi_crees= Impact::whereIn('indicateur_id',[env('INDICATEURNBREEMPPF'),env('INDICATEURNBREEMPTF'),env('INDICATEURNBREEMPPH'),env('INDICATEURNBREEMPTH')])->sum('valeur_creee');
-   
     $nombre_demploi_permanent_femme_crees= Impact::where('indicateur_id',env('INDICATEURNBREEMPPF'))->sum('valeur_creee');
     $nombre_demploi_temporaire_femme_crees= Impact::where('indicateur_id',env('INDICATEURNBREEMPTF'))->sum('valeur_creee');
     $nombre_demploi_permanent_homme_crees= Impact::where('indicateur_id',env('INDICATEURNBREEMPPH'))->sum('valeur_creee');
     $nombre_demploi_temporaire_homme_crees= Impact::where('indicateur_id',env('INDICATEURNBREEMPTH'))->sum('valeur_creee');
-
     $nombre_demploi_permanent_femme_conserves= Impact::where('indicateur_id',env('INDICATEURNBREEMPPF'))->sum('valeur_ref');
     $nombre_demploi_temporaire_femme_conserves= Impact::where('indicateur_id',env('INDICATEURNBREEMPTF'))->sum('valeur_ref');
     $nombre_demploi_permanent_homme_conserves= Impact::where('indicateur_id',env('INDICATEURNBREEMPPH'))->sum('valeur_ref');
@@ -818,6 +816,8 @@ if($type_detail=='impact'){
     $augmentation_du_chiffre_daffaire= Impact::where('indicateur_id',env('IDINDICATEURCHIFFREDAFFAIRE'))->sum('valeur_creee');
     $augmentation_du_benefice= Impact::where('indicateur_id',env('IDINDICATEURBENEFICE'))->sum('valeur_creee');
     $ind_nombre_mpme_forme = Indicateur::find(13);
+    $ind_ressource_mobilise_mpme = Indicateur::find(env('IDINDICATEURRESMOBMPME'));
+    $ind_ressource_mobilise_aop_el = Indicateur::find(env('IDINDICATEURRESMOBAOPEL'));
     $ind_nombre_aop_forme = Indicateur::find(12);
     $ind_nombre_emploi_cree = Indicateur::find(14);
     $acquisistions_valides_par_categories= DB::table('acquisitions')
@@ -847,11 +847,24 @@ if($type_detail=='impact'){
              }
              
         }
-//Proportion de la contrepartie mobilisée
-//dd((Subvention::all()->sum('montant_subvention')));
-$proportion_de_contrepartie_mobilise = Accompte::all()->sum('montant')/(Accompte::all()->sum('montant') + Subvention::all()->sum('montant_subvention'))*100;
+$contrepartie_mobilise= DB::table('entreprises')
+                                            ->join('accomptes',function($join){
+                                                $join->on('accomptes.entreprise_id','=','entreprises.id');
+                                            })
+                                            ->get();
+$subvention_mobilise= DB::table('entreprises')
+                                            ->join('subventions',function($join){
+                                                $join->on('subventions.entreprise_id','=','entreprises.id');
+                                            })
+                                            ->get();
+$mobilisation_de_ressource_mpme = $contrepartie_mobilise->where('aopOuleader','mpme')->sum('montant') + $subvention_mobilise->where('aopOuleader','mpme')->sum('montant_subvention'); 
+$mobilisation_de_ressource_aop_el= $contrepartie_mobilise->where('aopOuleader','!=','mpme')->sum('montant') + $subvention_mobilise->where('aopOuleader','!=','mpme')->sum('montant_subvention'); 
+$total_contrepartie_mobilise = Accompte::all()->sum('montant');
+$total_subvention_mobilise = Subvention::all()->sum('montant_subvention');
+
+$proportion_de_contrepartie_mobilise = $total_contrepartie_mobilise/($total_contrepartie_mobilise + $total_subvention_mobilise )*100;
 $proportion_de_contrepartie_mobilise = round($proportion_de_contrepartie_mobilise,2);
-$nombre_de_client_par_secteurdactivites= DB::table('entreprises')
+$nombre_de_client_par_secteurdactivites = DB::table('entreprises')
                                             ->join('impacts',function($join){
                                                 $join->on('impacts.entreprise_id','=','entreprises.id')
                                                 ->where('impacts.indicateur_id',env('IDINDICATEUNEWCLIENT'));
@@ -860,7 +873,7 @@ $nombre_de_client_par_secteurdactivites= DB::table('entreprises')
                                             ->groupBy('entreprises.secteur_activite','valeurs.libelle'  )
                                             ->select("valeurs.libelle as secteur_dactivite", DB::raw("SUM(impacts.valeur_ref) as nombre_avant"),DB::raw("SUM(impacts.valeur_resultat) as nombre_apres"))
                                             ->get();
-         $nombre_de_client_par_zones=  DB::table('entreprises')
+$nombre_de_client_par_zones=  DB::table('entreprises')
                                             ->join('impacts',function($join){
                                                 $join->on('impacts.entreprise_id','=','entreprises.id')
                                                 ->where('impacts.indicateur_id',env('IDINDICATEUNEWCLIENT'));
@@ -869,7 +882,7 @@ $nombre_de_client_par_secteurdactivites= DB::table('entreprises')
                                             ->groupBy('entreprises.region','valeurs.libelle'  )
                                             ->select("valeurs.libelle as zone", DB::raw("SUM(impacts.valeur_ref) as nombre_avant"),DB::raw("SUM(impacts.valeur_resultat) as nombre_apres"))
                                             ->get();
-      $nombre_demploi_par_secteurdactivites= DB::table('entreprises')
+$nombre_demploi_par_secteurdactivites= DB::table('entreprises')
                                             ->join('impacts',function($join){
                                                 $join->on('impacts.entreprise_id','=','entreprises.id')
                                                 ->whereIn('impacts.indicateur_id',[env('INDICATEURNBREEMPTF'),env('INDICATEURNBREEMPPH'),env('INDICATEURNBREEMPTH'),env('INDICATEURNBREEMPPF')]);
@@ -878,7 +891,7 @@ $nombre_de_client_par_secteurdactivites= DB::table('entreprises')
                                             ->groupBy('entreprises.secteur_activite','valeurs.libelle'  )
                                             ->select("valeurs.libelle as secteur_dactivite", DB::raw("SUM(impacts.valeur_ref) as nombre_avant"),DB::raw("SUM(impacts.valeur_resultat) as nombre_apres"))
                                             ->get();
-    $nombre_demploi_par_zones = DB::table('entreprises')  
+$nombre_demploi_par_zones = DB::table('entreprises')  
                                             ->join('impacts',function($join){
                                                 $join->on('impacts.entreprise_id','=','entreprises.id')
                                                 ->whereIn('impacts.indicateur_id',[env('INDICATEURNBREEMPTF'),env('INDICATEURNBREEMPPH'),env('INDICATEURNBREEMPTH'),env('INDICATEURNBREEMPPF')]);
@@ -887,7 +900,13 @@ $nombre_de_client_par_secteurdactivites= DB::table('entreprises')
                                             ->groupBy('entreprises.region','valeurs.libelle'  )
                                             ->select("valeurs.libelle as zone", DB::raw("SUM(impacts.valeur_ref) as nombre_avant"),DB::raw("SUM(impacts.valeur_resultat) as nombre_apres"))
                                             ->get();
-    return view('dashboard.detail_impact',compact('projet_selectionnes','proportion_de_contrepartie_mobilise','nombre_demploi_par_secteurdactivites','nombre_demploi_par_zones','nombre_de_client_par_zones','nombre_de_client_par_secteurdactivites','total_contrepartie_suplementaire_mobilise','montant_total_des_aquisitions','acquisistions_valides_par_categories','nombre_demploi_permanent_femme_conserves','nombre_demploi_temporaire_femme_conserves','nombre_demploi_permanent_homme_conserves','nombre_demploi_temporaire_homme_conserves','ind_nombre_emploi_cree','leader_AOP_formes','ind_nombre_aop_forme','mpme_formes','ind_nombre_mpme_forme','augmentation_du_chiffre_daffaire','augmentation_du_benefice','nombre_de_nouveaux_clients','nombre_demploi_crees','nombre_demploi_permanent_femme_crees','nombre_demploi_permanent_homme_crees','nombre_demploi_temporaire_femme_crees','nombre_demploi_temporaire_homme_crees','nombre_de_pca','fond_mobilise','total_souscription_enregistres'));
+      $ind_emp_permanent=  Indicateur::find(env('INDICATEURNBREEMPP'));
+      $ind_emp_temporaire=  Indicateur::find(env('INDICATEURNBREEMPT'));
+
+     $liste_indicateur_impacts= Indicateur::whereIn('id',[env('IDINDICATEURBENEFICE'),env('IDINDICATEURCHIFFREDAFFAIRE'),env('IDINDICATEUNEWCLIENT'),env('IDINDICATEURSALAUGMENTE')]) ->get();
+
+                                // dd(count($beneficiaire_ayant_augmente_benefice));
+    return view('dashboard.detail_impact',compact('ind_emp_permanent','ind_emp_temporaire','liste_indicateur_impacts','ind_ressource_mobilise_mpme','ind_ressource_mobilise_aop_el','mobilisation_de_ressource_mpme','mobilisation_de_ressource_aop_el','projet_selectionnes','proportion_de_contrepartie_mobilise','nombre_demploi_par_secteurdactivites','nombre_demploi_par_zones','nombre_de_client_par_zones','nombre_de_client_par_secteurdactivites','total_contrepartie_suplementaire_mobilise','montant_total_des_aquisitions','acquisistions_valides_par_categories','nombre_demploi_permanent_femme_conserves','nombre_demploi_temporaire_femme_conserves','nombre_demploi_permanent_homme_conserves','nombre_demploi_temporaire_homme_conserves','ind_nombre_emploi_cree','leader_AOP_formes','ind_nombre_aop_forme','mpme_formes','ind_nombre_mpme_forme','augmentation_du_chiffre_daffaire','augmentation_du_benefice','nombre_de_nouveaux_clients','nombre_demploi_crees','nombre_demploi_permanent_femme_crees','nombre_demploi_permanent_homme_crees','nombre_demploi_temporaire_femme_crees','nombre_demploi_temporaire_homme_crees','nombre_de_pca','fond_mobilise','total_souscription_enregistres'));
 }
 
 
