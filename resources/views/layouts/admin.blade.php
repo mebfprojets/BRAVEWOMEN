@@ -30,7 +30,7 @@
    crossorigin=""/>
 
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-
+        <link rel="stylesheet" href="{{ asset('js/plugins/ekko-lightbox/ekko-lightbox.css') }}">
         <!-- Related styles of various icon packs and plugins -->
         <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
 

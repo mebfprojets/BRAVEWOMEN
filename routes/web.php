@@ -33,8 +33,11 @@ use App\Http\Controllers\SimpleExcelController;
 use App\Models\Entreprise;
 use App\Models\Formation;
 use App\Http\Controllers\GrilleEvalController;
+use App\Http\Controllers\SucessStorieController;
 use App\Models\Parametre;
 use App\Models\Valeur;
+use App\Models\SucessStorie;
+
 use App\Policies\SouscriptionPolicy;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Sanctum;
@@ -183,6 +186,8 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/emplois/cree/par/zone', [ImpactController::class, 'emploi_par_zone'] )->name("impact.emploi_par_zone");
     Route::get('/donnees/indicateur/par/secteur_dactivite', [ImpactController::class, 'indicateur_par_secteurdactivite'] )->name("impact.donnees_par_secteurdactivite");
     Route::get('/donnees/indicateur/par/zone', [ImpactController::class, 'indicateur_par_zone'] )->name("impact.donnees_par_zone");
+    Route::resource('sucessStorie', SucessStorieController::class);
+    Route::get('/trouvesucessStorie/get', [SucessStorieController::class, 'get_success_storie'] )->name("successStorie.get");
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");
 Route::resource("promoteur", PromotriceController::class);
