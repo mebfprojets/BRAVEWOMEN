@@ -50,6 +50,9 @@
                             <li class="@yield('dashboard_detail')">
                                 <a href="{{ route("dashboard") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Plus Detaillé</span></a>
                             </li>
+                            <li class="@yield('dashboard_detail')">
+                                <a href="{{ route("sucessStorie.index") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Success Stories</span></a>
+                            </li>
                         </ul>
                 </li>
             @endcan 
