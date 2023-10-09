@@ -4319,8 +4319,14 @@ only screen and (min-device-pixel-ratio: 1.5) {
     background-color: #777;
     border-radius: 10px;
   }
+
   .widget_plus{
     border:solid 1px rgba(81, 78, 78, 0.547);
     border-radius: 10px;
     box-shadow: 2px 15px 10px rgba(0, 0, 0, 0.1);
+}
+  .impact_tableaux_text{
+    font-size: 16px;
+    font-family: Verdana, sans-serif;
+
   }

@@ -125,7 +125,7 @@ public function beneficiaires_ayant_cree_emplois(Request $request)
                         ->groupBy('entreprises.secteur_activite','valeurs.libelle'  )
                         ->select("valeurs.libelle as secteur_dactivite", DB::raw("count(distinct(entreprises.id)) as nombre"))
                         ->get();
-                       //dd(json_encode(array($beneficiaire_ayant_cree_emplois,$beneficiaire_nayant_pas_cree_demploi)));
+                      
              return json_encode(array($beneficiaire_ayant_cree_emplois,$beneficiaire_nayant_pas_cree_demploi));
             
 }
