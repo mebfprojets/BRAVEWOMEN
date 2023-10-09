@@ -25,7 +25,7 @@
         <div class="tab-content" id="custom-tabs-three-tabContent">
           <div class="tab-pane active" id="custom-tabs-three-home">
             <div class="tableFixHead">
-                <table class="table table-striped table-vcenter">
+                <table class="table table-striped table-vcenter impact_tableaux_text">
                         <thead>
                                 <tr>
                                     <th style="width: 5%">Numero </th>
@@ -37,31 +37,70 @@
                                 </tr>
                         </thead>
                         <tbody>
-                            
                                 <tr>
-                                    <td>1</td>
+                                  <td>1</td>
+                                  <td>{{ $ind_ressource_mobilise_mpme->libelle }}</td>
+                                  <td>{{ format_prix($ind_ressource_mobilise_mpme->cible) }}</td>
+                                  <td>{{ format_prix($mobilisation_de_ressource_mpme) }}</td>
+                                  <td>{{ arrondir_taux($mobilisation_de_ressource_mpme / $ind_ressource_mobilise_mpme->cible *100) }}</td>
+                                  <td></td>
+                              </tr>
+                              <tr>
+                                <td>2</td>
+                                <td>{{ $ind_ressource_mobilise_aop_el->libelle }}</td>
+                                <td>{{ format_prix($ind_ressource_mobilise_aop_el->cible) }}</td>
+                                <td>{{ format_prix($mobilisation_de_ressource_aop_el) }}</td>
+                                <td>{{ arrondir_taux($mobilisation_de_ressource_aop_el/ $ind_ressource_mobilise_aop_el->cible *100) }}</td>
+                                <td></td>
+                            </tr>
+                                <tr>
+                                    <td>3</td>
                                     <td>{{ $ind_nombre_mpme_forme->libelle }}</td>
                                     <td>{{ $ind_nombre_mpme_forme->cible }}</td>
                                     <td>{{ count($mpme_formes) }}</td>
-                                    <td>{{ count($mpme_formes)/ $ind_nombre_mpme_forme->cible *100 }}%</td>
+                                    <td>{{ arrondir_taux(count($mpme_formes)/ $ind_nombre_mpme_forme->cible *100 )}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>4</td>
                                     <td>{{ $ind_nombre_aop_forme->libelle }}</td>
                                     <td>{{ $ind_nombre_aop_forme->cible }}</td>
                                     <td>{{ count($leader_AOP_formes) }}</td>
-                                    <td>{{ count($leader_AOP_formes)/ $ind_nombre_aop_forme->cible *100 }}%</td>
+                                    <td>{{ arrondir_taux(count($leader_AOP_formes)/ $ind_nombre_aop_forme->cible *100 )}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
-                                    <td>{{ $ind_nombre_emploi_cree->libelle }}</td>
-                                    <td>{{ $ind_nombre_emploi_cree->cible }}</td>
-                                    <td>{{ $nombre_demploi_crees }}</td>
-                                    <td>{{ $nombre_demploi_crees/ $ind_nombre_emploi_cree->cible *100 }}%</td>
+                                    <td>5</td>
+                                    <td>{{ $ind_emp_permanent->libelle }}</td>
+                                    <td>{{ $ind_emp_permanent->cible }}</td>
+                                    <td>{{ $nombre_demploi_permanent_femme_crees + $nombre_demploi_permanent_homme_crees }}</td>
+                                    <td>{{ arrondir_taux(($nombre_demploi_permanent_femme_crees + $nombre_demploi_permanent_homme_crees)/ $ind_emp_permanent->cible *100) }} </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                  <td>6</td>
+                                  <td>{{ $ind_emp_temporaire->libelle }}</td>
+                                  <td>{{ $ind_emp_temporaire->cible }}</td>
+                                  <td>{{ ($nombre_demploi_temporaire_homme_crees + $nombre_demploi_temporaire_homme_crees) }}</td>
+                                  <td>{{ arrondir_taux(($nombre_demploi_temporaire_homme_crees + $nombre_demploi_temporaire_homme_crees)/ $ind_emp_temporaire->cible *100) }} </td>
+                                  <td></td>
+                              </tr>
+                              @php
+                                $i=6;
+                              @endphp
+                                @foreach ($liste_indicateur_impacts as $liste_indicateur_impact )
+                                    @php
+                                      $i++;
+                                    @endphp
+                                <tr>
+                                  <td>{{ $i }}</td>
+                                  <td>{{ $liste_indicateur_impact->libelle }}</td>
+                                  <td>{{ $liste_indicateur_impact->cible }}</td>
+                                  <td>{{ nbre_beneficiaire_ayant_augmente_nbre_ind($liste_indicateur_impact->id) }}</td>
+                                  <td>{{ nbre_beneficiaire_ayant_augmente_nbre_ind($liste_indicateur_impact->id)/ $liste_indicateur_impact->cible * 100 }}</td>
+                                  <td></td>
+                              </tr>
+                                @endforeach
                                 
                         </tbody>
                 </table>
