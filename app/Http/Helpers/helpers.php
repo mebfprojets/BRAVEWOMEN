@@ -198,9 +198,25 @@ function Insertion_Journal($table,$operation)
                     if(!function_exists('arrondir_taux')){
                         function arrondir_taux($taux){
                           $taux= number_format($taux, 2, '.', '');
-                            return $taux;
+                          if($taux > 100)
+                            return "100 % +" ;
+                        else
+                            return $taux." %";
                         }
                     }
+                    if(!function_exists('nbre_beneficiaire_ayant_augmente_nbre_ind')){
+                function nbre_beneficiaire_ayant_augmente_nbre_ind($indicateur){
+                    $nbre_entreprise= DB::table('impacts')
+                            ->join('entreprises',function($join){
+                                $join->on('impacts.entreprise_id','=','entreprises.id');
+                            })
+                            ->where('impacts.indicateur_id',$indicateur)
+                            ->where('impacts.valeur_creee','>',0)
+                            ->get();
+                            return count($nbre_entreprise);
+                        }
+                    }
+
 
                     // function permettant de formatter un nombre en deux chiffre
                     if(!function_exists('formater_deux_chiffres')){
