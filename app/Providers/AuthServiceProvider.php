@@ -11,6 +11,8 @@ use App\Policies\ValeurPolicy;
 use App\Policies\ProjetPolicy;
 use App\Policies\BanquePolicy;
 use App\Policies\FacturePolicy;
+use App\Policies\SuccessStoriesPolicy;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -86,5 +88,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('valider_execution_pca',[ProjetPolicy::class,'valider_execution_pca'] );
         Gate::define('acceder_aux_pca_selectionne',[ProjetPolicy::class,'acceder_pca_selectionnes'] );
         Gate::define('update_suivi_execution_devis',[DevisPolicy::class,'update_devis_execution'] );
+        Gate::define('creer_success_stories',[SuccessStoriesPolicy::class,'create'] );
+        Gate::define('update_success_stories',[SuccessStoriesPolicy::class,'update'] );
     }
 }

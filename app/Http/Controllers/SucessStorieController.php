@@ -6,7 +6,7 @@ use App\Models\SucessStorie;
 use App\Models\Entreprise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 class SucessStorieController extends Controller
 {
     /**
@@ -43,6 +43,7 @@ class SucessStorieController extends Controller
      */
     public function store(Request $request)
     { 
+    if(Auth::user()->can('creer_success_stories')){
         if($request->hasFile('image_successstorie')){
             $url_image_success_stories= $request->image_successstorie->store('public/success_stories_images');
         }
@@ -56,12 +57,51 @@ class SucessStorieController extends Controller
         flash("Success stories enregistré avec success !!!")->success();
         return redirect()->back();
     }
+        else{
+            flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+            return redirect()->back();
+        }
+    }
 
    public function get_success_storie(Request $request)
    {
             $success_storie= SucessStorie::find($request->id);
-            $data= array('titre'=>$success_storie->apercu, 'description'=>$success_storie->description, 'beneficiaire'=>$success_storie->beneficaire->denomination);
+            
+            $array = preg_split('/[\/]/', $success_storie->url_image);
+            $imagename= $array[2];
+            $lien = 'storage/success_stories_images/'.$imagename;
+            
+            $data= array('id'=>$success_storie->id,'titre'=>$success_storie->apercu, 'description'=>$success_storie->description, 'beneficiaire'=>$success_storie->beneficaire->denomination,'url_img'=>$lien);
             return json_encode($data);
+    }
+    public function modifier_success_storie(Request $request){
+    if(Auth::user()->can('update_success_stories')){
+            $success_storie= SucessStorie::find($request->id);
+            $success_storie->update([
+            'apercu'=>$request['titre'],
+            'entreprise_id'=>$request['beneficiaire'],
+            'description'=>$request['description'],
+            'created_by'=>Auth::user()->id,
+            'url_image'=>$url_image_success_stories,
+        ]);
+        return redirect()->back();
+    }
+    else{
+        flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+        return redirect()->back();
+    }
+}
+    public function supprimer_success_storie(Request $request){
+        if(Auth::user()->can('update_success_stories')){
+            $success_storie= SucessStorie::find($request->success_stories_id);
+            $success_storie->delete();
+            return redirect()->back();
+        }
+        else{
+            flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+            return redirect()->back();
+        }
+        
     }
 
     /**

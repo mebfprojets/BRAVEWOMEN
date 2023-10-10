@@ -188,6 +188,10 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/donnees/indicateur/par/zone', [ImpactController::class, 'indicateur_par_zone'] )->name("impact.donnees_par_zone");
     Route::resource('sucessStorie', SucessStorieController::class);
     Route::get('/trouvesucessStorie/get', [SucessStorieController::class, 'get_success_storie'] )->name("successStorie.get");
+    Route::post('/modifiersucessStorie', [SucessStorieController::class, 'modifier_success_storie'] )->name("sucessStorie.modifier");
+    Route::post('/supprimersucessStorie', [SucessStorieController::class, 'supprimer_success_storie'] )->name("sucessStorie.supprimer");
+    
+
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");
 Route::resource("promoteur", PromotriceController::class);
