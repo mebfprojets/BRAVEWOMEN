@@ -861,8 +861,13 @@ $mobilisation_de_ressource_mpme = $contrepartie_mobilise->where('aopOuleader','m
 $mobilisation_de_ressource_aop_el= $contrepartie_mobilise->where('aopOuleader','!=','mpme')->sum('montant') + $subvention_mobilise->where('aopOuleader','!=','mpme')->sum('montant_subvention'); 
 $total_contrepartie_mobilise = Accompte::all()->sum('montant');
 $total_subvention_mobilise = Subvention::all()->sum('montant_subvention');
+$montant_total_mobilise=$total_contrepartie_mobilise + $total_subvention_mobilise;
+if($montant_total_mobilise > 0 ){
+    $proportion_de_contrepartie_mobilise = $total_contrepartie_mobilise/($montant_total_mobilise )*100;
+}
+else
+ $proportion_de_contrepartie_mobilise =0;
 
-$proportion_de_contrepartie_mobilise = $total_contrepartie_mobilise/($total_contrepartie_mobilise + $total_subvention_mobilise )*100;
 $proportion_de_contrepartie_mobilise = round($proportion_de_contrepartie_mobilise,2);
 $nombre_de_client_par_secteurdactivites = DB::table('entreprises')
                                             ->join('impacts',function($join){

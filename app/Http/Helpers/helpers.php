@@ -317,8 +317,11 @@ $nombre_de_beneficiaire_ayant_evolue= DB::table('impacts')
                                         ->where('impacts.valeur_creee','>',0)
                                         ->select(DB::raw("count(distinct(entreprises.id)) as nombre"))
                                         ->count(); 
+        if($beneficaire_evalues_sur_lindicateur > 0){
+            return $nombre_de_beneficiaire_ayant_evolue/$beneficaire_evalues_sur_lindicateur*100;
+        }
+        return 0;
 
-        return $nombre_de_beneficiaire_ayant_evolue/$beneficaire_evalues_sur_lindicateur*100;
     }
 }
 
