@@ -55,29 +55,31 @@
 </div>
 
 @endsection
-<div id="modal-confirme-supression" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-times"></i> Confirmer la suppression</h2>
-            </div>
-            <div class="modal-body">
-                <form id="form-validation" method="POST"  action="{{route('sucessStorie.supprimer')}}" class="form-horizontal form-bordered" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                        <p>Voulez-vous vraiment Supprimer le success stories ???</p>
-                    <input type="hidden" name="success_stories_id" id="success_stories_sup_id">
-                    <div class="form-group form-actions">
-                        <div class="row text-right">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-sm btn-primary">Supprimer</button>
+@section('modal_part')
+    <div id="modal-confirme-supression" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h2 class="modal-title"><i class="fa fa-times"></i> Confirmer la suppression</h2>
+                </div>
+                <div class="modal-body">
+                    <form id="form-validation" method="POST"  action="{{route('sucessStorie.supprimer')}}" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                            <p>Voulez-vous vraiment Supprimer le success stories ???</p>
+                        <input type="hidden" name="success_stories_id" id="success_stories_sup_id">
+                        <div class="form-group form-actions">
+                            <div class="row text-right">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Supprimer</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div id="modal-create-success_stories" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div id="modal-create-success_stories" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <!-- Modal Header -->
@@ -160,7 +162,7 @@
                 </div>
             </div>
         </div>
-</div>
+    </div>
     <div id="modal-update-success_stories" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -280,7 +282,7 @@
             </div>
         </div>
     </div>
-
+@endsection
     <script>
         function get_success_stories_id(id){
             $("#success_stories_sup_id").val(id);

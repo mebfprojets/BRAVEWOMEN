@@ -98,7 +98,8 @@
         </div>
        
         <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
-
+        @yield('modal_part')
+    
         <!-- User Settings, modal which opens from Settings link (found in top right user menu) and the Cog link (found in sidebar user info) -->
         <div id="modal-user-settings" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
