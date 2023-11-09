@@ -23,7 +23,7 @@ class ResponsableaopController extends Controller
 
     public function create()
     {
-        
+        return redirect()->back();
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
@@ -32,6 +32,7 @@ class ResponsableaopController extends Controller
     }
     public function storecompleteresponsableaop(Request $request)
     {
+        return redirect()->back();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
         $annees=Valeur::where('parametre_id',16 )->get();
         $promoteur= Promotrice::find($request->promoteur);

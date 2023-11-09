@@ -97,7 +97,7 @@
                                   <td>{{ $liste_indicateur_impact->libelle }}</td>
                                   <td>{{ $liste_indicateur_impact->cible }}</td>
                                   <td>{{ nbre_beneficiaire_ayant_augmente_nbre_ind($liste_indicateur_impact->id) }}</td>
-                                  <td>{{ nbre_beneficiaire_ayant_augmente_nbre_ind($liste_indicateur_impact->id)/ $liste_indicateur_impact->cible * 100 }}</td>
+                                  <td>{{ arrondir_taux(nbre_beneficiaire_ayant_augmente_nbre_ind($liste_indicateur_impact->id)/ $liste_indicateur_impact->cible * 100) }}</td>
                                   <td></td>
                               </tr>
                                 @endforeach

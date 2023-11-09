@@ -26,7 +26,7 @@
     @endif
          Votre code de suivi de la souscription est : {{ $promoteur->code_promoteur }}
          <p style="color: rgb(199, 38, 38)"> Bien vouloir garder ce code pour la suite. Ce code est envoyé dans votre boite mail. </p>
-         <form action="{{ route("entrepriseaopl.new",$promoteur->code_promoteur) }}" method="post">
+         <form action="{{ route("entreprise.creation") }}" method="post">
             @csrf
             <input type="hidden" name="promoteur_code" value="{{ $promoteur->code_promoteur }}">
             @if($promoteur->etape_suscription2 == null)

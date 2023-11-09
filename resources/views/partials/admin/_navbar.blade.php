@@ -55,8 +55,7 @@
                             </li>
                         </ul>
                 </li>
-            @endcan 
-                
+            @endcan   
             @can('acceder_souscriptions', Auth::user())
             <li class="@yield('souscription')">
                 <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-folder sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Souscriptions</span></a>
@@ -130,7 +129,7 @@
                         @endcan
                        @can('souscription.listerRetenues', Auth::user())
                             <li class="@yield('aop_retenu')">
-                                    <a href="{{ route("aop.retenu") }}?typeentreprise=aop"> Retenues </a>
+                                    <a href="{{ route("souscription_retenue") }}?typeentreprise=aop"> Retenues </a>
                             </li>
                             <li class="@yield('aop_post_analyse') loaddata">
                                 <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=aop" onclick="loadfunction()"> Bénéficiaires data</a>

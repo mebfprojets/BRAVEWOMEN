@@ -275,10 +275,22 @@ $rows1['mois']= $mois;
         $total_souscription_enregistres= count($entreprises);
         $entreprisesLeaderAOP=count($entreprisesAOP);
         if(Auth::user()->structure_represente == null && Auth::user()->banque_id==null && Auth::user()->code_promoteur == null ){
+            if(Auth::user()->can('tableau.debord')){
                 return view('dashboard.principale', compact('nombre_de_pca','total_souscription_enregistres', 'fond_mobilise',  'entreprisesLeaderAOP')) ;
+            }
+            else{
+                flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+                return redirect()->back();
+            }
         }
         elseif(Auth::user()->structure_represente == null && Auth::user()->banque_id!=null ){
+         if(Auth::user()->can('dashboard_bank')){
             return redirect()->route("dashboad_banque");
+        }
+        else{
+            flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+            return redirect()->back();
+        }
         }
         elseif(Auth::user()->code_promoteur != null){
             return redirect()->route("profil.beneficiaire");
@@ -444,7 +456,6 @@ $subvention_valide_par_banque= DB::table('entreprises')
       $montant_subvention_pca_enregistre= InvestissementProjet::sum('subvention_demandee');
       $montant_apport_pca_enregistre= InvestissementProjet::sum('apport_perso');
      $nombre_pca_selelctionnes= Projet::where('statut', 'selectionne')->count();
-
      $nombre_pca_mpme= DB::table('entreprises')
                         ->join('projets','projets.entreprise_id','=','entreprises.id')
                         ->where('entreprises.entrepriseaop',null)
@@ -529,9 +540,10 @@ $pca_aop_selectionne_par_secteurs= DB::table('entreprises')
                         ->get();
 $pca_enregistre_par_categories= DB::table('entreprises')
                         ->leftjoin('projets','projets.entreprise_id','=','entreprises.id')
-                        ->groupBy('entreprises.aopouleader')
+                        ->groupBy('entreprises.aopOuleader')
                         ->select('entreprises.aopOuleader as categorie', DB::raw("COUNT(projets.id) as nombre"))
                         ->get();
+              
 $pca_enregistes_par_banque= DB::table('entreprises')
                             ->join('projets',function($join){
                                 $join->on('projets.entreprise_id','=','entreprises.id')
@@ -1195,11 +1207,13 @@ public function souscriptiongeopresenation()
         return json_encode($datageo);
 }
 public function entreprise_detail($id){
+
    $entreprise= Entreprise::find($id);
    $piecejointes=Piecejointe::where('entreprise_id', $entreprise->id)->get();
    return view('dashboard.detail_entreprise', compact('entreprise','piecejointes'));
 }
 public function dashboard_bank(){
+if(Auth::user()->can('dashboard_bank')){ 
     $nombre_facture_a_paye= DB::table('factures')
                             ->join('entreprises','factures.entreprise_id','=','entreprises.id')
                             ->where('factures.statut','validé')
@@ -1260,7 +1274,15 @@ public function dashboard_bank(){
     $montant_total_mobilise_par_banque= $contrepartie_par_banks->sum('montant') + $subvention_par_banks->sum('montant');
     return view('banque.dashboard', compact('montant_des_projets_de_la_banque','contrepartie_par_banks','subvention_par_banks','factures_validees','factures_payees','beneficiaire_par_banks','nombre_facture_a_paye','nombre_facture_payes','montant_total_mobilise_par_banque', 'beneficiaire_par_banks') );
 }
+else{
+    flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+    return redirect()->back();
+}
+
+}
+
 function dashboard_banque_perform(){
+if(Auth::user()->can('tableau.debord')){ 
     $facture_valides_par_banques= DB::table('banques')
                             ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
                             ->leftjoin('factures',function($join){
@@ -1347,7 +1369,14 @@ $taux_de_consommation_par_banque= DB::table('entreprises')
                                 LEFT JOIN accomptes a ON a.entreprise_id=e.id
                                 LEFT JOIN subventions s ON s.entreprise_id=e.id
                                 GROUP BY b.id, b.nom');
-               // dd($financement_par_banks);
+              
     return view('dashboard.banque_perform', compact('montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
 }
+else
+{
+    flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+    return redirect()->back();
+}
+}
+
 }

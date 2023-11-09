@@ -32,6 +32,8 @@
                     <th class="text-center" >Resultat</th>
                     <th class="text-center" >Date de signature de l'accord bénéficiaire </th>
                     <th class="text-center" >Date de création du sous compte</th>
+                    <th class="text-center" >Numéro de sous compte</th>
+
 
                     <th class="text-center">Actions</th>
                 </tr>
@@ -71,6 +73,7 @@
                         <td class="text-center">
                             @if($demande->date_de_signature_accord_beneficiaire)
                                 {{ format_date($demande->date_de_signature_accord_beneficiaire) }}
+
                             @else
                              Non disponible
                             @endif
@@ -80,6 +83,13 @@
                                 {{ format_date($demande->date_de_creation_compte) }}
                             @else
                                 Non disponible {{ $demande->id }}
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($demande->date_de_signature_accord_beneficiaire)
+                                {{ $demande->num_ss_compte }}
+                            @else
+                             Non disponible
                             @endif
                         </td>
                         <td class="text-center">

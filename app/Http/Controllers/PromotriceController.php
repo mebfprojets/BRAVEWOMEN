@@ -32,6 +32,8 @@ class PromotriceController extends Controller
      */
     public function create()
     {
+    //    return redirect()->back();
+    
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $nb_annee_experience=Valeur::where("parametre_id", env('PARAMETRE_TRANCHE_EXPERIENCE'))->get();
@@ -49,6 +51,7 @@ class PromotriceController extends Controller
      */
     public function store(Request $request)
     {
+        //return redirect()->back();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
          $annees=Valeur::where('parametre_id',16 )->get();
         $this->email = $request->email_promoteur;

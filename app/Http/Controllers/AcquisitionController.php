@@ -59,13 +59,13 @@ class AcquisitionController extends Controller
     }
     //Supprimer les anciennes données avant l'import 
     foreach($datas as $data){
-
-        $entreprise=Entreprise::where('code_promoteur', $data['code_promoteur'])->where('date_de_signature_accord_beneficiaire','!=',null)->first();
+        //$entreprise=Entreprise::where('code_promoteur', $data['code_promoteur'])->where('date_de_signature_accord_beneficiaire','!=',null)->first();
+        $entreprise=Entreprise::where('code_promoteur', $data['code_promoteur'])->first();
       //  dd($entreprise);
         Acquisition::where('entreprise_id',$entreprise->id)->delete();
     }
         foreach($datas as $data){
-            //traitement de la categorie d'investissment
+            //traitement de la categorie d'investissement
             if($data['categorie_invest']=='Construction'){
                 $categorie= 7124;
             }

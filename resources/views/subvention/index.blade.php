@@ -37,7 +37,7 @@
                         <a href="{{ route('subvention.getRecu',$subvention)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
                     </td>
                     <td>
-                        @if(count($entreprise->factures) >0)
+                        @if(count($entreprise->factures) ==0)
                             <a href="#modal-edit-subvention" data-toggle="modal"  title="télécharger" class="btn btn-xs btn-success"  target="_blank"><i class="fa fa-pencil" onclick="edit_subvention('{{ $subvention->id }}')"></i> </a>
                         @endif
                     </td>
