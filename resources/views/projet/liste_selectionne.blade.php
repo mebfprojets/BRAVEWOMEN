@@ -120,7 +120,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label class=" control-label" for="example-chosen">Selectionner la banque<span class="text-success">*</span></label>
-                        <select id="coach" name="banque"  value="{{old("banque")}}"  class="form-control" data-placeholder="Selectionner le banque ayant appuyer à l'elaboration du PCA .." style="width: 80%;" required>
+                        <select id="coach" name="banque"  value="{{old("banque")}}"  class="form-control" data-placeholder="Selectionner le banque ayant appuyer à l'elaboration du PCA .." style="width: 80%;">
                             <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
                             @foreach ($banques as $banque )
                                     <option value="{{ $banque->id  }}" {{ old('banque') == $banque->id ? 'selected' : '' }}>{{ $banque->nom }} </option>

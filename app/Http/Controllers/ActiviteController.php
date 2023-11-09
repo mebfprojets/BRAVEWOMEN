@@ -113,12 +113,18 @@ class ActiviteController extends Controller
         //
     }
     public function liste_activite(){
+    if(Auth::user()->can('tableau.debord')){
         $activites= Activite::all();
         $date_deffet= Activite::first()->created_at;
         $nombre_activite=  $activites->count();
         $taux_de_realisation_global= $activites->sum('taux_de_realisation')/$nombre_activite;
        $taux_de_realisation_global= number_format($taux_de_realisation_global, 2, '.', '');
         return view('activite.liste_dashbord',compact('activites', 'taux_de_realisation_global','date_deffet'));
+    }
+    else{
+        flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+        return redirect()->back();
+    }
     }
     public function activity_all(){
         $activites= Activite::all();

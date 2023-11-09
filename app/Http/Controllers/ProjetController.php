@@ -320,10 +320,11 @@ public function importer_date_creation_ss_compte(Request $request){
 $ids=[];
 $i=0;
 foreach($rows as $row){
-    $datas[]= array('code_promoteur'=>$row['code_promoteur'],'date_demande_de_creation'=>$row['date_demande_de_creation'], 'date_creation'=>$row['date_creation']);
+    $datas[]= array('code_promoteur'=>$row['code_promoteur'],'date_demande_de_creation'=>$row['date_demande_de_creation'], 'date_creation'=>$row['date_creation'],'num_ss_compte'=>$row['num_ss_compte']);
 }
 //Supprimer les anciennes données avant l'import 
 foreach($datas as $data){
+    
     $entreprise=Entreprise::where('code_promoteur', $data['code_promoteur'],)->where("participer_a_la_formation",1)->first();
     $pj= Projet::where('entreprise_id',$entreprise->id)->first();
 if($pj){
@@ -333,6 +334,7 @@ if($st=='selectionné' && $entreprise->date_de_signature_accord_beneficiaire!=nu
     $entreprise->update([
         'date_de_demande_creation_compte'=> $data['date_demande_de_creation'],
         'date_de_creation_compte'=> $data['date_creation'],
+        'num_ss_compte'=> $data['num_ss_compte'],
     ]);
 }
     

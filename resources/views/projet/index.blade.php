@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th class="text-center">Numero</th>
+                    <th class="text-center">Cohorte</th>
                     <th class="text-center">Region</th>
                     <th class="text-center">Province</th>
                     <th class="text-center">Secteur</th>
@@ -44,6 +45,13 @@
                         @endphp
                     <tr>
                         <td class="text-center" style="width: 10%">{{ $i }}</td>
+                        <td class="text-center">
+                            @if($projet->entreprise->phase_de_souscription==2)
+                                Cohorte 2
+                            @else
+                             Cohorte 1
+                            @endif
+                        </td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->region)}}</td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->province)}}</td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->arrondissement)}} </td>

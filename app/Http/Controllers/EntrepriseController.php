@@ -27,12 +27,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PDF;
 
 class EntrepriseController extends Controller
-{ public function __construct()
+{ 
+    public function __construct()
     {
-        $this->middleware('auth')->only(["show","detaildocument"]);
+        $this->middleware('auth')->only(["show","detaildocument","return_view"]);
     }
 
     /**
@@ -57,6 +59,39 @@ class EntrepriseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function creation(Request $request)
+    {
+        $promoteur_code= $request->promoteur_code;
+        $promoteur=Promotrice::where('code_promoteur',$promoteur_code )->first();
+        if(!empty($request->entreprise)){
+            $entreprise=Entreprise::where("id",$request->entreprise )->first();
+        }
+        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
+        $forme_juridiques=Valeur::where('parametre_id',8 )->get();
+        $nature_clienteles=Valeur::where('parametre_id',10 )->get();
+        $provenance_clients=Valeur::where('parametre_id',9 )->get();
+        $maillon_activites=Valeur::where('parametre_id',7 )->get();
+        $source_appros=Valeur::where('parametre_id',12 )->get();
+        $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
+        $annees=Valeur::where('parametre_id',16 )->get();
+        $futur_annees=Valeur::where('parametre_id',17 )->get();
+        $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
+        $effectifs=Valeur::where('parametre_id',15 )->get();
+        $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_SECTEUR_ACTIVITE_ID') )->get();
+        $nb_annee_activites= Valeur::where('parametre_id', env('PARAMETRE_NB_ANNEE_EXISTENCE_ENT') )->get();
+        $techno_utilisees= Valeur::where('parametre_id', env('PARAMETRE_TECHNO_UTILISE_ENTREPRISE_ID') )->get();
+        $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
+        $ouinon_reponses=Valeur::where('parametre_id',env("PARAMETRE_REPONSES_OUINON_ID") )->get();
+        $niveau_resiliences=Valeur::where('parametre_id',env("PARAMETRE_NIVEAUDE_RESILIENCE_ID") )->get();
+    if($promoteur->suscription_etape==1){
+        return view("public.enrentreprise", compact("regions","forme_juridiques","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences"));
+    }elseif($promoteur->suscription_etape==2 && $entreprise!= null){
+        return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
+    }
+  else{
+    return view("validateStep1", compact("promoteur"))->with('success','Item created successfully!');
+  }
+}
     public function create(Request $request)
     {
         $promoteur_code= $request->promoteur_code;
@@ -134,7 +169,7 @@ class EntrepriseController extends Controller
     {
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $annees=Valeur::where('parametre_id',16 )->get();
-        $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->get();
+        $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
        $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->get();
@@ -415,8 +450,11 @@ else{
         $benefice_nets= Infoentreprise::where("entreprise_id",$entreprise->id)->where("indicateur",env("VALEUR_PRODUIT_VENDU"))->get();
         $data["email"] = $promoteur->email_promoteur;
         $this->email= $promoteur->email_promoteur;
-        $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','contact_chef_de_zone'));
-        //dd($promoteur);
+        //générer le qrCode 
+       // $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate('string'));
+         $qrcode =  base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate("Ceci est un recepissé générer par la plateforme BRAVE WOMEN Burkina"."Code didentification:"." ".$promoteur->code_promoteur."_".$promoteur->id."BWBF"));
+        $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','contact_chef_de_zone','qrcode'));
+       // dd($qrcode);
        // Mail::to($this->email)->queue(new recepisseMail($promoteur->id));
         return  $pdf->download('récépissé BRAVE WOMEN.pdf');
     }

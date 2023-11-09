@@ -15,7 +15,13 @@
             <thead>
                 <tr>
                     <th class="text-center">N°</th>
+                    <th class="text-center">Phase de souscription</th>
+                    <th class="text-center">Type d'entreprise</th>
                     <th class="text-center" style="width:10px;" >Code promoteur</th>
+                    <th class="text-center">Region</th>
+                    <th class="text-center">Province</th>
+                    <th class="text-center">Commune</th>
+                    <th class="text-center">Secteur</th>
                     <th class="text-center">Nom & Prenom</th>
                     <th class="text-center">Télephone</th>
                     <th class="text-center">Entreprise</th>
@@ -33,8 +39,34 @@
                         @endphp
                     <tr>
                          <td class="text-center" style="width: 2%">{{ $i }}</td>
+                         <td class="text-center" style="width: 10%">
+                            @if ( $entreprise->phase_de_souscription ==2 )
+                                Phase 2
+                            @else
+                                Phase 1
+                            @endif
+                        </td>
+                        <td class="text-center" style="width: 10%">
+                            @if ($entreprise->aopOuleader =="aop" )
+                                AOP
+                            @elseif($entreprise->aopOuleader =="leader")
+                                Entreprise leader
+                            @else
+                             MPME
+                            @endif
+                        </td>
                         <td class="text-center" style="width: 5%;" >
                             {{ $entreprise->promotrice->code_promoteur }}
+                        </td>
+                        <td class="text-center" style="width: 5%;" >
+                            {{ getlibelle($entreprise->region) }}
+                        </td><td class="text-center" style="width: 5%;" >
+                            {{ getlibelle($entreprise->province) }}
+                        </td><td class="text-center" style="width: 5%;" >
+                            {{ getlibelle($entreprise->commune) }}
+                        </td>
+                        </td><td class="text-center" style="width: 5%;" >
+                            {{ getlibelle($entreprise->arrondissement) }}
                         </td>
                         <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->nom }} {{ $entreprise->promotrice->prenom }}</td>
                         <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->telephone_promoteur }}</td>

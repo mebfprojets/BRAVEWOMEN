@@ -194,8 +194,7 @@ else{
     flash("Vous n'a pas l'autorisation d'effectuer cette action bien vouloir consulter l'administrateur")->error();
     return redirect()->back();
 }
-        
-        
+     
 }
     //Fonction des Participants à une session de formation des AOP 
     public function selectionnerParticipantAlaSessionAOP(Formation $formation){

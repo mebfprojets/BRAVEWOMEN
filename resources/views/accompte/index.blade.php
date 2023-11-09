@@ -40,7 +40,7 @@
                     <a href="{{ route('account.getRecu',$accompte)}}" title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
                     </td>
                     <td>
-                    @if(count($entreprise->factures) >0)
+                    @if(count($entreprise->factures)==0)
                         <a href="#modal-edit-account" data-toggle="modal" title="télécharger" class="btn btn-xs btn-success"  target="_blank"><i class="fa fa-pencil" onclick="edit_accompte('{{ $accompte->id }}')"></i> </a>
                     @endif
                     </td>

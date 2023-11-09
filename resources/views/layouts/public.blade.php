@@ -64,17 +64,17 @@
             </li>
             <li class="dropdown"><a href="#"><span>SOUSCRIRE</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
-                  {{-- <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
+                 <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                      <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li> 
-
-                      <li><a href="#modal-soumettre-devis" data-toggle="modal">SOUMETTRE DEVIS</a></li>
+                        <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li> 
+                    <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li> 
                     </ul>
-                  </li> --}}
+                  </li> 
                   <li class="dropdown"><a href="#"><span>AOP/LEADER</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                      <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li>
-                      <li><a href="#" data-toggle="modal">SOUMETTRE LE PCA</a></li>
+                    {{--  <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li>
+                      --}}
+                      <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li> 
                     </ul>
                   </li>
                 </ul>
@@ -405,7 +405,7 @@
         </div>
     </div>
 </div>
-<div id="modal-Fin-souscription" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+{{-- <div id="modal-Fin-souscription" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -424,7 +424,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
   <div id="modal-consulter-resultat" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

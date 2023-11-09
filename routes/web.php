@@ -197,6 +197,7 @@ Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("
 Route::resource("promoteur", PromotriceController::class);
 Route::resource('projet', ProjetController::class);
 Route::resource("entreprise",EntrepriseController::class);
+Route::post("creation",[EntrepriseController::class, 'creation'])->name("entreprise.creation");
 Route::get("/verifierentreprise",[EntrepriseController::class, 'verifierentreprise'] )->name("verifierentreprise");
 Route::post("/creerEntreprise/{code}",[EntrepriseController::class, 'create'])->name("entreprise.cree");
 Route::get("/validation/souscription",[SouscriptionController::class, 'validersouscription'] )->name("entreprise.valider");

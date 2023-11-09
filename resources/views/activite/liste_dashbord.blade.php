@@ -40,7 +40,6 @@
                     <tr>
                         <th>Numero </th>
                         <th>Activité </th>
-                        <th>Precedentes </th>
                         <th>Debut</th>
                         <th>Fin</th>
                         <th>Taux </th>
@@ -51,7 +50,6 @@
                     <tr>
                         <td>{{$activite->numero}}</td>
                         <td>{{$activite->libelle}}</td>
-                        <td style="text-align: center">{{$activite->numero_precedent}}</td>
                         <td>{{format_date($activite->date_debut)}}</td>
                         <td>{{format_date($activite->date_fin)}}</td>
                         <td>

@@ -12,6 +12,7 @@
                 <tr>
                     <th class="text-center">N°</th>
                     {{-- <th class="text-center" style="width:10px;" >Code promoteur</th> --}}
+                    <th class="text-center">Numéro de compte</th>
                     <th class="text-center">Entreprise</th>
                     <th class="text-center">Banque</th>
                     <th class="text-center">Télephone</th>
@@ -32,6 +33,9 @@
                         @endphp
                     <tr>
                          <td class="text-center" style="width: 2%">{{ $i }}</td>
+                         <td class="text-center">
+                                {{ $entreprise->num_ss_compte }}
+                        </td>
                         <td class="text-center" style="width: 5%;" >
                             {{ $entreprise->denomination }}
                         </td>
