@@ -52,6 +52,7 @@
     </div>
     </div>
 @endsection
+@section('modalSection')
 <div id="modal-add-account"  class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -198,32 +199,7 @@
         </div>
     </div>
 </div>
-@section('modalSection')
-    <div id="modal-confirm-delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header text-center">
-                        <h2 class="modal-title"><i class="fa fa-pencil"></i> Confirmation</h2>
-                    </div>
-                    <!-- END Modal Header -->
-
-                    <!-- Modal Body -->
-                    <div class="modal-body">
-                            <input type="hidden" name="id_table" id="id_table">
-                                <p>Voulez-vous vraiment Supprimer ce role ??</p>
-                            <div class="form-group form-actions">
-                                <div class="text-right">
-                                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
-                                    <button type="submit" class="btn btn-sm btn-primary" onclick="supp_id();">OUI</button>
-                                </div>
-                            </div>
-
-                    </div>
-                    <!-- END Modal Body -->
-                </div>
-            </div>
-    </div>
+@endsection
     @section('script_additionnel')
         <script>
     function initialiser_contrepartie_id(champ){
