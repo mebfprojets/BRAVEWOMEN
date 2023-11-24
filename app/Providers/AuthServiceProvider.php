@@ -10,7 +10,9 @@ use App\Policies\DevisPolicy;
 use App\Policies\ValeurPolicy;
 use App\Policies\ProjetPolicy;
 use App\Policies\BanquePolicy;
-use App\Policies\FacturePolicy;
+use App\Policies\FacturePolicy; 
+use App\Policies\DocumentPolicy; 
+
 use App\Policies\SuccessStoriesPolicy;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -43,6 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::resource('banque', BanquePolicy::class);
         Gate::resource('devis', DevisPolicy::class);
         Gate::resource('facture', FacturePolicy::class);
+        Gate::resource('document', DocumentPolicy::class);
         Gate::resource('accompte', AccomptePolicy::class);
         Gate::resource('prestataire', PrestatairePolicy::class);
         Gate::resource('projet', ProjetPolicy::class);
@@ -61,7 +64,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('tableau.debord',[SouscriptionPolicy::class,'tableauDebord'] );
         Gate::define('dashboard.ugp',[SouscriptionPolicy::class,'tableauDebordUgp'] );
         Gate::define('acceder.aux_decision_du_dossier',[SouscriptionPolicy::class,'acceder_aux_decisions_sur_le_dossier'] );
-
         Gate::define('avisqualitative_ugp',[SouscriptionPolicy::class,'avisqualitative_ugp'] );
         Gate::define('avisfinal_ugp',[SouscriptionPolicy::class,'avisfinal_ugp'] );
         Gate::define('verdict_comite',[SouscriptionPolicy::class,'verdict_comite'] );

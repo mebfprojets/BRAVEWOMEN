@@ -77,6 +77,7 @@ return array(
     'App\\Models\\Contact' => $baseDir . '/app/Models/Contact.php',
     'App\\Models\\Decision' => $baseDir . '/app/Models/Decision.php',
     'App\\Models\\Devi' => $baseDir . '/app/Models/Devi.php',
+    'App\\Models\\Document' => $baseDir . '/app/Models/Document.php',
     'App\\Models\\Entreprise' => $baseDir . '/app/Models/Entreprise.php',
     'App\\Models\\Entreprise_activite' => $baseDir . '/app/Models/Entreprise_activite.php',
     'App\\Models\\Entreprise_activite_invest' => $baseDir . '/app/Models/Entreprise_activite_invest.php',

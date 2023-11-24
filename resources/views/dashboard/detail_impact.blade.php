@@ -277,7 +277,7 @@
                     <div class="col-md-6">
                         <div class="card card-success">
                             <div class="card-header">
-                              <h3 class="card-title">Augmentation du nombre d'employés par secteur d'activité</h3>
+                              <h3 class="card-title">Augmentation du nombre d'employés par Zone</h3>
                               <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                   <i class="fas fa-minus"></i>
@@ -932,6 +932,22 @@
           </div>
           <div class="tab-pane" id="custom-tabs-three-settings" role="tabpanel" aria-labelledby="custom-tabs-three-settings-tab">
             <div class="row">
+              <div class="col-md-4">
+                <a onclick="" href="javascript:void(0)" class="widget widget-hover-effect2">
+                      <div class="info-box shadow">
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-shopping-cart"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                Montant Total des acquisitions réalisé
+                            </span>
+                          <span class="info-box-text"><strong>{{ format_prix($montant_total_des_aquisitions) }} Fcfa</strong> </span>
+                         
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </a>
+                </div>
                 <div class="col-md-4">
                     <a href="#modal-details-montant_mobilise" data-toggle="modal" class="widget widget-hover-effect2">
                           <div class="info-box shadow">
@@ -947,22 +963,7 @@
                           <!-- /.info-box -->
                         </a>
                     </div>
-                    <div class="col-md-4">
-                        <a onclick="" href="javascript:void(0)" class="widget widget-hover-effect2">
-                              <div class="info-box shadow">
-                                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-shopping-cart"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">
-                                        Montant Total des acquisitions réalisé
-                                    </span>
-                                  <span class="info-box-text"><strong>{{ format_prix($montant_total_des_aquisitions) }} Fcfa</strong> </span>
-                                 
-                                </div>
-                                <!-- /.info-box-content -->
-                              </div>
-                              <!-- /.info-box -->
-                            </a>
-                        </div>
+                    
                         <div class="col-md-4">
                             <a onclick="" href="javascript:void(0)" class="widget widget-hover-effect2">
                                   <div class="info-box shadow">

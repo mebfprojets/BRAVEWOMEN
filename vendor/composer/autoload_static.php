@@ -750,6 +750,7 @@ class ComposerStaticInit5c450201a9df88e63364bd2a10f3c0a4
         'App\\Models\\Contact' => __DIR__ . '/../..' . '/app/Models/Contact.php',
         'App\\Models\\Decision' => __DIR__ . '/../..' . '/app/Models/Decision.php',
         'App\\Models\\Devi' => __DIR__ . '/../..' . '/app/Models/Devi.php',
+        'App\\Models\\Document' => __DIR__ . '/../..' . '/app/Models/Document.php',
         'App\\Models\\Entreprise' => __DIR__ . '/../..' . '/app/Models/Entreprise.php',
         'App\\Models\\Entreprise_activite' => __DIR__ . '/../..' . '/app/Models/Entreprise_activite.php',
         'App\\Models\\Entreprise_activite_invest' => __DIR__ . '/../..' . '/app/Models/Entreprise_activite_invest.php',

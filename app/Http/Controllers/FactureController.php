@@ -30,6 +30,15 @@ class FactureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function get_file_emplacement($input_name,$file,$devi,$num){
+        $devi_designation=Devi::find($devi)->designation;
+        $code_promoteur=Auth::user()->code_promoteur;
+        $extension=$file->getClientOriginalExtension();
+        $fileName = $num.'_'.$devi_designation.'.'.$extension;
+        $emplacement='public/'.$input_name.'/'.$code_promoteur; 
+        $url_store= $file->storeAs($emplacement, $fileName);
+        return $url_store;
+    }
     public function create_historique($facture_id, $statut,$motif, $observation, ){
         $datedujour = new \DateTime();
         $date= $datedujour->format('Y-m-d');
@@ -187,7 +196,6 @@ public function facture_de_ma_zone(){
 
         $images = $request->images;
         $champ_nombre_dimage = $request->champ_nombre_dimage;
-       //dd($champ_nombre_dimage);
         $devi=Devi::find($request->devi_id);
     if($devi->factures->sum('montant') + reformater_montant2($request->montant_facture) > $devi->montant_devis){
         flash("Cette facture ne peut pas etre soumis pour depassement du montant du devis !")->error();
@@ -204,11 +212,10 @@ public function facture_de_ma_zone(){
         }
         $copie_rib=null;
         if($request->hasFile('facture_file')){
-            $facture_file= $request->facture_file->store('public/facture');
-           
+           $facture_file=$this->get_file_emplacement('facture_file',$request->file('facture_file'),$request->devi_id,$num_fact);
         }
         if($request->hasFile('copie_rib')){
-            $copie_rib= $request->copie_rib->store('public/copie_rib');
+           $copie_rib=$this->get_file_emplacement('copie_rib',$request->file('copie_rib'),$request->devi_id,$num_fact);
         }
       
        $facture= Facture::create([
@@ -235,7 +242,7 @@ public function facture_de_ma_zone(){
                 $file = $request->file($inputname);
                 $fileName = $file->getClientOriginalName();
                 //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise
-                $emplacement='public/image_aquisitions/'.$devi->entreprise->code_promoteur; 
+                $emplacement='public/image_aquisitions/'.$devi->entreprise->code_promoteur.'/'.$facture->num_facture; 
                 $image_acquisition= $request[$inputname]->storeAs($emplacement, $fileName);
                 FactureImage::create([
                     'facture_id'=>  $facture->id,
@@ -279,14 +286,14 @@ public function facture_de_ma_zone(){
    $facture= facture::find($request->facture_id);
    $copie_rib=null;
     if($request->facture_file_u){
-        $facture_file= $request->facture_file_u->store('public/facture');
+        $facture_file=$this->get_file_emplacement('facture_file',$request->file('facture_file_u'),$facture->devi_id,$facture->num_facture);
         $facture->update([
             'url_fac'=>$facture_file,
         ]);
       
     }
     if($request->hasFile('copie_rib_u')){
-        $copie_rib= $request->copie_rib_u->store('public/copie_rib');
+        $copie_rib=$this->get_file_emplacement('copie_rib',$request->file('copie_rib_u'),$facture->devi_id,$facture->num_facture);
     }
     $devi=$facture->devi;
     $facture->update([

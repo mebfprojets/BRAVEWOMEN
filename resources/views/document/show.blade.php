@@ -45,13 +45,13 @@
 
                             <div class="form-group">
                             <a onclick="window.history.back();" class="btn btn-sm btn-success"><i class="fa fa-repeat"></i> Fermer</a>
+                            
                             </div>
                     </div>
                     <div class="col-lg-8 img-bg" style="cursor: pointer;">
                             <div style="box-shadow: 1px 2px 5px 1px #999">
                               <embed src= "{{ Storage::disk('local')->url($piecejointe->url) }}" height=600 type='application/pdf' style="width: 100%;" />
                         </div>
-
                     </div>
         </div>
                 </div>

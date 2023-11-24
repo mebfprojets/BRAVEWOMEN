@@ -66,15 +66,15 @@
                 <ul>
                  <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                        <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li> 
+                        {{-- <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li>  --}}
                     <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li> 
                     </ul>
                   </li> 
                   <li class="dropdown"><a href="#"><span>AOP/LEADER</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                    {{--  <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li>
-                      --}}
-                      <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li> 
+                        <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li> 
+                      
+                      {{--<li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li>--}}
                     </ul>
                   </li>
                 </ul>

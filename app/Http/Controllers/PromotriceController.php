@@ -32,7 +32,7 @@ class PromotriceController extends Controller
      */
     public function create()
     {
-    //    return redirect()->back();
+        return redirect()->back();
     
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();

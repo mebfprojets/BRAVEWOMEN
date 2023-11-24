@@ -104,7 +104,6 @@ if (!function_exists('getlibelle')) {
                             return $mois;
                     }
             }
-            //Fonction pour savoir si les information d'une entreprise ont été complété
             if (!function_exists('proportionpromoteur_enregistre')) {
                 function proportionpromoteur_enregistre($id)
                     {
@@ -145,7 +144,7 @@ if (!function_exists('getlibelle')) {
 
                     if(!function_exists('kyc_entreprise_is_valide')){
                         function kyc_entreprise_is_valide($code_promoteur){
-                            $entreprise = Entreprise::where('code_promoteur',$code_promoteur)->where('decision_du_comite_phase1', 'selectionnee')->where('resultat_kyc',"!=",null)->first();
+                            $entreprise = Entreprise::where('code_promoteur',$code_promoteur)->where('decision_du_comite_phase1', 'selectionnee')->first();
                            
                         if($entreprise->resultat_kyc== 'concluant' && $entreprise->date_de_creation_compte !=null){
                             return true;

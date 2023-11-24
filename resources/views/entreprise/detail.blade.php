@@ -934,7 +934,7 @@
                                         <div class="row">
                                             <div class="col-md-10">
                                                 <div  id="condanation" class="form-group row">
-                                                    <p class="col-md-2 control-label"><span class="labdetail">L'idee de projet : </span> </p>
+                                                    <p class="col-md-2 control-label"><span class="labdetail">L'idée de projet : </span> </p>
                                                         <p class="col-md-10" style="text-align: justify;">
                                                         <span style="text-align: justify;" class="valdetail">
                                                         @empty($entreprise->description_du_projet)
@@ -942,6 +942,30 @@
                                                         @else         
                                                              {{$entreprise->description_du_projet}}
                                                          @endempty
+                                                    </span></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div  id="condanation" class="form-group">
+                                                    <p class="col-md-3 control-label"><span class="labdetail">Cout du projet : </span> </p>
+                                                        <p class="col-md-9" style="text-align: justify;">
+                                                        <span style="text-align: justify;" class="valdetail">
+                                                        @empty($entreprise->cout_projet )
+                                                                Informations non disponible
+                                                                            @endempty
+                                                             {{ format_prix($entreprise->cout_projet)}}
+                                                    </span></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div  id="condanation" class="form-group">
+                                                    <p class="col-md-3 control-label"><span class="labdetail">Montant subvention demandée : </span> </p>
+                                                        <p class="col-md-9" style="text-align: justify;">
+                                                        <span style="text-align: justify;" class="valdetail">
+                                                        @empty($entreprise->montant_subvention )
+                                                                Informations non disponible
+                                                                            @endempty
+                                                             {{ format_prix($entreprise->montant_subvention)}}
                                                     </span></p>
                                                 </div>
                                             </div>

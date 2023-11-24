@@ -2038,8 +2038,8 @@
                 <div class="form-group{{ $errors->has('piece_file') ? ' has-error' : '' }} col-md-10" style="margin-left:10px;">
                     <label  class="control-label col-md-4"  class="control-label" for="piece_file">Joindre la nouvelle piece jointe <span class="text-danger">*</span></label>
                     <div class="input-group col-md-6">
-                        <input class="form-control docsize"  type="file" name="piece_file" id="piece_file" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('piece_file');" placeholder="Charger la nouvelle piece">
-                        <span class="input-group-addon"><a href="#" class="empty_field" onclick="empty_input_file('piece_file')">Vider le champ</a></span>
+                        <input class="form-control docsize"  type="file" name="piece_file" id="piece_file_u" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('piece_file_u');" placeholder="Charger la nouvelle piece">
+                        <span class="input-group-addon"><a href="#" class="empty_field" onclick="empty_input_file('piece_file_u')">Vider le champ</a></span>
                     </div>
                     @if ($errors->has('piece_file'))
                         <span class="help-block">

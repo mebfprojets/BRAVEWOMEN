@@ -289,6 +289,7 @@
                                 </li>
                                 
                         @endcan
+                        
                         @can('souscription.liste', Auth::user())
                                 <li class="@yield('souscription_enregistre')">
                                     <a href="{{ route('banque.beneficiaires') }}"> Mouvements financiers</a>
@@ -338,44 +339,21 @@
                     </ul>
                 </li>
 
-                {{-- <li class="@yield('finacement')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-group sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide"> Impacts</span></a>
-                    <ul>
-                        @can('souscription.liste', Auth::user())
-                                <li class="@yield('souscription_enregistre')">
-                                    <a href="{{ route("souscription.terminee") }}"> Enregistrées</a>
-                                </li>
-                            @endcan
-                        @can('souscription.listerParZone', Auth::user())
-                            <li class="@yield('souscription_par_zone')">
-                                <a href="{{ route("souscription__reparties_par_zone") }}">  Par Zone</a>
-                            </li>
-                        @endcan
-
-                        @can('souscription.soumis_au_comite', Auth::user())
-                            <li class="@yield('souscription_soumis_aucomite')">
-                                    <a href="{{ route("soumises_au_comite_technique") }}"> En Attente d'Analyse</a>
-                            </li>
-                        @endcan
-                        @can('souscription.soumis_au_comite', Auth::user())
-                            <li class="@yield('souscription_analysee_par_lecomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}"> Soumises au Comité</a>
-                            </li>
-                        @endcan
-                       @can('souscription.listerRetenues', Auth::user())
-                            <li class="@yield('souscription_retenue')">
-                                    <a href="{{ route("souscription_retenue") }}"> Retenues </a>
-                            </li>
-                        @endcan
-                        @can('souscription.listerParZone', Auth::user())
-                            <li class="@yield('souscription_retenue')">
-                                    <a href="{{ route("souscription_retenue_par_zone") }}"> Retenues Par Zone</a>
-                            </li>
-                        @endcan
-                    </ul>
-                </li> --}}
+                
                 @endcan
-            
+                @can('document.view', Auth::user())
+                <li class="@yield('documents')">
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Documentation</span></a>
+                    <ul>
+                @can('document.view', Auth::user())
+                <li class="@yield('liste-document')">
+                    <a href="{{ route('document.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Documents</a>
+                </li>
+                 @endcan
+                    </ul>
+                    {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
+                </li> 
+            @endcan
            @can('formation.all', Auth::user())
                 <li class="@yield('gestion_projet')">
                     <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Gestion du projet</span></a>
@@ -463,24 +441,7 @@
                 </li>
                 
                 @endcan
-                @can('formation.all', Auth::user())
-                <li class="@yield('gestion_projet')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Documentation</span></a>
-                    <ul>
-                  @can('formation.listerFormation', Auth::user())
-                     <li class="@yield('activite')">
-                        <a href="{{ route('activites.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Typologies de document</a>
-                    </li>
-                @endcan
-                @can('formation.all', Auth::user())
-                <li class="@yield('budget')">
-                    <a href="{{ route('budgets.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Documents</a>
-                </li>
-                 @endcan
-                    </ul>
-                    {{-- <a href="{{ route('formation.index') }}" class="sidebar-nav-menu"><i class=" sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-leaf"></i><span class="sidebar-nav-mini-hide"> Formations</span></a> --}}
-                </li> 
-            @endcan
+               
             </ul>
         </div>
     </div>

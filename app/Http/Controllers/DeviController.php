@@ -28,6 +28,15 @@ class DeviController extends Controller
     {
         $this->middleware('auth');
     }
+    
+        public function get_file_emplacement($input_name,$file, $designation,){
+            $code_promoteur=Auth::user()->code_promoteur;
+            $extension=$file->getClientOriginalExtension();
+            $fileName = $designation.'.'.$extension;
+            $emplacement='public/'.$input_name.'/'.$code_promoteur; 
+            $url_store= $file->storeAs($emplacement, $fileName);
+            return $url_store;
+        }
     public function create_historique($devi_id, $statut, $motif, $observation){
         $date = new \DateTime();
         $date= $date->format('Y-m-d');
@@ -50,7 +59,6 @@ class DeviController extends Controller
     {
         if (Auth::user()->can('analyser_devis')) {
             $devis = Devi::orderBy('updated_at', 'desc')->get();
-
             return view("devi.index", compact('devis'));
         }
         else{
@@ -94,9 +102,7 @@ else{
     else{
         $devis = Devi::orderBy('updated_at', 'desc')->get();
     }
-
     return view("devi.aanalyser", compact('devis'));
-
  }
     /**
      * Show the form for creating a new resource.
@@ -116,12 +122,13 @@ else{
      */
     public function store(Request $request)
     {
-       // dd($request->all());
         if ($request->hasFile('copie_devis') && $request->hasFile('fiche_analyse') && $request->hasFile('copie_devis2') && $request->hasFile('copie_devis1'))  {
-            $copie_devis= $request->copie_devis->store('public/devis');
-            $fiche_analyse= $request->fiche_analyse->store('public/fiche_danalyse_devis');
-            $copie_devis1= $request->copie_devis1->store('public/devis');
-            $copie_devis2= $request->copie_devis2->store('public/devis');
+            $designation=$request->designation;
+
+           $copie_devis=$this->get_file_emplacement('copie_devis',$request->file('copie_devis'),$designation);
+           $fiche_analyse= $this->get_file_emplacement('fiche_analyse',$request->file('fiche_analyse'),$designation);
+           $copie_devis1= $this->get_file_emplacement('copie_devis1',$request->file('copie_devis1'),$designation);
+           $copie_devis2= $this->get_file_emplacement('copie_devis2',$request->file('copie_devis2'),$designation);
         }
         $lastOne = DB::table('devis')->latest('id')->first();
         if($lastOne){
@@ -211,30 +218,28 @@ else{
     {
     }
     public function enr_modification(Request $request){
-       
         $devi= Devi::find($request->devi_id);
-        
+        $designation=$request->designation;
         if($request->fiche_analyse){
-            
-            $fiche_analyse= $request->fiche_analyse->store('public/fiche_danalyse_devis');
+           $fiche_analyse= $this->get_file_emplacement('fiche_analyse',$request->file('fiche_analyse'),$designation);
             $devi->update([
                 'copie_fiche_analyse'=>$fiche_analyse,
             ]);
         }
         if($request->hasFile('copie_devis2')){
-            $copie_devis2= $request->copie_devis2->store('public/devis');
+            $copie_devis2= $this->get_file_emplacement('copie_devis2',$request->file('copie_devis2'),$designation);
             $devi->update([
                 'copie_devis_2'=>$copie_devis2,
             ]);
         }
         if($request->hasFile('copie_devis1')){
-            $copie_devis1= $request->copie_devis1->store('public/devis');
+           $copie_devis1= $this->get_file_emplacement('copie_devis1',$request->file('copie_devis1'),$designation);
             $devi->update([
                 'copie_devis_1'=>$copie_devis1,
             ]);
         }
         if($request->hasFile('copie_devis')){
-            $copie_devis= $request->copie_devis->store('public/devis');
+            $copie_devis=$this->get_file_emplacement('copie_devis',$request->file('copie_devis'),$designation);
             $devi->update([
                 'copie_devis_prefere'=>$copie_devis,
             ]);

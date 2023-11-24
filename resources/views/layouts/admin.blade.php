@@ -366,7 +366,9 @@
                   url: url,
                  type: 'GET',
                  dataType: 'json',
-                  error:function(data){alert("Erreur");},
+                  error:function(data){
+
+    },
                    success: function (donnee) {
         console.log(donnee);
             var group= new Array();
@@ -427,7 +429,9 @@
                   url: url,
                  type: 'GET',
                  dataType: 'json',
-                  error:function(data){alert("Erreur");},
+                  error:function(data){
+        
+    },
                    success: function (donnee) {
         console.log(donnee);
         var data = new google.visualization.DataTable(donnee);

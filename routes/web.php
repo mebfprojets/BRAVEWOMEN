@@ -28,6 +28,8 @@ use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\CoachController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\ImpactController;
+use App\Http\Controllers\DocumentController;
+
 
 use App\Http\Controllers\SimpleExcelController;
 use App\Models\Entreprise;
@@ -190,7 +192,12 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/trouvesucessStorie/get', [SucessStorieController::class, 'get_success_storie'] )->name("successStorie.get");
     Route::post('/modifiersucessStorie', [SucessStorieController::class, 'modifier_success_storie'] )->name("sucessStorie.modifier");
     Route::post('/supprimersucessStorie', [SucessStorieController::class, 'supprimer_success_storie'] )->name("sucessStorie.supprimer");
-    
+    Route::get('/type_doc/get', [DocumentController::class, 'lister_type_document'] )->name("document.type");
+    Route::resource('document', DocumentController::class);
+    Route::get('/lister/document/bycategorie/{id}', [DocumentController::class, 'lister_document_par_categorie'])->name("documents.byCategorie");
+    Route::get('/afficher/document/{document}', [DocumentController::class, 'afficher_document'])->name("documents.afficher");
+    Route::get('/modifier/document/', [DocumentController::class, 'modif_document'])->name("document.modif");
+    Route::post('storemodif/document', [DocumentController::class, 'modifier_document'])->name("document.modifier");
 
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");
