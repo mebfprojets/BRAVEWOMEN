@@ -32,7 +32,9 @@ if(Auth::user()->can('document.view'))
         ->select("documents.categorie as cat_id","valeurs.libelle as categorie", DB::raw("COUNT(documents.id) as nombre"))
         ->get();
         $categories= Valeur::where('parametre_id',43)->get();
-        return view('document.index',compact("documents","categories"));
+        $type_supports= Valeur::where('parametre_id',44)->get();
+
+        return view('document.index',compact("documents","categories",'type_supports'));
     }
     else{
         flash("Vous n'avez pas le droit sur cette action. Bien vouloir contacter l'admnistrateur")->success();
@@ -80,9 +82,9 @@ public function lister_document_par_categorie($id){
     {
     if(Auth::user()->can('document.create'))
     {
+        $titre=$request->titre;
         if($request->hasFile('document')) {
             $file = $request->file('document');
-            $titre=$request->titre;
             $zone_user=(Auth::user()->zone==100)?"central":getlibelle(Auth::user()->zone);
             $categorie_doc= getlibelle($request->categorie);
             $extension=$file->getClientOriginalExtension();
@@ -90,8 +92,14 @@ public function lister_document_par_categorie($id){
             $annee=date("Y");
             $emplacement='public/'.$categorie_doc.'/'.$annee.'/'.$zone_user; 
             $file_url= $request['document']->storeAs($emplacement, $fileName);
+           
+        }
+        else{
+            $file_url=$request['lien_video'];
+        }
             Document::create([
                 'categorie'=>$request->categorie,
+                'type_document'=>$request->type_document,
                 'titre_doc'=> $titre,
                 'description_doc'=> $request->description,
                 'url_doc'=> $file_url,
@@ -101,7 +109,7 @@ public function lister_document_par_categorie($id){
             ]);
             flash("Le document enregistré avec success.")->success();
             return redirect()->route('document.index');
-        }
+        
         flash("Le document n'a pas été chargé.")->error();
         return redirect()->back();
     }
@@ -133,8 +141,9 @@ public function lister_document_par_categorie($id){
     {
     if(Auth::user()->can('document.view'))
         {
+            $type_supports= Valeur::where('parametre_id',44)->get();
             $categories= Valeur::where('parametre_id',43)->get();
-            return view('document.afficher',compact('document','categories'));
+            return view('document.afficher',compact('document','categories','type_supports'));
         }
     else{
         flash("Vous n'avez pas le droit sur cette action. Bien vouloir contacter l'admnistrateur")->error();
@@ -176,7 +185,7 @@ public function lister_document_par_categorie($id){
     }
     public function modif_document(Request $request){
                 $document=Document::find($request->id);
-                $test= array('id'=>$document->id, 'titre_doc'=>$document->titre_doc,'categorie'=>$document->categorie,'description'=>$document->description_doc,);
+                $test= array('id'=>$document->id, 'titre_doc'=>$document->titre_doc,'categorie'=>$document->categorie,'description'=>$document->description_doc,'type_document'=>$document->type_document);
                  return json_encode($test);
     }
     public function modifier_document(Request $request){
@@ -184,6 +193,7 @@ public function lister_document_par_categorie($id){
         $document=Document::find($request->id_doc);
         $document->update([
             'titre_doc'=>$request->titre,
+            'type_document'=>$request->type_document,
             'description_doc'=>$request->description,
             'categorie'=>$request->categorie,
         ]);

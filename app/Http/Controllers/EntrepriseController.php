@@ -73,7 +73,7 @@ class EntrepriseController extends Controller
         $maillon_activites=Valeur::where('parametre_id',7 )->get();
         $source_appros=Valeur::where('parametre_id',12 )->get();
         $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $futur_annees=Valeur::where('parametre_id',17 )->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
@@ -106,7 +106,7 @@ class EntrepriseController extends Controller
         $maillon_activites=Valeur::where('parametre_id',7 )->get();
         $source_appros=Valeur::where('parametre_id',12 )->get();
         $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $futur_annees=Valeur::where('parametre_id',17 )->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
@@ -168,7 +168,7 @@ class EntrepriseController extends Controller
     public function store(Request $request)
     {
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
@@ -542,7 +542,7 @@ else{
         $maillon_activites=Valeur::where('parametre_id',7 )->get();
         $source_appros=Valeur::where('parametre_id',12 )->get();
         $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $futur_annees=Valeur::where('parametre_id',17 )->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
@@ -644,14 +644,14 @@ else{
     {
         $proportiondedepences= Valeur::where('parametre_id', 32)->get();
         $nombre_de_clients= Valeur::where('id', 7085)->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         return view("entreprise.completerProportiondepensedupromoteur", compact("entreprise", "nombre_de_clients","proportiondedepences","annees"));
 }
 public function storePoportiondeDepensedupromoteur(Request $request){
     $proportiondedepences= Valeur::where('parametre_id', 32)->get();
     $nombre_de_clients= Valeur::where('id', 7085)->get();
         // dd($proportiondedepences);
-    $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
     foreach($proportiondedepences as $proportiondedepence){
         foreach($annees as $annee){
             $variable=$proportiondedepence->id.$annee->id;

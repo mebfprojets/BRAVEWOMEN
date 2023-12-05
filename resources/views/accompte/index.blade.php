@@ -52,7 +52,7 @@
     </div>
     </div>
 @endsection
-@section('modalSection')
+@section('modal_part')
 <div id="modal-add-account"  class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -185,17 +185,14 @@
                                     @endif
                                 </div>
                             </div>
-                    
                         <div class="form-group form-actions">
                         <div class="col-md-8 col-md-offset-4">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-sm btn-sucess valider"><i class="fa fa-arrow-right"></i> Modifier</button>
-
                         </div>
                     </div>
                     </form>
             </div>
-            <!-- END Modal Body -->
         </div>
     </div>
 </div>
@@ -248,7 +245,7 @@
                   });
   }
         </script>
-    @endsection
+
     <script>
     function detailUser(id){
                 var id=id;

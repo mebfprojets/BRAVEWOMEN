@@ -418,6 +418,11 @@
             
             });
     </script>
+    <script>
+        $(document).ready(function() {
+          $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        })
+    </script>
     <script type="text/javascript">
          google.charts.load('current', {'packages':['timeline']});
          google.charts.setOnLoadCallback(drawChart);

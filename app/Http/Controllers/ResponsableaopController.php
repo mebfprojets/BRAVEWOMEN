@@ -14,7 +14,7 @@ class ResponsableaopController extends Controller
 {
     public function completeview($code){
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-         $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $promoteur = Promotrice::where('code_promoteur',$code)->first();
         $proportiondedepence=Proportion_de_depense_promotrice::where('promotrice_id', $promoteur->id )->get();
         (count($proportiondedepence) == 0)?($afficherproportion=1):($afficherproportion=0);
@@ -23,18 +23,18 @@ class ResponsableaopController extends Controller
 
     public function create()
     {
-        return redirect()->back();
+       // return redirect()->back();
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-         $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         return view("public.responsableAOP", compact("regions","proportiondedepences","annees", "niveau_instructions"));
     }
     public function storecompleteresponsableaop(Request $request)
     {
         return redirect()->back();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $promoteur= Promotrice::find($request->promoteur);
         $promoteur->update([
             'fonction'=>$request->fonction,
@@ -63,7 +63,7 @@ class ResponsableaopController extends Controller
         $this->nom = $request->nom_promoteur;
         $this->prenom= $request->prenom_promoteur;
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
        $validated= $request->validate([
             'nom_promoteur' =>'required',
             // 'numero_identite'=>'unique:promotrices|max:255',

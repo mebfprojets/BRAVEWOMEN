@@ -14,7 +14,7 @@ class AddColumnNumSsCompteToEntreprises extends Migration
     public function up()
     {
         Schema::table('entreprises', function (Blueprint $table) {
-            $table->string('num_ss_compte');
+            $table->string('num_ss_compte')->nullable();
         });
     }
 

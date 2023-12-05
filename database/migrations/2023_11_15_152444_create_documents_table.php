@@ -19,6 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->string("titre_doc");
             $table->text("description_doc");
             $table->string("url_doc");
+            $table->integer("type_document");
             $table->integer("region_enregistrement");
             $table->integer("creer_par");
             $table->integer("modifier_par");

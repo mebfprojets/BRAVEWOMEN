@@ -95,7 +95,7 @@
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('pme_retenu_par_zone')">
-                                    <a href="{{ route("souscription_retenue_par_zone") }}?typeentreprise=mpme"> Retenues Par Zone</a>
+                                <a href="{{ route("souscription_retenue_par_zone") }}?typeentreprise=mpme"> Retenues Par Zone</a>
                             </li>
                         @endcan
                         <li class="@yield('souscription_retenue')">
@@ -194,10 +194,13 @@
                             <li class="@yield('analyse_par_le_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=analyse_par_le_comite&type_entreprise=mpme"> Décision du comité</a>
                             </li>
-                            <li class="@yield('liste_dattente')">
-                                <a href="{{ route("pca.lister_liste_dattente") }}?type_entreprise=mpme"> Liste d'attente</a>
-                            </li>
                             @endcan
+                            @can('acceder_aux_pca_selectionne',Auth::user())
+                                    <li class="@yield('liste_dattente')">
+                                        <a href="{{ route("pca.lister_liste_dattente") }}?type_entreprise=mpme"> Liste d'attente</a>
+                                    </li>
+                            @endcan
+        
                             @can('projet.view', Auth::user())
                             <li class="@yield('selectionnes')">
                                 <a href="{{ route("pca.selectionneparzone") }}?type_entreprise=mpme"> Projets retenus</a>
@@ -208,14 +211,7 @@
                                     <a  href="{{ route('liste_demande_kyc') }}?type_entreprise=mpme"> Demandes de KYC</a>
                                 </li>
                             @endcan
-                            {{-- @can('suivre_execution_pca', Auth::user())
-                                <li class="@yield('asuivre')">
-                                    <a  href="{{ route('projet.asuivre') }}?type_entreprise=mpme"> Exécution PCA</a>
-                                </li>
-                                <li class="@yield('acquisition')">
-                                    <a href="{{ route("acquisition.create") }}"> Acquisition</a>
-                                </li>
-                            @endcan --}}
+                            
                         </ul>
                     </li>
                     <li class="@yield('pca_aop')">
@@ -246,10 +242,13 @@
                             <li class="@yield('analyse_par_le_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=analyse_par_le_comite&type_entreprise=aop">  Décision du comité</a>
                             </li>
-                            <li class="@yield('liste_dattente')">
-                                <a href="{{ route("pca.lister_liste_dattente") }}?type_entreprise=aop"> Liste d'attente</a>
-                            </li>
                             @endcan
+                            @can('acceder_aux_pca_selectionne',Auth::user())
+                                <li class="@yield('liste_dattente')">
+                                    <a href="{{ route("pca.lister_liste_dattente") }}?type_entreprise=aop"> Liste d'attente</a>
+                                </li>
+                            @endcan
+                            
                             @can('projet.view', Auth::user())
                             <li class="@yield('selectionnes')">
                                 <a href="{{ route("pca.selectionneparzone") }}?type_entreprise=aop">  Projets retenus</a>
@@ -343,11 +342,11 @@
                 @endcan
                 @can('document.view', Auth::user())
                 <li class="@yield('documents')">
-                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-settings sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Documentation</span></a>
+                    <a href="#" class="sidebar-nav-menu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-archive sidebar-nav-icon"></i></i><span class="sidebar-nav-mini-hide "> Documentation</span></a>
                     <ul>
                 @can('document.view', Auth::user())
                 <li class="@yield('liste-document')">
-                    <a href="{{ route('document.index') }}"> <i class="gi gi-leaf sidebar-nav-icon"></i> Documents</a>
+                    <a href="{{ route('document.index') }}"> <i class="fa fa-folder-open sidebar-nav-icon"></i> Documents</a>
                 </li>
                  @endcan
                     </ul>

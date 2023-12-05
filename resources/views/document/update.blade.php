@@ -3,7 +3,7 @@
 @section('administration-parametre', 'active')
     @section('blank')
         <li>Accueil</li>
-        <li>Roles</li>
+        <li>Document</li>
         <li><a href="">Modifier</a></li>
     @endsection
     @section('content')

@@ -142,11 +142,11 @@ class ProjetController extends Controller
             }
             elseif($request->statut=='analyse_par_le_comite'){
                 if($type_entreprise=='mpme'){
-                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->where('type_entreprise','mpme')->whereBetween('updated_at', ['2023-04-03 00-00-00', '2023-04-08 00-00-00'])->orderBy('updated_at', 'desc')->get(); 
+                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->where('type_entreprise','mpme')->whereBetween('updated_at', ['2023-11-27 00-00-00', '2023-11-28 00-00-00'])->orderBy('updated_at', 'desc')->get(); 
                     $type_entreprise='pca_mpme';
                 }
                 else{
-                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->whereIn('type_entreprise',['leader','aop'])->whereBetween('updated_at', ['2023-04-03 00-00-00', '2023-04-08 00-00-00'])->orderBy('updated_at', 'desc')->get(); 
+                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->whereIn('type_entreprise',['leader','aop'])->whereBetween('updated_at', ['2023-11-27 00-00-00', '2023-11-28 00-00-00'])->orderBy('updated_at', 'desc')->get(); 
                     $type_entreprise='pca_aop';
                 }
                 $texte= "/PCA/PA analysés par le comité";

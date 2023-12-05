@@ -105,7 +105,7 @@
     </div>
 </div>
 @endsection
-
+@section('modal_part')
 <div id="modal-signature-accord-beneficaire" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -306,6 +306,7 @@
                 <!-- END Modal Body  modal-devis-edit -->
             </div>
         </div>
+@endsection
 <script>
       function recupererentreprise_id(entreprise){
             document.getElementById("id_entreprise").setAttribute("value", entreprise);

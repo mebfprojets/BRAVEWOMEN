@@ -18,6 +18,7 @@
             <thead>
                 <tr>
                     <th class="text-center">Numero</th>
+                    <th class="text-center">Cohore</th>
                     <th class="text-center">Code promoteur</th>
                     <th class="text-center">Zone</th>
                     <th class="text-center">Nom du promoteur</th>
@@ -52,6 +53,13 @@
                         style="color:red;"
                     @endif>
                         <td class="text-center" style="width: 10%">{{ $i }}</td>
+                        <td class="text-center">
+                            @if($projet->entreprise->phase_de_souscription!=2) 
+                                Cohorte 1
+                            @else
+                                Cohorte 2
+                            @endif
+                        </td>
                         <td class="text-center">{{$projet->entreprise->promotrice->code_promoteur}} </td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->region) }} {{ getlibelle($projet->entreprise->province) }} {{ getlibelle($projet->entreprise->commune) }} </td>
                         

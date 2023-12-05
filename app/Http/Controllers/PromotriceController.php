@@ -32,14 +32,12 @@ class PromotriceController extends Controller
      */
     public function create()
     {
-        return redirect()->back();
-    
+       
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $nb_annee_experience=Valeur::where("parametre_id", env('PARAMETRE_TRANCHE_EXPERIENCE'))->get();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-       
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         return view("public.subscription", compact("regions", "niveau_instructions","nb_annee_experience","proportiondedepences","annees"));
     }
 
@@ -53,7 +51,7 @@ class PromotriceController extends Controller
     {
         //return redirect()->back();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
-         $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $this->email = $request->email_promoteur;
         $this->nom = $request->nom_promoteur;
         $this->prenom= $request->prenom_promoteur;
@@ -178,33 +176,7 @@ class PromotriceController extends Controller
         $data= array('result'=>$result);
         return json_encode($data);
     } 
-//function search utilisée pour la recherche des MPMES
-    // public function search(Request $request){
-      
-    //     $promoteur = Promotrice::where("code_promoteur", $request->code_promoteur)->first();
-    //     if($promoteur==null){
-    //         return view("invalide");
-    //     }
-    //     else{
-    //         if($promoteur->suscription_etape==2){
-    //             $entreprise= Entreprise::where("promotrice_id",$promoteur->id )->first();
-    //             $entreprise=$entreprise->id;
-    //             return view("validateStep1", compact("promoteur","entreprise"));
-    //            // return view("validateStep1aop", compact("promoteur","entreprise"));
-              
-    //         }
-    //         elseif($promoteur->suscription_etape==1){
-               
-    //             //return view("validateStep1", compact("promoteur"));
-    //             return view("validateStep1aop", compact("promoteur"));
-    //         }
-    //         else{
-    //             //dd('oko');
-    //             return view("validateStep1aop", compact("promoteur"));
-    //            // return view("validateStep2",compact("promoteur"));
-    //         }
-    //     }
-    // }
+
     public function search(Request $request){
       
         $promoteur = Promotrice::where("code_promoteur", $request->code_promoteur)->first();
