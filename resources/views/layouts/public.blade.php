@@ -831,6 +831,38 @@ function calculer_pourcentage(id_avance, id_montant_devis, id_montant_devi_cache
                     }
             });
         }
+
+       function controler_de_doublon_promotrice(champ_controle){
+            var numero_identite= $("#numero_identite").val();
+            var telephone_promoteur= $("#telephone_promoteur").val();
+            var mobile_promoteur= $("#mobile_promoteur").val();
+            var email_promoteur= $("#email_promoteur").val();
+            var url = "{{ route('souscription.control_doublon') }}";
+            $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {numero_identite: numero_identite, 
+                        telephone_promoteur:telephone_promoteur,
+                         mobile_promoteur:mobile_promoteur, 
+                         email_promoteur:email_promoteur
+                        },
+                    dataType: 'json',
+                    error:function(data){alert("Erreur");},
+                    success: function (data) {
+                        console.log(data);
+                         if(data){
+                            $(".message_doublon").show();
+                            $(".code_promoteur").text(data.code_promoteur)
+                            $("#"+champ_controle).val("")
+                            $("#numero_identite").val("");
+                         }
+                         else{
+                            $(".message_doublon").hide();
+                            $("#valider").show();
+                         }
+                    }
+            });  
+       }
   </script>
   
 </body>

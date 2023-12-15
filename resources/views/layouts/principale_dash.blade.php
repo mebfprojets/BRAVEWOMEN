@@ -217,6 +217,10 @@
                      maxZoom: 20
                 }).addTo(map);
                 var url = "{{ route('souscriptiongeopresenation') }}";
+                var custumIcon= L.icon({
+                    iconUrl:'./img/femme.png',
+                    iconSize:[30,30]
+                });
                 var markers = L.markerClusterGroup();
             $.ajax({
                 url: url,
@@ -229,7 +233,10 @@
                                     if(data[i].longitude){
                                         var url = '{{ route("dashboard.entreprise_detail",":id") }}';
                                         url = url.replace(':id', data[i].id);
-                                        marker= L.marker([data[i].longitude, data[i].latitude]);
+                                        marker= L.marker([data[i].longitude, data[i].latitude],{
+                                        icon:custumIcon,
+                                        title:data[i].denomination
+                                    });
                                         if(data[i].aopOuleader="mpme"){
                                             var categorie="MPME"
                                         }

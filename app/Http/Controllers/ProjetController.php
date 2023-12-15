@@ -160,11 +160,11 @@ class ProjetController extends Controller
         $banques= Banque::all();
         $type_entreprise= $request->type_entreprise;
         if($type_entreprise=='mpme'){
-            $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('type_entreprise', 'mpme')->where('avis_ugp','!=',null)->where('liste_dattente_observations','!=',null)->orderBy('updated_at', 'desc')->get();
+            $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('type_entreprise', 'mpme')->where('avis_ugp','!=',null)->where('liste_dattente_observations','!=',null)->whereBetween('updated_at', ['2023-11-26 00-00-00', '2023-11-28 00-00-00'])->orderBy('updated_at', 'desc')->get();
             $type_entreprise='pca_mpme';
         }
         else{
-            $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('avis_ugp','!=',null)->whereIn('type_entreprise',['leader','aop'])->where('liste_dattente_observations','!=',null)->orderBy('updated_at', 'desc')->get();
+            $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('avis_ugp','!=',null)->whereIn('type_entreprise',['leader','aop'])->where('liste_dattente_observations','!=',null)->whereBetween('updated_at', ['2023-11-27 00-00-00', '2023-11-28 00-00-00'])->orderBy('updated_at', 'desc')->get();
            $type_entreprise='pca_aop';
         }
         $texte= "Liste d'attente des PCA/PA ";
@@ -962,7 +962,6 @@ public function add_piecej_to_projet(Request $request){
    // dd($request->projet_id);
     $projet= Projet::find($request->projet_id);
     $type_piece=$request->type_piece;
-    
 if($type_piece==env('VALEUR_ID_DOCUMENT_DEVIS')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();

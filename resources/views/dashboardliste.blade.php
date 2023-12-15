@@ -60,97 +60,12 @@
             </ul>
             
         </div>
-
-        {{-- <div class="col-md-6">
-            <ul class="nav nav-pills nav-stacked">
-                <li>
-                    <a href="javascript:void(0)" onclick="entreprise_aformer('aop');">
-                        <span class="badge pull-right">0</span>
-                        <i class="fa fa-tag fa-fw text-success"></i> <strong>Nombre de PCA soumis(MPME) </strong>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="javascript:void(0)">
-                        <span class="badge pull-right">0</span>
-                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de PCA Selectionnés (MPME)</strong>
-                    </a>
-                </li>
-                
-                <li>
-                  <a href="javascript:void(0)">
-                      <span class="badge pull-right">0</span>
-                      <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de PCA soumis(Leader/AOP)</strong>
-                  </a>
-              </li>
-                <li>
-                    <a href="javascript:void(0)">
-                        <span class="badge pull-right">0</span>
-                        <i class="fa fa-tag fa-fw text-danger"></i> <strong>Nombre de PCA Selectionnés (Leader/AOP)</strong>
-                    </a>
-                </li>
-                
-            </ul>
-
-        </div>  --}}
     </div>
     <hr>
     
 </div>
 
 </div>
-
-{{-- <div class="row text-center">
-    <div class="col-sm-6 col-lg-2">
-        <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('listeallensouscription') }}?typeentreprise=mpme')" class="widget widget-hover-effect2">
-            <div class="widget-extra themed-background">
-                <h4 class="widget-content-light"><strong>MPME</strong> Enregistrées</h4>
-            </div>
-            <div class="widget-extra-full"><span class="h2 animation-expandOpen">{{ $totalenregistres }}</span></div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-2">
-        <a href="javascript:void(0)"  onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=mpme');" class="widget widget-hover-effect2">
-            <div class="widget-extra themed-background-dark">
-                <h4 class="widget-content-light"><strong>MPME</strong> A former</h4>
-            </div>
-            <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ $decisions_retenu }}</span></div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-2">
-        <a href="javascript:void(0)"  onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=mpme');" class="widget widget-hover-effect2">
-            <div class="widget-extra themed-background">
-                <h4 class="widget-content-light"><strong>MPME</strong> Subventionnee</h4>
-            </div>
-            <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ $decisions_retenu }}</span></div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-2">
-        <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('listeallensouscription') }}?typeentreprise=aop')" class="widget widget-hover-effect2">
-            <div class="widget-extra themed-background-dark">
-                <h4 class="widget-content-light"><strong></strong>AOP/leader</strong> Enregistées</h4>
-            </div>
-            <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ $entreprisesLeaderAOP }}</span></div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-2">
-        <a href="javascript:void(0)"  onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=aop')" class="widget widget-hover-effect2">
-            <div class="widget-extra themed-background">
-                <h4 class="widget-content-light"><strong>AOP/leader</strong> A formés</h4>
-            </div>
-            <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ $nbaopaformer }}</span></div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-2">
-        <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=aop')" class="widget widget-hover-effect2">
-            <div class="widget-extra themed-background-dark">
-                <h4 class="widget-content-light"><strong>AOP/Leader</strong> subventionnee</h4>
-            </div>
-            <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ $nbaopaformer }}</span></div>
-        </a>
-    </div>
-</div> --}}
-
 <div class="block full">
     <div class="table-responsive">
         <table id="datatable" class="table table-vcenter table-condensed table-bordered listepdf">

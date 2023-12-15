@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
    crossorigin=""/>
+   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
         <!-- Related styles of various icon packs and plugins -->
@@ -286,27 +287,14 @@
         <script>$(function(){ FormsValidation.init(); });</script>
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
-    <script>
-        var map = L.map('map').setView([12.35, -1.516667], 8);
-    //  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    //      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //      maxZoom: 13,
-    //     id: 'mapbox/streets-v11',
-    //     tileSize: 512,
-    //      zoomOffset: -1,
-    //      accessToken: 'pk.eyJ1Ijoic3RlcGhzYW4iLCJhIjoiY2wxeGo1N2xuMDNiMDNkbXFudW8xazNrZiJ9.fHt7ZUxVTOdt_pAc-ps6dg'
-    //  }).addTo(map);
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-                     // Il est toujours bien de laisser le lien vers la source des données
-                     attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
-                     minZoom: 1,
-                    maxZoom: 20
-                }).addTo(map);
-    </script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    @yield('additional_script')
+    
+
     <script>
         function listedashbordlistdata(url) 
         {   
-            //var url = "{{ route('entreprise_retenues') }}?typeentreprise=mpme";
             var url = url;
             $.ajax({
                     url: url,
@@ -331,7 +319,6 @@
         }
         function listepcadashbordlistdata(url) 
         {   
-            //var url = "{{ route('entreprise_retenues') }}?typeentreprise=mpme";
             var url = url;
             $.ajax({
                     url: url,
@@ -368,15 +355,9 @@ function makedatatable(){
             'csvHtml5',
             'pdfHtml5'
         ],
-        
-
-
-//fin total 
 		dom: 'Bfrtip',
 		initComplete: function () {
             var api = this.api();
- 
-            // For each column
             api
                 .columns()
                 .eq(0)
@@ -535,7 +516,7 @@ function makedatatable(){
 
 });   
 </script>
-<script language = "JavaScript">
+<script language ="JavaScript">
     function entreprise_aformer(type_entreprise, valeur_de_forme){
         (type_entreprise=="mpme")?(categorie_entreprise="Les MPME"):(categorie_entreprise="Les Entreprises leaders et les AOP");
         (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="Selectionnées pour la formation ");
@@ -547,7 +528,7 @@ function makedatatable(){
                             data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme },
                             error:function(data){alert("Erreur");},
                             success: function (donnee) {
-    var donnch= new Array();
+                        var donnch= new Array();
                             var secteur = new Array();
                         for(var i=0; i<donnee.length; i++)
                         {
@@ -588,8 +569,6 @@ function makedatatable(){
                                 data: donnch
                             }]
                         });
-
-   
                            
 }
 
@@ -753,7 +732,6 @@ $.ajax({
 
 <script language = "JavaScript">
     function dashboardentreprise_aformer(type_entreprise){
-        //alert(type_entreprise);
         var url = "{{ route('aopleader.enregistreparsecteuractivite') }}";
           $.ajax({
                             url: url,
@@ -789,7 +767,6 @@ $.ajax({
                                     cursor: 'pointer',
                                     dataLabels: {
                                         enabled: true,
-                                        //format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                                     }
                                 }
                             },
@@ -851,7 +828,6 @@ $.ajax({
     });
     }      
 </script>
-
 <script language = "JavaScript">
     var url = "{{ route('enregistreSecteurActiviteZone') }}";
       $.ajax({
@@ -860,8 +836,8 @@ $.ajax({
                             dataType: 'json',
                             error:function(data){alert("Erreur");},
                             success: function (donnee) {
-                        var donnch= new Array();
-                        var secteur = new Array();
+                            var donnch= new Array();
+                            var secteur = new Array();
                     for(var i=0; i<donnee.length; i++)
                     {
 
@@ -934,7 +910,8 @@ $.ajax({
 </script>
 <script>
 function initMap()
-{
+{ 
+    var markers = L.markerClusterGroup();
     var url = "{{ route('souscriptiongeopresenation') }}";
     $.ajax({
             url: url,
@@ -942,19 +919,15 @@ function initMap()
             dataType: 'json',
             error:function(data){alert("Erreur");},
             success: function (data) {
-               // alert(data.length)
                 for(var i=0; i<data.length; i++)
                     {
                         if(data[i].longitude){
-                            marker= L.marker([data[i].longitude, data[i].latitude]).addTo(map);
+                            marker= L.marker([data[i].longitude, data[i].latitude]);
                             marker.bindPopup("<b>"+'Denomination :'+data[i].denomination+"!</b><br>"+'Zone :'+data[i].region).openPopup();
-                        }
-                      
-                        
+                            markers.addLayer(marker);
+                        } 
                     }
-
-        
-
+                    map.addLayer(markers);
             }
     });
 }

@@ -12,6 +12,7 @@
             <form  id="progress-wizard" action="{{ route("responsableaop.store") }}" method="post" class="form-horizontal form-bordered" style="padding-left: 20px; border:1px solid black;"  enctype="multipart/form-data" >
                 @csrf
                             <div class="row">
+                                   <p class="message_doublon" style="color: red; display:none;">Désole vous vous êtes déjà enregistré sur la plateforme avec le code promoteur.Votre code promoteur vous sera envoyé par mail. Contacter nos chefs de zone</span> </p>
                                <div class="col-lg-5">
                                          <fieldset>
                                                 <legend>Informations générales</legend>
@@ -57,7 +58,7 @@
                                                     <div class="form-group">
                                                         <label class=" control-label" for="val_username">Télephone Principal:<span class="text-danger">*</span><span data-toggle="tooltip" title="Ce numéro de téléphone ne sera pas utilise pour d'autre souscription"><i class="fa fa-info-circle"></i></span></label>
                                                             <div class="input-group">
-                                                                <input type="text" id="telephone_promoteur" name="telephone_promoteur" class="form-control masked_phone" value="{{old('telephone_promoteur')}}" placeholder="Votre numéro de télephone" required="Ce champ est obligatoire">
+                                                                <input type="text" id="telephone_promoteur" name="telephone_promoteur" class="form-control masked_phone" value="{{old('telephone_promoteur')}}" placeholder="Votre numéro de télephone" required="Ce champ est obligatoire" onchange="controler_de_doublon_promotrice('telephone_promoteur')">
                                                             </div>
                                                             @if ($errors->has('telephone_promoteur'))
                                                             <span class="help-block text-danger">
@@ -70,14 +71,14 @@
                                                         <label class=" control-label" for="val_username">Mobile (WhatsApp)</label>
 
                                                             <div class="input-group">
-                                                                <input type="text" id="mobile_promoteur" name="mobile_promoteur" value="{{old('mobile_promoteur')}}" class="form-control masked_phone" placeholder="Votre numéro de télephone WhatsApp " >
+                                                                <input type="text" id="mobile_promoteur" name="mobile_promoteur" value="{{old('mobile_promoteur')}}" class="form-control masked_phone" placeholder="Votre numéro de télephone WhatsApp "  onchange="controler_de_doublon_promotrice('mobile_promoteur')">
                                                             </div>
 
                                                     </div>
                                                     <div class="form-group">
                                                         <label class=" control-label" for="val_email">Email <span class="text-danger">*</span><span data-toggle="tooltip" title="Cet adresse sera utilisé pour les notifications sur votre dossier par email "><i class="fa fa-info-circle"></i></span></label>
                                                             <div class="input-group">
-                                                                <input type="email" id="email_promoteur" name="email_promoteur" class="form-control" value="{{old('email_promoteur')}}" placeholder="test@example.com" required="Ce champ est obligatoire" >
+                                                                <input type="email" id="email_promoteur" name="email_promoteur" class="form-control" value="{{old('email_promoteur')}}" placeholder="test@example.com" required="Ce champ est obligatoire" onchange="controler_de_doublon_promotrice('email_promoteur')">
                                                             </div>
 
                                                     </div>
@@ -98,7 +99,7 @@
                                                                 <div class="form-group">
                                                                     <label class=" control-label" for="">Numéro <span class="text-danger">*</span></label>
                                                                     <div class="input-group">
-                                                                        <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." required>
+                                                                        <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." onchange="controler_de_doublon_promotrice('numero_identite')"  required>
                                                                     </div>
                                                                     @if ($errors->has('numero_identite'))
 										                                <span class="help-block text-danger">
@@ -106,6 +107,7 @@
 										                                </span>
 										                            @endif
                                                             </div>
+                                                            
                                                             <div class="form-group">
                                                                 <label class=" control-label" for="">Date d'établissement <span class="text-danger">*</span></label>
                                                             <div class="input-group">

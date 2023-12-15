@@ -1112,8 +1112,6 @@ public function enregistreSecteurActiviteZone()
 //fonction pour le représentation graphique de souscriptions enregistrées par zone
 public function souscriptionparzone(Request $request)
 {
-  // $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.updated_at BETWEEN '2022-05-27 00-00-00' AND '2022-07-01 00-00-00' and e.status=1  GROUP by e.region, v.libelle");
-
    $souscriptionsParsecteur= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id  and e.status=1  GROUP by e.region, v.libelle');
     $datacategorie=[];
         foreach( $souscriptionsParsecteur as $value)
@@ -1179,9 +1177,6 @@ public function entreprisepreselectionneparzone(Request $request)
         else
          return $dataregion=0;
 }
-
-
-
 //selection des aop ou leader enregistés pour la phase de formation par région
 public function aoppreselectionneparzone()
 {
@@ -1193,11 +1188,42 @@ public function aoppreselectionneparzone()
         }
         return json_encode($dataregion);
 }
-
 //La géoprésentation des MPME enregistés
+public function beneficiairegeopresenation(Request $request )
+{
+   $type_entreprise= $request->type_entreprise;
+   $souscriptionsgeo= Entreprise::where("aopOuleader",$type_entreprise)->get();
+    $datageo=[];
+        foreach( $souscriptionsgeo as $value)
+        {
+           $datageo[] = array('id'=>$value->id,'denomination'=>$value->denomination,'telephone'=>$value->telephone_entreprise, 'longitude'=>$value->longitude, 'latitude'=>$value->latitude, 'secteur_activite'=> getlibelle($value->secteur_activite),'region'=>getlibelle($value->region) );
+        }
+        return json_encode($datageo);
+
+}
 public function souscriptiongeopresenation()
 {
-   $souscriptionsgeo= DB::select('select e.id, e.denomination, e.longitude, e.secteur_activite, e.region, e.latitude, e.telephone_entreprise FROM entreprises e where e.status=1');
+  // $souscriptionsgeo= Entreprise::where("decision_du_comite_phase1","selectionnee")->get();
+   $souscriptionsgeo= Entreprise::all();
+
+    $datageo=[];
+        foreach( $souscriptionsgeo as $value)
+        {
+           $datageo[] = array('id'=>$value->id,'denomination'=>$value->denomination,'telephone'=>$value->telephone_entreprise, 'longitude'=>$value->longitude, 'latitude'=>$value->latitude, 'secteur_activite'=> getlibelle($value->secteur_activite),'region'=>getlibelle($value->region) );
+        }
+        return json_encode($datageo);
+
+}
+public function entreprise_forme_geopresenation(Request $request )
+{
+   $type_entreprise= $request->type_entreprise;
+   $forme= $request->valeur_de_forme;
+   if($forme==1){
+    $souscriptionsgeo= Entreprise::where("aopOuleader",$type_entreprise)->where("decision_du_comite_phase1","selectionnee")->where('participer_a_la_formation',$forme)->get();
+   }
+   else{
+    $souscriptionsgeo= Entreprise::where("aopOuleader",$type_entreprise)->where("decision_du_comite_phase1","selectionnee")->get();
+   }
     $datageo=[];
         foreach( $souscriptionsgeo as $value)
         {

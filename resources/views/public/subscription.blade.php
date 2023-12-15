@@ -12,6 +12,7 @@
             <form  id="progress-wizard" action="{{ route("promoteur.store") }}" method="post" class="form-horizontal form-bordered" style="padding-left: 20px; border:1px solid black;" enctype="multipart/form-data" >
                 @csrf
                             <div class="row">
+                                 <p class="message_doublon" style="color: red; display:none;">Désole vous vous êtes déjà enregistré sur la plateforme avec le code promoteur. Votre code promoteur vous sera envoyé par mail. </p>
                                <div class="col-lg-5">
                                          <fieldset>
                                                 <legend>Informations générales</legend>
@@ -49,7 +50,7 @@
                                                     <div class="form-group">
                                                         <label class=" control-label" for="val_username">Télephone Principal:<span class="text-danger">*</span><span data-toggle="tooltip" title="Ce numéro de téléphone ne sera pas utilise pour d'autre souscription"><i class="fa fa-info-circle"></i></span></label>
                                                             <div class="input-group">
-                                                                <input type="text" id="telephone_promoteur" name="telephone_promoteur" class="form-control masked_phone" value="{{old('telephone_promoteur')}}" placeholder="Votre numéro de télephone" required="Ce champ est obligatoire">
+                                                                <input type="text" id="telephone_promoteur" name="telephone_promoteur" class="form-control masked_phone" value="{{old('telephone_promoteur')}}" placeholder="Votre numéro de télephone" required="Ce champ est obligatoire" onchange="controler_de_doublon_promotrice('telephone_promoteur')">
                                                             </div>
                                                             @if ($errors->has('telephone_promoteur'))
                                                             <span class="help-block text-danger">
@@ -59,16 +60,14 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class=" control-label" for="val_username">Mobile (WhatsApp)</label>
-
                                                             <div class="input-group">
-                                                                <input type="text" id="mobile_promoteur" name="mobile_promoteur" value="{{old('mobile_promoteur')}}" class="form-control masked_phone" placeholder="Votre numéro de télephone WhatsApp " >
+                                                                <input type="text" id="mobile_promoteur" name="mobile_promoteur" value="{{old('mobile_promoteur')}}" class="form-control masked_phone" placeholder="Votre numéro de télephone WhatsApp" onchange="controler_de_doublon_promotrice('mobile_promoteur')" required >
                                                             </div>
-
                                                     </div>
                                                     <div class="form-group">
                                                         <label class=" control-label" for="val_email">Email <span class="text-danger">*</span><span data-toggle="tooltip" title="Cet adresse sera utilisé pour les notifications sur votre dossier par email "><i class="fa fa-info-circle"></i></span></label>
                                                             <div class="input-group">
-                                                                <input type="email" id="email_promoteur" name="email_promoteur" class="form-control" value="{{old('email_promoteur')}}" placeholder="test@example.com" required="Ce champ est obligatoire" >
+                                                                <input type="email" id="email_promoteur" name="email_promoteur" class="form-control" value="{{old('email_promoteur')}}" placeholder="test@example.com" required="Ce champ est obligatoire" onchange="controler_de_doublon_promotrice('email_promoteur')" >
                                                             </div>
 
                                                     </div>
@@ -88,8 +87,7 @@
                                                                 <div class="form-group">
                                                                     <label class=" control-label" for="">Numéro <span class="text-danger">*</span></label>
                                                                     <div class="input-group">
-                                                                        <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." required>
-
+                                                                        <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." onchange="controler_de_doublon_promotrice()" required>
                                                                     </div>
                                                                     @if ($errors->has('numero_identite'))
 										                                <span class="help-block text-danger">
@@ -103,29 +101,10 @@
                                                                 <input type="text" id="date_identification" value="{{old('date_identification')}}" name="date_identification" class="form-control datepicker" data-date-format="dd-mm-yyyy" placeholder="mm/dd/yy"required>
                                                         </div>
                                                             </div>
-                                                        {{-- <div class="form-group">
-                                                            <label class=" control-label" for="">Autorité de délivrance <span class="text-danger">*</span></label>
-
-                                                            <div class="input-group">
-                                                                <select id="autorite_delivrance_identification" value="{{old('autorite_delivrance_identification')}}" name="autorite_delivrance_identification" class="select-select2" data-placeholder="Choisir l'autorite de delivrance" style="width: 100%;" required>
-                                                                    <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                                                                    <option value="1" {{ old('autorite_delivrance_identification') == 1 ? 'selected' : '' }} >ONI</option>
-                                                                    <option value="2" {{ old('autorite_delivrance_identification') == 2 ? 'selected' : '' }}>Autre</option>
-                                                                </select>
-                                                            </div>
-                                                    </div> --}}
-                                                    {{-- <div class="form-group">
-                                                        <label class=" control-label" for="">Lieu d'établissement<span class="text-danger">*</span></label>
-
-                                                        <div class="input-group">
-                                                            <input type="text" id="lieu_etablissement_identification" name="lieu_etablissement_identification" value="{{old("lieu_etablissement_identification")}}" class="form-control" placeholder="Lieu d'etablissement" required>
-
-                                                        </div>
-
-                                                </div> --}}
+                                                        
                                                 <div class="form-group{{ $errors->has('docidentite') ? ' has-error' : '' }}">
                                                     <label class=" control-label" for="docidentite">Joindre une copie<span class="text-danger">*</span></label>
-                                                        <input class="form-control" type="file" name="docidentite" id="docidentite" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie du document d'identification" required>
+                                                        <input class="form-control" type="file" name="docidentite" id="docidentite1" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie du document d'identification" onchange="VerifyUploadSizeIsOK('docidentite1')" required>
                                                     @if ($errors->has('docidentite'))
                                                         <span class="help-block">
                                                             <strong>{{ $errors->first('docidentite') }}</strong>
@@ -179,7 +158,6 @@
                                                </div>
                                     </fieldset>
                                     </div>
-
                                         <fieldset>
                                             <legend>Competences du promoteur</legend>
                     <div class="row">
@@ -193,14 +171,6 @@
                                                @endforeach
                                            </select>
                                    </div>
-                                   {{-- <div class="form-group" id="autre_niveau_instruction">
-                                        <label class=" control-label" for="">Précisez</label>
-                                        <div class="input-group">
-                                            <input type="text" name="autre_niveau_instruction" class="form-control" placeholder="Précisez autre niveau instruction " value="{{old("autre_niveau_instruction")}}" required>
-
-                                        </div>
-
-                                    </div> --}}
                                     <div class="form-group">
                                         <label class=" control-label" for="example-chosen">Formation (s) en rapport avec l’activité<span class="text-danger">*</span><span data-toggle="tooltip" title="Comment vous vous êtes formé sur l'activité que vous menez comme activité de l'entreprise "><i class="fa fa-info-circle"></i></span></label>
                                             <select id="formation_activite" name="formation_activite" class="select-select2" data-placeholder="Le mode de formation en relation avec l'activite" style="width: 100%;" required onchange="afficherautre('formation_activite',  2 ,'domaine_formation');">
@@ -217,7 +187,6 @@
                                             <span class="input-group-addon"><i class="gi gi-learning"></i></span>
                                         </div>
                                     </div>
-                                    
                                     <div class="form-group">
                                         <label class="control-label " for="">Nombre d’années d’expérience dans le domaine d'activite <span class="text-danger">*</span></label>
                                             <div class="input-group">
@@ -250,13 +219,11 @@
                                                     <option value="2" {{ old('membre_ass') == 2 ? 'selected' : '' }}>Non</option>
                                                 </select>
                                         </div>
-                                        <div class="form-group associations">
-                                            <label class=" control-label" for="example-textarea-input">Citer les associations <span data-toggle="tooltip" title="Citer les associations dont vous êtes membre "><i class="fa fa-info-circle"></i></span></label>
-                                                <textarea id="associations" name="associations" rows="9" class="form-control" placeholder="citer les associations..">{{old('associations') }}</textarea>
-                                        </div>
-                                        
+                                    <div class="form-group associations">
+                                        <label class=" control-label" for="example-textarea-input">Citer les associations <span data-toggle="tooltip" title="Citer les associations dont vous êtes membre "><i class="fa fa-info-circle"></i></span></label>
+                                            <textarea id="associations" name="associations" rows="9" class="form-control" placeholder="citer les associations..">{{old('associations') }}</textarea>
+                                    </div>   
                             </div>
-
                     </div>
                     <div class="row">
                         @foreach ($proportiondedepences as $proportiondedepence )
@@ -291,12 +258,11 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                       </fieldset>
+            </fieldset>
                             <div class="col-md-8 col-md-offset-4" style="margin-top:20px">
                                 <input type="reset" class="btn btn-sm btn-warning"  value="Annuler">
-                                    <input   onclick="return VerifyUploadSizeIsOK()" type="submit" id="valider" disabled class="btn btn-sm btn-success"  value="Enregister">
+                                    <input   onclick="" type="submit" id="valider" disabled class="btn btn-sm btn-success"  value="Enregister">
                             </div>            <!-- END Form Buttons -->
                          </form>
                      </div>

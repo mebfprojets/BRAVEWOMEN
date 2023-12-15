@@ -15,6 +15,33 @@ use Illuminate\Support\Facades\Http;
 
 class PromotriceController extends Controller
 {
+    public function control_doublon_souscription(Request $request){
+     if($request->mobile_promoteur){
+        $promotrice= Promotrice::where("numero_identite", $request->numero_identite)
+        ->orWhere("telephone_promoteur", $request->telephone_promoteur)
+        ->orWhere("mobile_promoteur", $request->mobile_promoteur)
+        ->orWhere("email_promoteur", $request->email_promoteur)
+        ->first();
+     }
+     
+     else{
+        $promotrice= Promotrice::where("numero_identite", $request->numero_identite)
+        ->orWhere("telephone_promoteur", $request->telephone_promoteur)
+        ->orWhere("telephone_promoteur", $request->mobile_promoteur)
+        ->orWhere("email_promoteur", $request->email_promoteur)
+        ->first();
+     }
+           
+            if($promotrice != null){
+                $details['email'] = $promotrice->email_promoteur;
+                $details['nom'] = $promotrice->nom;
+                $details['prenom'] = $promotrice->prenom;
+                $details['code'] = $promotrice->code_promoteur;
+                $dest=dispatch(new SendEmailJob($details));
+            }
+           
+            return json_encode($promotrice);
+    }
     /**
      * Display a listing of the resource.
      *

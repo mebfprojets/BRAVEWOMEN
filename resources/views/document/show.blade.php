@@ -49,13 +49,9 @@
                             </div>
                     </div>
                     <div class="col-lg-8 img-bg" style="cursor: pointer;">
-                            <div style="box-shadow: 1px 2px 5px 1px #999">
-                            @if($document->type_piece!=)
-                              <embed src= "{{ Storage::disk('local')->url($piecejointe->url) }}" height=600 type='application/pdf' style="width: 100%;" />
-                              @else
-                              <iframe width="674" height="379" src="https://www.youtube.com/embed/QV2ua08jARE" title="spot" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                              @endif
-                            </div>
+                        <div style="box-shadow: 1px 2px 5px 1px #999">
+                          <embed src= "{{ Storage::disk('local')->url($piecejointe->url) }}" height=600 type='application/pdf' style="width: 100%;" />
+                        </div>
                     </div>
         </div>
                 </div>

@@ -19,19 +19,6 @@
             <h2><strong>Detail</strong> sur le plan de continuité des Activité</h2>
         </div>
         <div class="col-md-7">
-        
-        <!-- Basic Form Elements Title -->
-       
-        {{-- @if ($projet->motif_du_rejet_de_lanalyse)
-            <div class="form-group row" >
-                <div class="col-md-4">
-                <label>Motif de rejet de l'analyse :</label>
-                </div>
-                <div class="col-sm-7 mb-3 mb-sm-0" style="color: red">
-                <label class="fb"> {{$projet->motif_du_rejet_de_lanalyse}}</label>
-                </div>
-            </div>
-        @endif --}}
                     <div class="form-group row">
                         <div class="col-md-4">
                         <label>Coach :</label>

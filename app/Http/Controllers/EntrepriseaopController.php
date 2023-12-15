@@ -43,7 +43,7 @@ class EntrepriseaopController extends Controller
         $maillon_activites=Valeur::where('parametre_id',7 )->get();
         $source_appros=Valeur::where('parametre_id',12 )->get();
         $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $futur_annees=Valeur::where('parametre_id',17 )->get();
         if($cat_entreprise=='aop'){
             $rentabilite_criteres=Valeur::where('parametre_id',14 )->whereNotIn('id',[7085,41])->get();
@@ -81,7 +81,7 @@ class EntrepriseaopController extends Controller
     {        
         $cat_entreprise=$request->cat_entreprise;
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
-        $annees=Valeur::where('parametre_id',16 )->get();
+        $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         if($cat_entreprise=='aop'){
             $rentabilite_criteres=Valeur::where('parametre_id',14 )->whereNotIn('id',[7085,41])->get();
         }
@@ -92,7 +92,11 @@ class EntrepriseaopController extends Controller
         // $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',7085)->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
-       $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->get();
+       $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->first();
+       $entreprises= DB::table('entreprises')
+                            ->join('projets','projets.entreprise_id','=','entreprises.id')
+                            ->where('projets.statut','selectionné')
+                            ->get();
        $date_de_formalisation= date('Y-m-d', strtotime($request->date_de_formalisation));
        //dd($date_de_formalisation);
        if($entreprises->count()< 1){
@@ -393,7 +397,7 @@ $entreprise=$entreprise->id;
 return view("validateStep1aop", compact("promoteur","entreprise"));
        }
 else{
-    return view("validateStep2" );
+    return view("validateStep2", compact("promoteur","entreprise") );
        }
     }
     public function print_resume_souscription(Promotrice $promotrice){

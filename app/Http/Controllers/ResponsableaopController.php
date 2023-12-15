@@ -32,7 +32,7 @@ class ResponsableaopController extends Controller
     }
     public function storecompleteresponsableaop(Request $request)
     {
-        return redirect()->back();
+        //return redirect()->back();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $promoteur= Promotrice::find($request->promoteur);
@@ -52,10 +52,9 @@ class ResponsableaopController extends Controller
                     ]);
                 }
             }
-            return  view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
         }
-        
-       
+        return  view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
+
     }
     public function store(Request $request)
     {

@@ -201,6 +201,7 @@ Route::group(['prefix'=>'administrator'], function(){
 
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");
+Route::get("/souscription/control_doublon", [PromotriceController::class, 'control_doublon_souscription'])->name("souscription.control_doublon");
 Route::resource("promoteur", PromotriceController::class);
 Route::resource('projet', ProjetController::class);
 Route::resource("entreprise",EntrepriseController::class);
@@ -246,6 +247,10 @@ Route::get('/dashboard/bank',[DashboradController::class, 'dashboard_bank'])->na
 Route::get("/financements/enregistres", [FinancementController::class, 'enregistre'])->name("financement.enregistres");
 Route::get("updatelocalisation/", [EntrepriseController::class, 'updatelocalisationentreprise'])->name("localisation.entreprise");
 Route::get("/dashboard/entreprises/geopresentation", [DashboradController::class, 'souscriptiongeopresenation'])->name("souscriptiongeopresenation");
+Route::get("/dashboard/beneficiaire/type_entreprise", [DashboradController::class, 'beneficiairegeopresenation'])->name("geopresenation_beneficiaire_par_type_entreprise");
+
+Route::get("/dashboard/entreprises/formees", [DashboradController::class, 'entreprise_forme_geopresenation'])->name("entreprise_forme");
+
 Route::get("/dashboard/entreprises/listepresentation", [DashboradController::class, 'dashboardliste'])->name("dashboardliste");
 Route::get("/promoteur/complement/{entreprise}", [EntrepriseController::class, 'completerPoportiondeDepensedupromoteur'])->name("promotrice.completeinfo");
 Route::post("/store/complement/", [EntrepriseController::class, 'storePoportiondeDepensedupromoteur'])->name("proportiondedepense.enr");
