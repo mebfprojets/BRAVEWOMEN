@@ -61,8 +61,10 @@ class EntrepriseController extends Controller
      */
     public function creation(Request $request)
     {
+        
         $promoteur_code= $request->promoteur_code;
         $promoteur=Promotrice::where('code_promoteur',$promoteur_code )->first();
+       // dd($promoteur->suscription_etape);
         if(!empty($request->entreprise)){
             $entreprise=Entreprise::where("id",$request->entreprise )->first();
         }
@@ -83,7 +85,7 @@ class EntrepriseController extends Controller
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
         $ouinon_reponses=Valeur::where('parametre_id',env("PARAMETRE_REPONSES_OUINON_ID") )->get();
         $niveau_resiliences=Valeur::where('parametre_id',env("PARAMETRE_NIVEAUDE_RESILIENCE_ID") )->get();
-    if($promoteur->suscription_etape==1){
+    if($promoteur->suscription_etape==1 || $promoteur->suscription_etape==null){
         return view("public.enrentreprise", compact("regions","forme_juridiques","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences"));
     }elseif($promoteur->suscription_etape==2 && $entreprise!= null){
         return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
@@ -94,12 +96,55 @@ class EntrepriseController extends Controller
 }
     public function create(Request $request)
     {
-        $promoteur_code= $request->promoteur_code;
-        $promoteur=Promotrice::where('code_promoteur',$promoteur_code )->first();
-        if(!empty($request->entreprise)){
-            $entreprise=Entreprise::where("id",$request->entreprise )->first();
+        $entreprise_nn_traite= Entreprise::where('code_promoteur', $request->promoteur_code)->where("conforme",null)->get();
+        dd($entreprise_nn_traite);
+      if(count($entreprise_nn_traite) < 2){
+                $promoteur_code= $request->promoteur_code;
+                $promoteur=Promotrice::where('code_promoteur',$promoteur_code )->first();
+                if(!empty($request->entreprise)){
+                    $entreprise=Entreprise::where("id",$request->entreprise )->first();
+                }
+                $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [62,64,63,59,58,53])->get();
+                $forme_juridiques=Valeur::where('parametre_id',8 )->get();
+                $nature_clienteles=Valeur::where('parametre_id',10 )->get();
+                $provenance_clients=Valeur::where('parametre_id',9 )->get();
+                $maillon_activites=Valeur::where('parametre_id',7 )->get();
+                $source_appros=Valeur::where('parametre_id',12 )->get();
+                $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
+                $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
+                $futur_annees=Valeur::where('parametre_id',17 )->get();
+                $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->get();
+                $effectifs=Valeur::where('parametre_id',15 )->get();
+                $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_SECTEUR_ACTIVITE_ID') )->get();
+                $nb_annee_activites= Valeur::where('parametre_id', env('PARAMETRE_NB_ANNEE_EXISTENCE_ENT') )->get();
+                $techno_utilisees= Valeur::where('parametre_id', env('PARAMETRE_TECHNO_UTILISE_ENTREPRISE_ID') )->get();
+                $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
+                $ouinon_reponses=Valeur::where('parametre_id',env("PARAMETRE_REPONSES_OUINON_ID") )->get();
+                $niveau_resiliences=Valeur::where('parametre_id',env("PARAMETRE_NIVEAUDE_RESILIENCE_ID") )->get();
+            if($promoteur->suscription_etape==1){
+                return view("public.enrentreprise", compact("regions","forme_juridiques","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences"));
+            }elseif($promoteur->suscription_etape==2 && $entreprise!= null){
+                return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
+            }
+            else{
+                return view("validateStep1", compact("promoteur"))->with('success','Item created successfully!');
+            }
+        
         }
-        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
+    else{
+        return redirect()->back();
+    }
+       
+
+}
+    public function create2(Promotrice $promoteur, Request $request)
+    {
+    $entreprise_nn_traite= Entreprise::where('code_promoteur', $request->promoteur_code)->where("conforme",null)->get();
+    
+        if(count($entreprise_nn_traite )<2 ){
+        $entreprise= Entreprise::where("promotrice_id", $promoteur->id)->orderBy('created_at','desc')->first();
+        $promoteur_code=$promoteur->code_promoteur;
+        $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [62,64,63,59,58,53])->get();
         $forme_juridiques=Valeur::where('parametre_id',8 )->get();
         $nature_clienteles=Valeur::where('parametre_id',10 )->get();
         $provenance_clients=Valeur::where('parametre_id',9 )->get();
@@ -107,37 +152,6 @@ class EntrepriseController extends Controller
         $source_appros=Valeur::where('parametre_id',12 )->get();
         $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
-        $futur_annees=Valeur::where('parametre_id',17 )->get();
-        $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->get();
-        $effectifs=Valeur::where('parametre_id',15 )->get();
-        $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_SECTEUR_ACTIVITE_ID') )->get();
-        $nb_annee_activites= Valeur::where('parametre_id', env('PARAMETRE_NB_ANNEE_EXISTENCE_ENT') )->get();
-        $techno_utilisees= Valeur::where('parametre_id', env('PARAMETRE_TECHNO_UTILISE_ENTREPRISE_ID') )->get();
-        $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
-        $ouinon_reponses=Valeur::where('parametre_id',env("PARAMETRE_REPONSES_OUINON_ID") )->get();
-        $niveau_resiliences=Valeur::where('parametre_id',env("PARAMETRE_NIVEAUDE_RESILIENCE_ID") )->get();
-    if($promoteur->suscription_etape==1){
-        return view("public.enrentreprise", compact("regions","forme_juridiques","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs", "nb_annee_activites","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences"));
-    }elseif($promoteur->suscription_etape==2 && $entreprise!= null){
-        return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
-    }
-  else{
-    return view("validateStep1", compact("promoteur"))->with('success','Item created successfully!');
-  }
-
-    }
-    public function create2(Promotrice $promoteur, Request $request)
-    {
-        $entreprise= Entreprise::where("promotrice_id", $promoteur->id)->orderBy('created_at','desc')->first();
-        $promoteur_code=$promoteur->code_promoteur;
-        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
-        $forme_juridiques=Valeur::where('parametre_id',8 )->get();
-        $nature_clienteles=Valeur::where('parametre_id',10 )->get();
-        $provenance_clients=Valeur::where('parametre_id',9 )->get();
-        $maillon_activites=Valeur::where('parametre_id',7 )->get();
-        $source_appros=Valeur::where('parametre_id',12 )->get();
-        $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
-        $annees=Valeur::where('parametre_id',16 )->get();
         $futur_annees=Valeur::where('parametre_id',17 )->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14 )->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
@@ -148,7 +162,7 @@ class EntrepriseController extends Controller
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
         $ouinon_reponses=Valeur::where('parametre_id',env("PARAMETRE_REPONSES_OUINON_ID") )->get();
         $niveau_resiliences=Valeur::where('parametre_id',env("PARAMETRE_NIVEAUDE_RESILIENCE_ID") )->get();
-    if($promoteur->etape_suscription2==null){
+    if($promoteur->suscription_etape==3){
         return view("public.enrentreprise", compact("regions","forme_juridiques","nature_clienteles","provenance_clients","maillon_activites","source_appros","sys_suivi_activites","promoteur_code","annees","rentabilite_criteres","effectifs","secteur_activites","techno_utilisees","nouveaute_entreprises","ouinon_reponses","niveau_resiliences","nb_annee_activites"));
     }elseif($promoteur->etape_suscription2== 2 && $entreprise!= null){
         return view("public.projet", compact("nature_clienteles","source_appros","promoteur_code","entreprise","futur_annees","effectifs"));
@@ -156,6 +170,10 @@ class EntrepriseController extends Controller
     else{
     return view("validateStep1", compact("promoteur"))->with('success','Item created successfully!');
     }
+}
+else{
+    return redirect()->back(); 
+}
 
 }
 
@@ -173,9 +191,13 @@ class EntrepriseController extends Controller
         $effectifs=Valeur::where('parametre_id',15 )->get();
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
        $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->get();
+       $entreprise_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("conforme","!=",null)->get();
+       $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","mpme")->where("conforme",null)->get();
        $date_de_formalisation= date('Y-m-d', strtotime($request->date_de_formalisation));
-       if($entreprises->count()< 2){
-        $entreprise = Entreprise::create([
+       //Pour eviter les doubles enregistrements
+       $entreprise_controle_doublon= Entreprise::where("code_promoteur",$promoteur->code_promoteur)->where("denomination",$request->denomination)->where("conforme",null)->get();
+       if(count($entreprise_controle_doublon)==0 && count($entreprise_nn_traite)< 2){
+         $entreprise = Entreprise::create([
             'denomination'=>$request->denomination,
             'region'=>$request->region,
             'province'=>$request->province,
@@ -210,9 +232,12 @@ class EntrepriseController extends Controller
             'niveau_resilience'=>$request->niveau_resilience,
             'mobililise_contrepartie'=>$request->mobililise_contrepartie,
             'status'=>0,
-            'banque_choisi'=>0
+            'banque_choisi'=>0,
+            "aopOuleader"=>"mpme",
+            'phase_de_souscription'=>2,
+            "num_ss_compte"=>"non défini"
         ]);
-        if ($request->hasFile('docagrement')) {
+        if($request->hasFile('docagrement')) {
             $docagrement= $request->docagrement->store('public/docagrement');
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_AGREMENT"),
@@ -224,7 +249,11 @@ class EntrepriseController extends Controller
             $urldocrccm=null;
         }
         if ($request->hasFile('docrccm')) {
-            $urldocrccm= $request->docrccm->store('public/docrccm');
+            $file = $request->file('docrccm');
+            $extension=$file->getClientOriginalExtension();
+            $fileName = $entreprise->code_promoteur.'.'.$extension;
+            $emplacement='public/docrccm'; 
+            $urldocrccm= $request['docrccm']->storeAs($emplacement, $fileName);
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_RCCM"),
                   'entreprise_id'=>$entreprise->id,
@@ -234,16 +263,16 @@ class EntrepriseController extends Controller
         else{
             $urldocrccm=null;
         }
-        if($entreprises->count()<1){
+        // if($entreprises->count()<1){
             $promoteur->update([
                 "suscription_etape"=>2,
             ]);
-        }
-        if($entreprises->count()==1){
-            $promoteur->update([
-                "etape_suscription2"=>2,
-            ]);
-        }
+        // }
+        // if($entreprises->count()==1){
+        //     $promoteur->update([
+        //         "etape_suscription2"=>2,
+        //     ]);
+        // }
         foreach($rentabilite_criteres as $rentabilite_critere){
             foreach($annees as $annee){
                 $variable=$rentabilite_critere->id.$annee->id;
@@ -423,13 +452,16 @@ $note_secteur_activite+ $note_entreprise_formalise + $note_outil_de_suivi+$note_
    // "decision_ugp"=> $decision_ugp
  ]);
 $entreprise=$entreprise->id;
+$entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","mpme")->where("conforme",null)->get();
+        //nombre de nouvelle entreprise enregistré pas le promoteur
+        $nbre_ent_nn_traite = count($entreprise_nn_traite);
 
-return view("validateStep1", compact("promoteur","entreprise"));
+return view("validateStep1", compact("promoteur","entreprise","nbre_ent_nn_traite"));
        }
 else{
-    return view("validateStep2" );
+    return view("validateStep2", compact("promoteur","entreprise") );
        }
-    }
+}
 
 
     public function genereRecpisse(Request $request)
@@ -452,7 +484,7 @@ else{
         $this->email= $promoteur->email_promoteur;
         //générer le qrCode 
        // $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate('string'));
-         $qrcode =  base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate("Ceci est un recepissé générer par la plateforme BRAVE WOMEN Burkina"."Code didentification:"." ".$promoteur->code_promoteur."_".$promoteur->id."BWBF"));
+         $qrcode =  base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate("Ceci est un recepissé généré par la plateforme BRAVE WOMEN Burkina"."Code didentification:"." ".$promoteur->code_promoteur."_".$promoteur->id."BWBF"));
         $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','contact_chef_de_zone','qrcode'));
        // dd($qrcode);
        // Mail::to($this->email)->queue(new recepisseMail($promoteur->id));
@@ -559,10 +591,18 @@ else{
     public function update(Request $request, Entreprise $entreprise)
     {
         $promoteur= Promotrice::where("code_promoteur",$request->code_promoteur)->first();
-        
-       $promoteur->update([
+        $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->where("description_du_projet",null)->orderBy('created_at','desc')->first();
+     if($entreprise->aopOuleader == "mpme"){
+        $promoteur->update([
+            "suscription_etape"=>3
+        ]);
+    }
+    else{
+        $promoteur->update([
             "suscriptionaopleader_etape"=>3
-       ]);
+        ]);
+    }
+       
     //     //Si le promoteur a enregistré deux entreprises et le la deuxième entreprise a un projet.
     //     //Cela veut dire qu'il a créer deux entreprise et chaque entreprise à une projet
     //     if($promoteur->entreprises->count()==2){
@@ -585,12 +625,21 @@ else{
         else{
              $contact_chef_de_zone= env("NUMERO_SUPPORT");
         }
-        $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
+
+        $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","mpme")->where("conforme",null)->get();
+        //nombre de nouvelle entreprise enregistré pas le promoteur
+        $nbre_ent_nn_traite = count($entreprise_nn_traite);
         $data["email"] = $promoteur->email_promoteur;
         $this->email= $promoteur->email_promoteur;
         Mail::to($this->email)->queue(new resumeMail($entreprise->promotrice->id));
         Mail::to($this->email)->queue(new recepisseMail($entreprise->promotrice->id));
-        return view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
+    if($entreprise->aopOuleader == "mpme"){
+        return view("validateStep1", compact("promoteur","nbre_ent_nn_traite"))->with('success','Item created successfully!');
+    }
+    else{
+        return view("validateStep1aop", compact("promoteur","nbre_ent_nn_traite"))->with('success','Item created successfully!');
+
+    }
     }
 
     /**
@@ -613,8 +662,8 @@ else{
         return view("document.show", compact('piecejointe'));
     }
     public function verifierentreprise(Request $request){
-           $denomination= $request->denom;
-       $result= Entreprise::where("denomination",$denomination)->first();
+            $denomination= $request->denom;
+            $result= Entreprise::where("denomination",$denomination)->where("code_promoteur",$promoteur)->first();
         return json_encode($result);
     }
     public function updatelocalisationentreprise(Request $request)

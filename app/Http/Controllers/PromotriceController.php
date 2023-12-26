@@ -12,7 +12,7 @@ use App\Models\Valeur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\DB;
 class PromotriceController extends Controller
 {
     public function control_doublon_souscription(Request $request){
@@ -155,6 +155,9 @@ class PromotriceController extends Controller
     public function afficherform(){
         return view("public.search");
     }
+    public function afficherform_mpme(){
+        return view("public.searchmpme");
+    }
     public function result(Request $request){
         $promoteur = Promotrice::where("code_promoteur", $request->code_promoteur)->first();
         if($promoteur==null){
@@ -204,31 +207,136 @@ class PromotriceController extends Controller
         return json_encode($data);
     } 
 
-    public function search(Request $request){
-      
+    public function search(Request $request)
+    {
         $promoteur = Promotrice::where("code_promoteur", $request->code_promoteur)->first();
         if($promoteur==null){
-            return view("invalide");
+            return view("invalide", compact("promoteur"));
         }
+        //Le promoteur existe dans la base de données
         else{
+            $entreprise_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","aop")->where("conforme","!=",null)->get();
+            $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->whereIn("aopOuleader",["aop","leader"])->where("conforme",null)->get();
+            $nbre_ent_nn_traite = count($entreprise_nn_traite);
+            if(!$entreprise_traite){
             if($promoteur->suscriptionaopleader_etape==2){
                 $entreprise= Entreprise::where("promotrice_id",$promoteur->id )->first();
                 $entreprise=$entreprise->id;
                 return view("validateStep1", compact("promoteur","entreprise"));
                // return view("validateStep1aop", compact("promoteur","entreprise"));
-              
             }
             elseif($promoteur->suscriptionaopleader_etape==1 || $promoteur->suscriptionaopleader_etape==null ){
-               
-              
-                return view("validateStep1aop", compact("promoteur"));
+                return view("validateStep1aop", compact("promoteur","nbre_ent_nn_traite"));
             }
             else{
-             
-                return view("validateStep1aop", compact("promoteur"));
-               
+                return view("validateStep1aop", compact("promoteur","nbre_ent_nn_traite"));
             }
         }
+        else{
+            // Verifions si une de ses entreprise à un PCA
+            $projet=  DB::table('entreprises')
+                        ->join('projets','projets.entreprise_id','entreprises.id')
+                        ->whereIn('entreprises.aopOuleader',["aop","leader"])
+                        ->where('entreprises.code_promoteur', $promoteur->code_promoteur)
+                        ->first();
+                       
+            if($projet){
+                return view("invalide", compact("promoteur"));
+            }
+            else{
+                if($promoteur->suscriptionaopleader_etape==2){
+                    $entreprise= Entreprise::where("promotrice_id",$promoteur->id )->first();
+                    $entreprise=$entreprise->id;
+                    return view("validateStep1aop", compact("promoteur","entreprise","nbre_ent_nn_traite"));
+                }
+                elseif($promoteur->suscriptionaopleader_etape==1 || $promoteur->suscriptionaopleader_etape==null ){
+                    return view("validateStep1aop", compact("promoteur","nbre_ent_nn_traite"));
+                }
+                return view("validateStep1aop", compact("promoteur", "nbre_ent_nn_traite"));
+            }
+        }
+
+    }
+    }
+    public function searchmpme(Request $request){
+        $promoteur = Promotrice::where("code_promoteur", $request->code_promoteur)->first();
+     
+        //Ce code promoteur n'existe pas dans la base de données
+        if($promoteur==null){
+            return view("invalide", compact("promoteur"));
+        }
+    //Le promoteur existe dans la base de données
+    else{
+        $entreprise_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("conforme","!=",null)->get();
+        $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","mpme")->where("conforme",null)->get();
+        //nombre de nouvelle entreprise enregistré pas le promoteur
+        $nbre_ent_nn_traite = count($entreprise_nn_traite);
+     // Verifions s'il y'a une entreprise en son nom lors de la phase une
+        
+        // S'il n'ya pas d'entreprise traitée
+        if(!$entreprise_traite){
+            if($promoteur->suscription_etape==2){
+                $entreprise= Entreprise::where("promotrice_id",$promoteur->id)->first();
+               // dd($promoteur->suscription_etape);
+                $entreprise=$entreprise->id;
+                return view("validateStep1", compact("promoteur","entreprise",'nbre_ent_nn_traite'));
+            }
+            elseif($promoteur->suscription_etape==1 || $promoteur->suscription_etape==null ){
+              // dd($promoteur->suscription_etape);
+              
+                return view("validateStep2", compact("promoteur"));
+            }
+            else{
+               
+                return view("validateStep1", compact("promoteur","nbre_ent_nn_traite"));
+            }
+        }
+            //S'il a une entreprise 
+        else{
+            // Verifions si une de ses entreprise à un PCA
+           
+            $projet=  DB::table('entreprises')
+                        ->join('projets','projets.entreprise_id','entreprises.id')
+                        ->where('entreprises.aopOuleader',"mpme")
+                        ->where('entreprises.code_promoteur', $promoteur->code_promoteur)
+                        ->first();
+                       
+            if($projet){
+                return view("invalide", compact("promoteur"));
+            }
+            else{
+                if($promoteur->suscription_etape==2){
+                    $entreprise= Entreprise::where("promotrice_id",$promoteur->id )->first();
+                    $entreprise=$entreprise->id;
+                    return view("validateStep1", compact("promoteur","entreprise","nbre_ent_nn_traite"));
+                }
+                elseif($promoteur->suscription_etape==1 || $promoteur->suscription_etape==null ){
+                    return view("validateStep1", compact("promoteur","nbre_ent_nn_traite"));
+                }
+                return view("validateStep1", compact("promoteur", "nbre_ent_nn_traite"));
+            }
+        }
+       
+        // if($promoteur->souscription_etape !=3){
+        //     if($promoteur->souscription_etape==2){
+        //         $entreprise= Entreprise::where("promotrice_id",$promoteur->id )->first();
+        //         $entreprise=$entreprise->id;
+        //         return view("validateStep1", compact("promoteur","entreprise","nbre_ent_nn_traite"));
+        //     }
+        //     elseif($promoteur->souscription_etape==1 || $promoteur->souscription_etape==null ){
+        //         return view("validateStep1", compact("promoteur","nbre_ent_nn_traite"));
+        //     }
+        //     else{
+        //         return view("validateStep1", compact("promoteur","nbre_ent_nn_traite"));
+        //     }
+        // }
+        // elseif($promoteur->souscription_etape==3){
+
+        // }
+    }
+        /* S'Il n'ya pas d'entreprise pour lui
+        il y'a juste le promoteur qui a été créé */
+       
     }
     /**
      * Display the specified resource.

@@ -48,11 +48,7 @@
         @endif>
                          <td class="text-center" style="width: 2%">{{ $i }}</td>
                          <td class="text-center" style="width: 10%">
-                            @if ( $entreprise->phase_de_souscription ==2 )
-                                Phase 2
-                            @else
-                                Phase 1
-                            @endif
+                               Phase {{ $entreprise->phase_de_souscription }}
                         </td>
                         <td class="text-center" style="width: 10%">
                             @if ($entreprise->aopOuleader =="aop" )
@@ -60,7 +56,7 @@
                             @elseif($entreprise->aopOuleader =="leader")
                                 Entreprise leader
                             @else
-                             MPME
+                                MPME
                             @endif
                         </td>
                          <td class="text-center" style="width: 5%;" >

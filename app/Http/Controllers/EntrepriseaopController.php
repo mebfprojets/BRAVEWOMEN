@@ -13,6 +13,7 @@ use App\Models\Promotrice;
 use App\Models\Valeur;
 use Illuminate\Http\Request;
 use PDF;
+use Illuminate\Support\Facades\DB;
 use App\Models\Proportion_de_depense_promotrice;
 
 class EntrepriseaopController extends Controller
@@ -81,6 +82,9 @@ class EntrepriseaopController extends Controller
     {        
         $cat_entreprise=$request->cat_entreprise;
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
+        $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->whereIn("aopOuleader",["aop","leader"])->where("conforme",null)->get();
+        //nombre de nouvelle entreprise enregistré pas le promoteur
+        $nbre_ent_nn_traite = count($entreprise_nn_traite);
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         if($cat_entreprise=='aop'){
             $rentabilite_criteres=Valeur::where('parametre_id',14 )->whereNotIn('id',[7085,41])->get();
@@ -93,13 +97,16 @@ class EntrepriseaopController extends Controller
         $effectifs=Valeur::where('parametre_id',15 )->get();
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
        $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->first();
-       $entreprises= DB::table('entreprises')
+       $entreprise_controle_doublon= Entreprise::where("code_promoteur",$promoteur->code_promoteur)->where("denomination",$request->denomination)->where("conforme",null)->get();
+       //Promotrice ayant une Entreprise AOP/leader ayant un projet 
+       $entreprises_as_projet= DB::table('entreprises')
                             ->join('projets','projets.entreprise_id','=','entreprises.id')
-                            ->where('projets.statut','selectionné')
+                            ->where('entreprises.code_promoteur',$promoteur->code_promoteur)
+                            ->whereIn('entreprises.aopOuleader',['aop','leader'])
                             ->get();
        $date_de_formalisation= date('Y-m-d', strtotime($request->date_de_formalisation));
-       //dd($date_de_formalisation);
-       if($entreprises->count()< 1){
+      // dd($entreprises_as_projet->count() );
+       if(count($entreprise_controle_doublon)==0  && $entreprises_as_projet->count() < 1){
         $entreprise = Entreprise::create([
             'denomination'=>$request->denomination,
             'region'=>$request->region,
@@ -147,7 +154,8 @@ class EntrepriseaopController extends Controller
             'membre_ass'=>$request->membre_ass,
             'ass_de_entreprise_leader'=>$request->ass_de_entreprise_leader,
             'banque_choisi'=>0,
-            'phase_de_souscription'=>2
+            'phase_de_souscription'=>3,
+            "num_ss_compte"=>"non défini"
         ]);
         if ($request->hasFile('docidentite')) {
             $urldocidentite= $request->docidentite->store('public/docidentification');
@@ -394,12 +402,12 @@ $entreprise->update([
 ]);
 $entreprise=$entreprise->id;
 //Fin de la notation des souscriptions 
-return view("validateStep1aop", compact("promoteur","entreprise"));
+return view("validateStep1aop", compact("promoteur","entreprise","nbre_ent_nn_traite"));
        }
 else{
-    return view("validateStep2", compact("promoteur","entreprise") );
+    return view("validateStep2", compact("promoteur") );
        }
-    }
+}
     public function print_resume_souscription(Promotrice $promotrice){
         $promoteur= Promotrice::find($promotrice->id);
        // dd($promotrice);

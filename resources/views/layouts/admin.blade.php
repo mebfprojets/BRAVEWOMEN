@@ -359,7 +359,22 @@
         });
         </script>
     <script>
-        
+function save_note_qualitatif(){
+        var id_entreprise= $("#entreprise").val();
+        var note_qualitatif= $("#note_qualitatif").val();
+        var url = "{{ route('souscription.savenote_qualitatif') }}";
+        $.ajax({
+                url: url,
+                type:'GET',
+                data: {id_entreprise: id_entreprise, note_qualitatif:note_qualitatif} ,
+                error:function(){alert('error');},
+                success:function(){
+                    $('#modal-confirm-rejet').hide();
+                    location.reload();
+                }
+            });
+
+    }
     $( document ).ready(function() {
             var url = "{{ route('all.activity') }}";
               $.ajax({

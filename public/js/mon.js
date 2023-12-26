@@ -177,6 +177,28 @@ if (arrayExtensions.lastIndexOf(ext) == -1) {
    }
    return true;
 } 
+//Taille limitée à 10 Mo.
+function VerifyUploadSizeIsOK_lourd (docsize)
+{
+   var UploadFieldID = docsize;
+   var MaxSizeInBytes = 10485760;
+   var fld = document.getElementById(docsize);
+   var val= fld.value;
+   var ext = val.split(".");
+    ext = ext[ext.length-1].toLowerCase();  
+   var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
+if (arrayExtensions.lastIndexOf(ext) == -1) {
+    alert("Ce type de fichier n'est pas autorisé. Seul les extensions : jpg, jpeg, png et pdf sont autorisés");
+    $('#'+ docsize).val('');
+}
+   if( fld.files && fld.files.length == 1 && fld.files[0].size > MaxSizeInBytes )
+   {
+      alert("La taille de la copie des pièce jointes ne doit pas exceder " + parseInt(MaxSizeInBytes/1024/1024) + "MB");
+      $('#'+ docsize).val('');
+      return false;
+   }
+   return true;
+} 
 //function pour rendre le boutton de rejet desactivé tant que le champ raison n'est pas renseigné
 function activerLeBouttonRejet(raison_du_rejet,btnrejet){
     var autre= $('#'+raison_du_rejet).val(); 

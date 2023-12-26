@@ -17,17 +17,17 @@
                     <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Conforme<i class="fa fa-check"></i></a>
                 @endcan
                 @endif
-             @if($entreprise->conforme!=null && $entreprise->decision_ugp==null) 
+                @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif === null)) 
+                @can('avisqualitative_ugp', Auth::user()) 
+                    <a href="#modal-note-critere-qualitatif-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="Noter les critères qualitatifs" class="btn btn-md btn-danger ">Noter les critères qualitatifs<i class="fa fa-check-square-o"></i></a>
+                @endcan
+            @endif
+             @if(!($entreprise->note_critere_qualitatif == null) && $entreprise->decision_ugp==null)
              @can('avisfinal_ugp', Auth::user()) 
                 <a href="#modal-decision-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="La décision de l'ugp" class="btn btn-md btn-danger avis_ugp">Avis final UGP<i class="fa fa-check-square-o"></i></a>
              @endcan 
            @endif 
-        {{-- @can('donner_avis_membre_comite', Auth::user())
-            @if(!$aStatuer)
-                <a href="#modal-confirm-rejet" data-toggle="modal" onclick="confirmChangeStatus1({{$entreprise->id}}, {{ Auth::user()->id }})" title="rejeter" class="btn btn-md btn-danger">Défavorable<i class="fa fa-times"></i></a>
-                <a href="#modal-confirm-changestatus" data-toggle="modal" onclick="confirmChangeStatus1({{$entreprise->id}}, {{ Auth::user()->id }})" title="Valider" class="btn btn-md btn-success">Favorable<i class="fa fa-check"></i></a>
-           @endif
-       @endcan --}}
+        
                             <div class="block full">
                                 <!-- Block Tabs Title -->
                                 <div class="block-title">
@@ -1158,8 +1158,66 @@
 
 
 
-@section('modalSection')
+@section("modal_part")
 {{-- modal de transmission --}}
+<div id="modal-decision-de-ugp" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-check"></i> Avis de l'UGP</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id_entreprise" id="id_entreprise1">
+                <div class="form-group">
+                  <label for="">Entrez les observations :</label>
+                  <textarea id="observation" name="observation" placeholder="Observation" id="" cols="60" rows="10" onchange="activerbtn('btn_desactive','observation')" aria-describedby="helpId"></textarea>
+                </div>
+            <div class="form-group form-actions">
+                <div class="text-right">
+                    <button  class="btn btn-md btn-danger btn_desactive" onclick="save_avis_ugp('inéligible');" disabled>Inéligible</button>
+                    <button class="btn btn-md btn-success btn_desactive" onclick="save_avis_ugp('éligible');" disabled>Eligible</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div> 
+<div id="modal-note-critere-qualitatif-de-ugp" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-check"></i> Notation</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="entreprise" id="entreprise" value="{{ $entreprise->id }}">
+                <div class="form-group">
+                    <label class=" control-label" for="val_username">Note critère quantitatif</label>
+                        <div class="input-group">
+                            <input type="number" id="" name="date_de_formalisation" class="form-control"  disabled value="{{ $entreprise->noteTotale }}" >
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label class=" control-label" for="val_username">Note critère quantitatif</label>
+                        <div class="input-group">
+                            <input type="number" id="note_qualitatif" max="100" name="Entre la note qualitatif de l'UGP sur 100" class="form-control"   onchange="activerbtn('btn_valider_note','note_qualitatif')"  >
+                        </div>
+                </div>
+                <p id="note_total"></p>
+            <div class="form-group form-actions">
+                <div class="text-right">
+                    <button  class="btn btn-md btn-danger btn_valider_note" onclick="save_note_qualitatif();"  disabled>Valider</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div>
 <div id="modal-confirm-etape" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

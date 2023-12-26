@@ -128,7 +128,7 @@ class BanqueController extends Controller
     public function liste_des_beneficiaires_de_la_banque(){
         if (Auth::user()->can('lister_les_mouvements_financiers')) {
         if(Auth::user()->banque_id!=null){
-            $entreprises= Entreprise::where('resultat_kyc', 'concluant')->where("date_de_signature_accord_beneficiaire",'!=',null)->where("banque_id",Auth::user()->banque_id)->get();
+            $entreprises= Entreprise::where('resultat_kyc', 'concluant')->where("date_de_signature_accord_beneficiaire",'!=',null)->where("date_de_creation_compte",'!=',null)->where("banque_id",Auth::user()->banque_id)->get();
         }
         elseif(Auth::user()->banque_id==null){
             $entreprises= Entreprise::where('resultat_kyc', 'concluant')->where("date_de_signature_accord_beneficiaire",'!=',null)->get();

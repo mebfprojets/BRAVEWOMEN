@@ -72,6 +72,14 @@ public function facture_de_ma_zone(){
     $devis = Devi::whereIn('entreprise_id', $entreprises)->where('statut', 'soumis')->get();
     return view("facture.aanalyser", compact('devis'));
  }
+ public function confirmer_facture(Request $request){
+        $facture= Facture::find($request->facture_id);
+        $facture->update([
+            "conforme" =>1,
+            "user_confirm" =>Auth::user()->id
+        ]);
+        return 1;
+ }
  public function analyse_de_facture(Request $request){
     $statut= $request->statut;
     if($statut){

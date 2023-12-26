@@ -14,6 +14,7 @@
         {{ method_field('PUT') }}
         <input type="hidden" id="code_promoteur" name="code_promoteur" value="{{ $promoteur_code }}">
         <input type="hidden" id="entreprise" name="entreprise_id" value="{{ $entreprise->id }}">
+        <input type="hidden" id="categorie_entreprise" name="categorie_entreprise" value="{{ $entreprise->aopOuleader }}">
         @if ($errors->has('entreprise_id'))
                <span class="help-block text-danger">
                      <strong>Cette entreprise a déja enregistrée son projet </strong>
@@ -32,7 +33,7 @@
                                         <div class="form-group" >
                                             <label class=" control-label" for="">Coût du projet <span class="text-danger">*</span></label>
                                                 <div class="input-group">
-                                                    <input type="number" name="cout_projet" class="form-control" placeholder="préciser le coût estimatif du projet" value="{{old("cout_projet")}}" required>
+                                                    <input type="number" id="cout_projet" name="cout_projet" class="form-control" placeholder="préciser le coût estimatif du projet" value="{{old("cout_projet")}}" required>
                                                 </div>
                                         </div>
                                     </div>
@@ -40,16 +41,17 @@
                                         <div class="form-group" >
                                             <label class=" control-label" for="">Montant de la subvention souhaitée <span class="text-danger">*</span><span data-toggle="tooltip" title="Précisez le montant de la subvention souhaitée. NB: vous compléterez le même montant pour la réalisation de votre projet"><i class="fa fa-info-circle"></i></span></label>
                                                 <div class="input-group">
-                                                    <input type="number" name="subvention_demandee" class="form-control" placeholder="préciser le montant de la subvention souhaitée" value="{{old("montant_projet")}}" required>
+                                                    <input type="number" id="subvention_demandee" name="subvention_demandee" class="form-control" placeholder="préciser le montant de la subvention souhaitée" value="{{old("montant_projet")}}" onchange="controler_cout_du_projet()" required>
                                                 </div>
                                         </div>
                                     </div>
+                                    <p style="color: red; display:none" id="message_montant_non_conforme">Le montant du projet non conforme. La subvention demandée doit être égale à la moitié du montant du projet.</p>
                             </div>
 
 
                      <div class="col-md-8 col-md-offset-4" style="margin-top:20px">
                         <input type="reset" class="btn btn-sm btn-warning"  value="ANNULER">
-                         <input type="submit" id="valider" class="btn btn-sm btn-success" value="ENREGISTRER">
+                         <input type="submit" id="valider" class="btn btn-sm btn-success" value="Enregistrer">
                    </div>
         </form>
                                     <!-- END Wizard with Validation Content -->

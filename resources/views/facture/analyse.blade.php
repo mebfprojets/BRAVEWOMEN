@@ -144,12 +144,16 @@
                                 <div class="form-group">
                                     <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
                                     <a href="#modal-confirm-devis" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-check"></i>Valider</a>
-                                    
                                 </div>
                                 @endif
                         @endcan
                             @can('facture.payer', Auth::user())
-                                @if($facture->statut=='validé')
+                                @if($facture->statut=='validé' && $facture->conforme!=1 )
+                                    <div class="form-group">
+                                        <a href="#modal-conforme-facture" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise_conforme', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Conforme</a>
+                                    </div>
+                                @endif
+                                @if($facture->statut=='validé' && $facture->conforme==1 )
                                     <div class="form-group">
                                         <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
                                         <a href="#modal-payer-facture" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Payer</a>
@@ -203,7 +207,7 @@
   </div>
   
 @endsection
-{{-- <div></div> --}}
+@section("modal_part")
 <div id="modal-images-biens" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog-lg">
         <div class="modal-content" style="height: 150%">
@@ -230,7 +234,28 @@
         </div>
     </div>
 </div>
+<div id="modal-conforme-facture" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Confirmer la validation de la facture</h2>
+            </div>
+            <div class="modal-body">
+                       <input type="hidden" name="id_entreprise_conforme" id="id_entreprise_conforme">
+                        <p>Confirmez-vous que la présente facture est conforme ?</p>
+                    <div class="form-group form-actions">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="facture_conforme();">Conforme</button>
+                        </div>
+                    </div>
 
+            </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div>
 <div id="modal-confirm-devis" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -390,7 +415,30 @@
             </div>
         </div>
     </div>
+@endsection
 <script>
+    function facture_conforme(){
+        $(function(){
+            var facture_id= $("#id_entreprise_conforme").val();
+            var url = "{{ route('facture.confirmer') }}";
+            $.ajax({
+                url: url,
+                type:'GET',
+                data: {facture_id: facture_id},
+                error:function(){alert('error');},
+                success:function(data){
+                if(data==0){
+                   // $("#taux_de_realisation_no_ok").hide();
+                   window.location=document.referrer;
+                }
+                else{
+                    window.location=document.referrer;
+                   //alert("Vous ne pouvez pas valider cette facture Car le taux de réalisation du devis est inférieur à 100%")
+                }  
+                }
+            });
+            });
+    }
      function changer_statut_devis(){
         $(function(){
             var facture_id= $("#id_entreprise").val();

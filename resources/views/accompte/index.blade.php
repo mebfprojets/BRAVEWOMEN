@@ -137,7 +137,6 @@
                 <h2 class="modal-title"><i class="fa fa-pencil"></i> Modifier un versement de contrepartie</h2>
             </div>
             <div class="modal-body">
-                   
                         <form id="form-validation" method="POST"  action="{{route('accompte.modif')}}" class="form-horizontal form-bordered"  enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <input type="hidden" name="id_contrepartie" id="contrepartie_modif">

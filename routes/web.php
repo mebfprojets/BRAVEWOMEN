@@ -125,6 +125,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get("Liste/des_factures", [FactureController::class, 'index'])->name('facture.index');
     Route::get('Liste_facture_validee_par_banque', [FactureController::class, 'facture_valide_par_banque'])->name('facture.a_payer_de_par_banque');
     Route::post('store/paiement/facture', [FactureController::class, 'store_paiement'])->name('facture.storepaiement');
+    Route::get('confirmer/facture', [FactureController::class, 'confirmer_facture'])->name('facture.confirmer');
     Route::resource('prestataire', PrestataireController::class);
     Route::get('er/modif',[PrestataireController::class, 'modifier'] )->name('prestataire.modif');
     Route::post('prestataire/store_modif',[PrestataireController::class, 'modifierstore'] )->name('prestataire.storemodif');
@@ -217,7 +218,10 @@ Route::get("store/second/entreprise/{promoteur}", [EntrepriseController::class, 
 //Route::post("/projet", [EntrepriseController::class, 'saveProjet'])->name("projet.save");
 Route::get("recepisse/print/{promoteur}",[EntrepriseController::class,'genereRecpisse'])->name("generer.recepisse");
 Route::get("/souscription/poursuivre/",[PromotriceController::class, 'afficherform'])->name("afficherform");
-Route::post("/pousuivre", [PromotriceController::class, 'search'])->name("search");
+Route::get("/mpme/souscription/poursuivre/",[PromotriceController::class, 'afficherform_mpme'])->name("afficherform_mpme");
+Route::post("/aop/pousuivre", [PromotriceController::class, 'search'])->name("search");
+Route::post("/mpme/pousuivre", [PromotriceController::class, 'searchmpme'])->name("searchmpme");
+
 Route::get("/souscription/result", [PromotriceController::class, 'result'])->name("result");
 Route::get("/planDecontinutePME/{idpromoteur}", [EntrepriseController::class, 'addPlanDeContinute'])->name("add.planDeContinute");
 Route::get("/listerlesentreprise/retenues/parpromoteur", [PromotriceController::class, 'entrepriseRetenuParPromoteur'])->name("entrepriseRetenuParPromoteur");

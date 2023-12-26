@@ -1169,7 +1169,7 @@
                                         <div class="row">
                                             <div class="col-md-10">
                                                 <div  id="condanation" class="form-group">
-                                                    <p class="col-md-3 control-label"><span class="labdetail">L'idee de projet : </span> </p>
+                                                    <p class="col-md-3 control-label"><span class="labdetail">L'idée de projet : </span> </p>
                                                         <p class="col-md-9" style="text-align: justify;">
                                                         <span style="text-align: justify;" class="valdetail">
                                                         @empty($entreprise->description_du_projet)
@@ -1560,22 +1560,7 @@
             });
 
     }
-    function save_note_qualitatif(){
-        var id_entreprise= $("#entreprise").val();
-        var note_qualitatif= $("#note_qualitatif").val();
-        var url = "{{ route('souscription.savenote_qualitatif') }}";
-        $.ajax({
-                url: url,
-                type:'GET',
-                data: {id_entreprise: id_entreprise, note_qualitatif:note_qualitatif} ,
-                error:function(){alert('error');},
-                success:function(){
-                    $('#modal-confirm-rejet').hide();
-                    location.reload();
-                }
-            });
-
-    }
+    
     function confirmChangeStatus1(id_entreprise, id_user){
             document.getElementById("id_entreprise").setAttribute("value", id_entreprise);
             document.getElementById("id_user").setAttribute("value", id_user);

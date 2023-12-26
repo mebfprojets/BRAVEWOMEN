@@ -380,7 +380,12 @@ public function save_accord_beneficiaire(Request $request){
             'date_de_signature_accord_beneficiaire'=>$date_de_signature,
             'banque_id' => $banque,
         ]);
-     $accord_beneficiaire= $request->accord_beneficiaire->store('public/accord_beneficiaire');
+            $file = $request->file('accord_beneficiaire');
+            $extension=$file->getClientOriginalExtension();
+            $fileName = $entreprise->code_promoteur.'.'.$extension;
+            $emplacement='public/accord_beneficiaire'; 
+            $accord_beneficiaire= $request['accord_beneficiaire']->storeAs($emplacement, $fileName);
+           // $accord_beneficiaire= $request->accord_beneficiaire->store('public/accord_beneficiaire');
      $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_PIECE_ACCORD_BENEFICIAIRE"));
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_PIECE_ACCORD_BENEFICIAIRE"),
@@ -633,9 +638,7 @@ public function save_fiche_danalyse(Request $request){
 public function valider_analyse(Request $request){
 if (Auth::user()->can('valider_analyse_pca')) {
     $projet= Projet::find($request->projet_id);
-    //
     if($request->raison){
-       // dd( $projet);
       $ok=  $projet->update([
             'motif_du_rejet_de_lanalyse'=>$request->raison,
             'statut'=>'soumis',
@@ -664,7 +667,7 @@ else{
     return redirect()->back();
  }
 }
-///Cette fonction permet au chef de zone de donner son avis sur un pca
+// Cette fonction permet au chef de zone de donner son avis sur un pca
 public function pca_save_avis_chefdezone(Request $request){
     $projet= Projet::find($request->projet_id);
         $projet->update([
@@ -672,7 +675,6 @@ public function pca_save_avis_chefdezone(Request $request){
             'observation_chefdezone'=>$request->observation,
         ]);
     return redirect('/administrator/lister_les_pca?statut=analyse');
-
 }
 public function pca_save_avis_ugp(Request $request){
     $projet= Projet::find($request->projet_id);

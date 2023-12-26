@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Entreprise;
 use App\Models\Piecejointe;
 use App\Models\InvestissementProjet;
-
 use App\Models\Impact;
 use App\Models\Accompte;
 use App\Models\Subvention;
@@ -1282,7 +1281,7 @@ if(Auth::user()->can('dashboard_bank')){
                             ->get();
 
 
-    $beneficiaire_par_banks= Entreprise::where("date_de_signature_accord_beneficiaire",'!=',null)->where('entreprises.banque_id',Auth::user()->banque_id)->get();
+    $beneficiaire_par_banks= Entreprise::where("date_de_signature_accord_beneficiaire",'!=',null)->where("date_de_creation_compte",'!=',null)->where('entreprises.banque_id',Auth::user()->banque_id)->get();
     $contrepartie_par_banks= DB::table('accomptes')
                             ->join('entreprises',function($join){
                                 $join->on('accomptes.entreprise_id','=','entreprises.id')

@@ -73,14 +73,16 @@
                   <li class="dropdown"><a href="#"><span>AOP/LEADER</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
                         <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li> 
-                      
-                      {{--<li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li>--}}
                     </ul>
                   </li>
                 </ul>
-        
               </li>
-              <li><a class="nav-link scrollto @yield('active_poursuivre')" href="{{ route("afficherform") }}">POURSUIVRE</a></li>
+              <li class="dropdown"><a href="#"><span>POUSUIVRE</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                    <li><a href="{{ route("afficherform_mpme") }}">EN MPME</a></li> 
+                    <li><a href="{{ route("afficherform") }}">EN AOP/LEADER</a></li> 
+                </ul>  
+              </li>
               <li><a class="nav-link scrollto @yield('active_result')" href="#modal-consulter-resultat" data-toggle="modal">RESULTAT</a></li>
               @if(auth()->guest())
                 <li><a class="getstarted scrollto" href="#modal-user-create" data-toggle="modal">Créer un compte</a></li>
@@ -761,7 +763,7 @@ function dateDiff(date1, date2){
     function unique(){
         var denomination= $('#denomination').val();
         var code_promoteur= $('#code_promoteur').val();
-        var url= "{{ route("verifierentreprise") }}"
+        var url= "{{ route('verifierentreprise') }}"
         $.ajax({
                     url: url,
                     type: 'GET',
@@ -832,7 +834,7 @@ function calculer_pourcentage(id_avance, id_montant_devis, id_montant_devi_cache
             });
         }
 
-       function controler_de_doublon_promotrice(champ_controle){
+function controler_de_doublon_promotrice(champ_controle){
             var numero_identite= $("#numero_identite").val();
             var telephone_promoteur= $("#telephone_promoteur").val();
             var mobile_promoteur= $("#mobile_promoteur").val();
@@ -864,6 +866,34 @@ function calculer_pourcentage(id_avance, id_montant_devis, id_montant_devi_cache
             });  
        }
   </script>
+<script>
+    function controler_cout_du_projet(){
+       var categorie_entreprise = $("#categorie_entreprise").val();
+       var montant_du_projet = $("#cout_projet").val();
+       var montant_subvention = $("#subvention_demandee").val();
+       if((categorie_entreprise=="mpme")){
+            if(montant_du_projet < 6000000 || montant_du_projet > 18000000 || montant_subvention != montant_du_projet/2){
+                $("#message_montant_non_conforme").show()
+                $("#valider").prop("disabled",true);
+            }
+            else{
+                $("#message_montant_non_conforme").hide()
+                $("#valider").prop("disabled",false);
+
+            }
+    }
+    else{
+        if(montant_du_projet < 18000000 || montant_du_projet > 60000000 || montant_subvention != montant_du_projet/2){
+                $("#message_montant_non_conforme").show()
+                $("#valider").prop("disabled",true);
+            }
+            else{
+                $("#message_montant_non_conforme").hide()
+                $("#valider").prop("disabled",false);
+            }
+    }
+    }
+</script>
   
 </body>
 

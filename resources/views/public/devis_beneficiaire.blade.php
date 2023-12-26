@@ -81,7 +81,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                     <label class="control-label" for="listedepresence">Fiche d'analyse <span class="text-danger">*</span></label>
-                        <input class="form-control docsize col-md-6"  type="file" name="fiche_analyse" id="fiche_analyse" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('fiche_analyse');" placeholder="Charger une copie de fiche d'analyse des offres" required style="100%">
+                        <input class="form-control docsize col-md-6"  type="file" name="fiche_analyse" id="fiche_analyse" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('fiche_analyse');" placeholder="Charger une copie de fiche d'analyse des offres" required style="100%">
                     @if ($errors->has('fiche_analyse'))
                         <span class="help-block">
                             <strong>{{ $errors->first('fiche_analyse') }}</strong>
@@ -119,7 +119,7 @@
  
                         <div class="form-group{{ $errors->has('copie_devis') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                             <label class="control-label" for="listedepresence">Joindre le devis <span class="text-danger">*</span></label>
-                            <input class="form-control col-md-6" type="file"   name="copie_devis" id="copie_devis" accept="image/jpeg,image/gif,image/png,application/pdf"  onchange="VerifyUploadSizeIsOK('copie_devis');"   placeholder="Charger une copie de fiche d'analyse des offres" required style="100%">
+                            <input class="form-control col-md-6" type="file"   name="copie_devis" id="copie_devis" accept="image/jpeg,image/gif,image/png,application/pdf"  onchange="VerifyUploadSizeIsOK_lourd('copie_devis');"   placeholder="Charger une copie de fiche d'analyse des offres" required style="100%">
                             @if ($errors->has('copie_devis'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('copie_devis') }}</strong>
@@ -158,7 +158,7 @@
                             <option value="">Selectionner le nombre de paiement souhaité</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
-                            <option value="3">3</option>
+                            {{-- <option value="3">3</option> --}}
                         </select>
                            
                     </div>
@@ -284,7 +284,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                     <label class="control-label" for="listedepresence">Fiche d'analyse <span class="text-danger">*</span></label>
-                        <input class="form-control docsize"   type="file" name="fiche_analyse" id="fiche_analyse"    onchange="VerifyUploadSizeIsOK('fiche_analyse');" placeholder="Charger une copie de fiche d'analyse des offres">
+                        <input class="form-control docsize"   type="file" name="fiche_analyse" id="fiche_analyse"    onchange="VerifyUploadSizeIsOK_lourd('fiche_analyse');" placeholder="Charger une copie de fiche d'analyse des offres">
                     @if ($errors->has('fiche_analyse'))
                         <span class="help-block">
                             <strong>{{ $errors->first('fiche_analyse') }}</strong>

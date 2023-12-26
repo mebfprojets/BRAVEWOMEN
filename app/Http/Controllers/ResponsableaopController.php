@@ -7,6 +7,7 @@ use App\Models\Piecejointe;
 use App\Models\Promotrice;
 use App\Models\Valeur;
 use Illuminate\Http\Request;
+use App\Models\Entreprise;
 use App\Models\Proportion_de_depense_promotrice;
 
 
@@ -40,6 +41,8 @@ class ResponsableaopController extends Controller
             'fonction'=>$request->fonction,
            'suscriptionaopleader_etape'=>1,
         ]);
+        $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->whereIn("aopOuleader",["aop","leader"])->where("conforme",null)->get();
+        $nbre_ent_nn_traite = count($entreprise_nn_traite);
         if($request->afficherproportion){
             foreach($proportiondedepences as $proportiondedepence){
                 foreach($annees as $annee){
@@ -53,8 +56,7 @@ class ResponsableaopController extends Controller
                 }
             }
         }
-        return  view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
-
+        return  view("validateStep1aop", compact("promoteur","nbre_ent_nn_traite"))->with('success','Item created successfully!');
     }
     public function store(Request $request)
     {
@@ -62,6 +64,7 @@ class ResponsableaopController extends Controller
         $this->nom = $request->nom_promoteur;
         $this->prenom= $request->prenom_promoteur;
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
+        
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
        $validated= $request->validate([
             'nom_promoteur' =>'required',
@@ -107,6 +110,8 @@ class ResponsableaopController extends Controller
             "resp_aop"=>1,
             'suscriptionaopleader_etape'=>1
         ]);
+        $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->whereIn("aopOuleader",["aop","leader"])->where("conforme",null)->get();
+        $nbre_ent_nn_traite = count($entreprise_nn_traite);
         if ($request->hasFile('docidentite')) {
             $urldocidentite= $request->docidentite->store('public/docidentification');
             Piecejointe::create([
@@ -126,6 +131,6 @@ class ResponsableaopController extends Controller
                 ]);
             }
         }
-        return  view("validateStep1aop", compact("promoteur"))->with('success','Item created successfully!');
+        return  view("validateStep1aop", compact("promoteur","nbre_ent_nn_traite"))->with('success','Item created successfully!');
     }
 }

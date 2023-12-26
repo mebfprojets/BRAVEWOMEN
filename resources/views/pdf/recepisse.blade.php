@@ -54,11 +54,18 @@
         <p class="contenu"> <strong>Numero d'identité : </strong></p> <p class="contenu"> {{ $promoteur->numero_identite }} du {{ $promoteur->date_etabli_identite }}</p> <br>
         <p class="contenu"><strong> Télephone du promoteur : </strong></p> <p class="contenu"> {{ $promoteur->telephone_promoteur }} / {{ $promoteur->mobile_promoteur }}</p> <br>
         <p class="contenu"> <strong>Email: </strong></p> <p class="contenu">{{ $promoteur->email_promoteur  }} </p> <br>
+        <p class="contenu"> <strong>Catégorie : </strong></p> <p class="contenu">
+            @if($entreprise->aopOuleader=="mpme")
+                MPME
+            @else
+                  AOP/Entreprise Leader
+            @endif                                                                 
+        </p> <br>
         <br>
         <p>Promoteur de l'entreprise <span style="font-weight: bold;">{{ $entreprise->denomination }}</span> exerçant dans le domaine de <span style="font-weight: bold;">  {{ getlibelle($entreprise->secteur_activite) }}</span> a souscrit sur la plateforme de BRAVE WOMEN Burkina Faso,le projet est le suivant: <span style="font-weight: bold;"> {{ $entreprise->description_du_projet}} .</span> </p> <br>
         <span style="width: 40%; float: right;">Fait le : <span style="font-weight: bold;">{{ date("d-m-Y") }}</span> </span> <br>
-        <p style="font-size: x-small;  text-align: justify;">Ce récépissé constitue la preuve que le promoteur a pris connaissance des conditions d'interventions du projet BRAVE WOMEN auxquelles il souscrit entièrement notamment le processus de selection des bénéficiaires.Le promoteur certifie voir pris acte et s'engage à se conformer au processus de selection des bénéficiaires et aux délibérations du jury.</p>
-        <p style="font-size: x-small;"> Pour toutsse information contactez nos chefs de zone<br> NB: Ce récépissé constitue le depôt de cadidature aux activités du projet BRAVE WOMEN.</p>
+        <p style="font-size: x-small;  text-align: justify;">Ce récépissé constitue la preuve que le promoteur a pris connaissance des conditions d'interventions du projet BRAVE WOMEN auxquelles il souscrit entièrement notamment le processus de selection des bénéficiaires qui est conditionné par la mise à disposition du financement par le bailleur à la MEBF.Le promoteur certifie voir pris acte et s'engage à se conformer au processus de selection des bénéficiaires et aux délibérations du jury.</p>
+        <p style="font-size: x-small;"> Pour toute information contactez nos chefs de zone<br> NB: Ce récépissé constitue une preuve de depôt de dossier aux activités du projet BRAVE WOMEN.</p>
         {{-- <p style="margin-top: 60px">{{ $qrcode }}</p> --}}
         <img src="data:image/png;base64, {!! $qrcode !!}">
 </body>

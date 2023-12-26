@@ -111,7 +111,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistremeny la signature de l'accord bénéficiaire</h2>
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistrement de l'accord bénéficiaire</h2>
             </div>
             <div class="modal-body" style="margin-left:15px;">
                 <form id="form-validation" method="POST"  action="{{ route('save_accord_beneficiaire') }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
@@ -138,7 +138,7 @@
             </div>
             <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8">
                 <label class=" control-label" for="accord_beneficiaire">Joindre une copie de l'accord bénéficaire<span class="text-danger">*</span></label>
-                <input class="form-control col-md-6" type="file" name="accord_beneficiaire" id="accord_beneficiaire" accept=".pdf, .jpeg, .png"   placeholder="Joindre une copie de l'accord bénéficiaire" required>  
+                <input class="form-control col-md-6" type="file" name="accord_beneficiaire" id="accord_beneficiaire" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK_lourd('accord_beneficiaire');"   placeholder="Joindre une copie de l'accord bénéficiaire" required>  
                     @if ($errors->has('accord_beneficiaire'))
                     <span class="help-block">
                         <strong>{{ $errors->first('accord_beneficiaire') }}</strong>
