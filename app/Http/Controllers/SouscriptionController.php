@@ -43,6 +43,18 @@ class SouscriptionController extends Controller
         $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])->orderBy('updated_at', 'desc')->get();  
         return view("souscriptions.liste_de_souscription_soumis_a_ugp", compact("entreprises","active","titre","active_principal"));
     }
+    public function souscription_a_analyser_par_ugp(Request $request){
+        $active='souscription_analyse_ugp';
+        $active_principal="pme";
+        $titre="A analyser par l'UGP";
+       
+        $categorieentreprise= $request->typeentreprise;
+        ($categorieentreprise=='mpme')?($active='souscription_analyse_ugp'):($active='souscription_analyse_ugp');
+        ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
+        ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
+        $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])->where("decision_du_comite_phase1",null)->orderBy('updated_at', 'desc')->get();  
+        return view("souscriptions.liste_de_souscription_soumis_a_ugp", compact("entreprises","active","titre","active_principal"));
+    }
 public function listersouscriptionpostpreanalyse(Request $request){
         $active='souscription_post_preanalyse';
         $active_principal="pme";
@@ -52,7 +64,6 @@ public function listersouscriptionpostpreanalyse(Request $request){
         ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
         ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
         $entreprises = Entreprise::where('entrepriseaop', $categorieentreprise )->where('participer_a_la_formation',1)->orderBy('updated_at', 'desc')->get();
-       
         return view("souscriptions.liste_souscription_postpreanalyse", compact("entreprises","active","titre","active_principal"));
     }
 public function listersouscriptionParZone(){

@@ -251,7 +251,7 @@
                                             </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class=" control-label" for="example-textarea-input">Brève description de l'activé<span class="text-danger">*</span> </label>
+                                        <label class=" control-label" for="example-textarea-input">Brève description de l'activité<span class="text-danger">*</span> </label>
                                             <textarea id="description_activite" name="description_activite" rows="9" class="form-control" placeholder="en quoi consiste votre activité ? 200 mots" autofocus required title="Ce champ est obligatoire">{{old('description_activite') }}</textarea>
                                     </div>
                                     </div>

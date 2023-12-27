@@ -96,8 +96,8 @@ class EntrepriseaopController extends Controller
         // $rentabilite_criteres=Valeur::where('parametre_id',14 )->where('id','!=',7085)->get();
         $effectifs=Valeur::where('parametre_id',15 )->get();
         $nouveaute_entreprises=Valeur::where('parametre_id',env("PARAMETRE_INOVATION_ENTREPRISE_ID") )->get();
-       $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->first();
-       $entreprise_controle_doublon= Entreprise::where("code_promoteur",$promoteur->code_promoteur)->where("denomination",$request->denomination)->where("conforme",null)->get();
+        $entreprises= Entreprise::where('promotrice_id',$promoteur->id)->first();
+        $entreprise_controle_doublon= Entreprise::where("code_promoteur",$promoteur->code_promoteur)->where("denomination",$request->denomination)->where("conforme",null)->get();
        //Promotrice ayant une Entreprise AOP/leader ayant un projet 
        $entreprises_as_projet= DB::table('entreprises')
                             ->join('projets','projets.entreprise_id','=','entreprises.id')

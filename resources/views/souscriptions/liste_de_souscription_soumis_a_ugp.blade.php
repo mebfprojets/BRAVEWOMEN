@@ -94,7 +94,6 @@
                                 {{-- <a href="" data-toggle="tooltip" title="Editer" class="btn btn-md btn-default"><i class="fa fa-pencil"></i></a> --}}
                                 <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
                                 <a href="{{ route("resume_souscription.print",$entreprise->promotrice) }}" data-toggle="tooltip" title="Imprimer le resumé de la souscription" class="btn btn-md btn-primary"><i class="fa fa-print"></i></a>
-
                                 {{-- @if(Auth::user()->zone== $entreprise->region)
                                     <a href="{{ route("generer.recepisse", $entreprise->promotrice->slug) }}" data-toggle="tooltip" title="Imprimer le recepissé" class="btn btn-md btn-default"><i class="fa fa-print"></i></a>
                                     <a href="#modal-confirm-send_synthese" onclick="delConfirm({{ $entreprise->id }});" data-toggle="modal" title="Envoyer la fiche de synthèse" class="btn btn-md btn-primary"><i class="fa fa-paper-plane"></i></a>

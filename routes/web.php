@@ -88,6 +88,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::resource("role",RoleController::class);
     Route::get('/listeval', [ValeurController::class,"listevakeur"])->name("valeur.listeval");
     Route::get("/souscription/terminees",[SouscriptionController::class, 'listerallsouscriptiontermine'] )->name("souscription.terminee");
+    Route::get("/analyse_ugp/souscription",[SouscriptionController::class, 'souscription_a_analyser_par_ugp'] )->name("souscription.analyse_ugp");
     Route::get('send/synthese',[EntrepriseController::class, 'sendSyntheseToComite'])->name("send.synthese");
     Route::get('conformite/souscription',[SouscriptionController::class, 'saveConformite'])->name("souscription.saveconformite");
     Route::get('souscription/save/decision',[SouscriptionController::class, 'save_avis_ugp'])->name("souscription.savedecisionugp");

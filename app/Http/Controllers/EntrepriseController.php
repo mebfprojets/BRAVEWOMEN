@@ -68,7 +68,7 @@ class EntrepriseController extends Controller
         if(!empty($request->entreprise)){
             $entreprise=Entreprise::where("id",$request->entreprise )->first();
         }
-        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
+        $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [62,64,63,59,58,53])->get();
         $forme_juridiques=Valeur::where('parametre_id',8 )->get();
         $nature_clienteles=Valeur::where('parametre_id',10 )->get();
         $provenance_clients=Valeur::where('parametre_id',9 )->get();
@@ -97,7 +97,7 @@ class EntrepriseController extends Controller
     public function create(Request $request)
     {
         $entreprise_nn_traite= Entreprise::where('code_promoteur', $request->promoteur_code)->where("conforme",null)->get();
-        dd($entreprise_nn_traite);
+       // dd($entreprise_nn_traite);
       if(count($entreprise_nn_traite) < 2){
                 $promoteur_code= $request->promoteur_code;
                 $promoteur=Promotrice::where('code_promoteur',$promoteur_code )->first();
@@ -105,6 +105,7 @@ class EntrepriseController extends Controller
                     $entreprise=Entreprise::where("id",$request->entreprise )->first();
                 }
                 $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [62,64,63,59,58,53])->get();
+               
                 $forme_juridiques=Valeur::where('parametre_id',8 )->get();
                 $nature_clienteles=Valeur::where('parametre_id',10 )->get();
                 $provenance_clients=Valeur::where('parametre_id',9 )->get();
@@ -145,6 +146,7 @@ class EntrepriseController extends Controller
         $entreprise= Entreprise::where("promotrice_id", $promoteur->id)->orderBy('created_at','desc')->first();
         $promoteur_code=$promoteur->code_promoteur;
         $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [62,64,63,59,58,53])->get();
+        
         $forme_juridiques=Valeur::where('parametre_id',8 )->get();
         $nature_clienteles=Valeur::where('parametre_id',10 )->get();
         $provenance_clients=Valeur::where('parametre_id',9 )->get();

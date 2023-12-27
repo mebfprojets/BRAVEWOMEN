@@ -67,6 +67,10 @@
                                 <li class="@yield('souscription_enregistre')">
                                     <a href="{{ route("souscription.terminee") }}?typeentreprise=mpme" onclick="loadfunction()"> Enregistrées</a>
                                 </li>
+                                <li class="@yield('souscription_analyse_ugp')">
+                                    <a href="{{ route("souscription.analyse_ugp") }}?typeentreprise=mpme" onclick="loadfunction()"> A analyser</a>
+                                </li>
+                                
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('souscription_par_zone')">
@@ -107,9 +111,12 @@
                 <li class="@yield('aop')">
                     <a href="#" class="sidebar-nav-submenu"><i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="gi gi-vcard"></i></i><span class="sidebar-nav-mini-hide"> AOP/Leader</span></a>
                     <ul>    
-                            @can('souscription.liste', Auth::user())
+                        @can('souscription.liste', Auth::user())
                             <li class="@yield('aop_enregistre')">
                                 <a href="{{ route("souscription.terminee") }}?typeentreprise=aop" onclick="loadfunction()"> Enregistrés</a>
+                            </li>
+                            <li class="@yield('souscription_analyse_ugp')">
+                                <a href="{{ route("souscription.analyse_ugp") }}?typeentreprise=aop" onclick="loadfunction()"> A analyser</a>
                             </li>
                         @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
@@ -119,12 +126,12 @@
                         @endcan
                         @can('aop.soumis_au_comite', Auth::user())
                             <li class="@yield('aop_soumis_aucomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> Attente d'Analyse</a>
+                                <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> Attente d'Analyse</a>
                             </li>
                         @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('aop_analyse_par_lecomite')">
-                                    <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> Soumises au Comité</a>
+                                <a href="{{ route("souscription.analyseParComite") }}?typeentreprise=aop"> Soumises au Comité</a>
                             </li>
                         @endcan
                        @can('souscription.listerRetenues', Auth::user())

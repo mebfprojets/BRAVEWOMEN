@@ -130,7 +130,11 @@ class PromotriceController extends Controller
             'suscription_etape'=>1
         ]);
         if ($request->hasFile('docidentite')) {
-            $urldocidentite= $request->docidentite->store('public/docidentification');
+            $file = $request->file('docidentite');
+            $extension=$file->getClientOriginalExtension();
+            $fileName = $promoteur->code_promoteur.'.'.$extension;
+            $emplacement='public/docidentification'; 
+            $urldocidentite= $request['docidentite']->storeAs($emplacement, $fileName);
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_IDENTITE"),
                   'promotrice_id'=>$promoteur->id,
