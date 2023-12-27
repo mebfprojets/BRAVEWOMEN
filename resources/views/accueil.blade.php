@@ -184,7 +184,7 @@
                     <i class="bi bi-phone"></i>
                     <div>
                         <p>
-                           <p> <h4>Boucle du Mouhoun</h4> </p>
+                           <p> <h4>Boucle du Mouhoun & Centre Ouest</h4> </p>
                            <p> Direction régionale de la Chambre de Commerce et d’Industrie du Burkina Faso Dédougou,</p>
                            <p>  Tél. : 61 35 25 42 </p>
                           </p>
@@ -192,9 +192,9 @@
                     <div>
                         <div>
                             <p>
-                               <p> <h4>Centre</h4> </p>
+                               <p> <h4>Centre & Centre Est</h4> </p>
                                <p> Siège de la Maison de l’Entreprise du Burkina Faso Ouagadougo,</p>
-                               <p>  Tél. : 70 76 73 74 / 72 47 18 86 </p>
+                               <p>  Tél. : 70 69 31 13 </p>
                               </p>
                         </div>
                     </div>
@@ -207,10 +207,10 @@
                     </div>
                     <div>
                         <p>
-                           <p> <h4> Nord </h4> </p>
+                           <p> <h4> Nord & Centre Nord </h4> </p>
                            <p> Direction régionale de la Chambre de Commerce et d’Industrie du Burkina Faso
                             Ouahigouya,</p>
-                           <p>  Tél. : 70 78 83 12 </p>
+                           <p>  Tél. : 70 51 44 80 </p>
                           </p>
                     </div>
                     {{-- <h4>Support:</h4>
