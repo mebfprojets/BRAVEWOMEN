@@ -143,36 +143,46 @@ else{
     //    $ligne_dinvestissement= InvestissementProjet::find($request->ligne_invest);
       // dd($ligne_dinvestissement);
     // if($ligne_dinvestissement->montant_valide >$montant_engange_sur_la_lignedinvestissment || $ligne_dinvestissement->montant_valide ==$montant_engange_sur_la_lignedinvestissment){
-        
+       $entreprise= Entreprise::find($request->entreprise_id);
+       $devis_exist= Devi::where('entreprise_id',$request->entreprise_id)->where('designation',$request->designation)->first();
+       if(!$devis_exist){
         $devi=Devi::create([
-           // 'investissement_projets_id'=>$request->ligne_invest,
-            'designation'=>$request->designation,
-            'description'=>$request->description,
-            'copie_fiche_analyse'=>$fiche_analyse,
-            'prestataire_id'=>$request->prestataire,
-            'nom_bank_prestataire'=>$request->nom_bank_prestataire,
-            'compte_bank_prestataire'=>$request->compte_bank_prestataire,
-            'copie_devis_prefere'=>$copie_devis,
-            'montant_devis'=>reformater_montant2($request->montant_devis),
-            'montant_avance'=>0,
-            'entreprise_id'=>$request->entreprise_id,
-            'user_id'=>Auth::user()->id,
-            'statut'=>'soumis',
-            'nombre_de_paiement'=>$request->nombre_depaiement,
-            'copie_devis_1'=>$copie_devis1,
-            'copie_devis_2'=>$copie_devis2,
-            "numero_devis"=>$code_devis
-        ]);
-        Insertion_Journal('Devis','Création');
+             'designation'=>$request->designation,
+             'description'=>$request->description,
+             'copie_fiche_analyse'=>$fiche_analyse,
+             'prestataire_id'=>$request->prestataire,
+             'nom_bank_prestataire'=>$request->nom_bank_prestataire,
+             'compte_bank_prestataire'=>$request->compte_bank_prestataire,
+             'copie_devis_prefere'=>$copie_devis,
+             'montant_devis'=>reformater_montant2($request->montant_devis),
+             'montant_avance'=>0,
+             'entreprise_id'=>$request->entreprise_id,
+             'user_id'=>Auth::user()->id,
+             'statut'=>'soumis',
+             'nombre_de_paiement'=>$request->nombre_depaiement,
+             'copie_devis_1'=>$copie_devis1,
+             'copie_devis_2'=>$copie_devis2,
+             "numero_devis"=>$code_devis
+         ]);
+         Insertion_Journal('Devis','Création');
+        if($devi->entreprise->region_affectation!=null){
+            $chef_de_zone= User::where('zone', $devi->entreprise->region)->orWhere('zone', $devi->entreprise->region_affectation)->first();
+        }
+        else{
+            $chef_de_zone= User::where('zone', $devi->entreprise->region)->first();
 
-        $chef_de_zone= User::where('zone', $devi->entreprise->region)->orWhere('zone', $devi->entreprise->region_affectation)->first();
+        }
         $e_msg="Vous avez des devis qui sont en attentes de validation.";
         $titre='Chef de Zone';
         $mail=$chef_de_zone->email;
-        Mail::to($chef_de_zone->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
             $this->create_historique($devi->id,'soumis', null,null);
             flash("Devis soumis avec succès avec success !!!")->success();
-        return redirect()->route('profil.mesdevis');
+       }
+       else{
+         flash("Ce Devis a été  déjà enregistré !!!")->error();
+       }
+            return redirect()->route('profil.mesdevis');
     
     }
 
@@ -258,19 +268,20 @@ else{
             'statut'=>"soumis"
         ]);
         Insertion_Journal('Devis','Modification');
-       
-        $chef_de_zone= User::where('zone', $devi->entreprise->region)->orWhere('zone', $devi->entreprise->region_affectation)->first();
+        if($devi->entreprise->region_affectation!=null){
+            $chef_de_zone= User::where('zone', $devi->entreprise->region)->orWhere('zone', $devi->entreprise->region_affectation)->first();
+        }
+        else{
+            $chef_de_zone= User::where('zone', $devi->entreprise->region)->first();
+
+        }
         $e_msg="Vous avez des devis qui sont en attentes de validation.";
         $titre='Chef de Zone';
         $mail=$chef_de_zone->email;
         Mail::to($chef_de_zone->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
         flash("Devis modifié avec succès avec success !!!")->success();
         return redirect()->route('profil.mesdevis');
-    //  }
-    //  else{
-    //     flash("Vous avez depassé le montant de la ligne d'investissement !!!")->error();
-    //     return redirect()->route('profil.mesdevis');
-    // }
+    
 
     }
 
@@ -336,7 +347,6 @@ else{
         //Ici nous Verifions si le totale de la contre partie a été versée avant de valider le devis
         $montant_total_des_accomptes_verses_par_entreprise=Accompte::where('entreprise_id', $devi->entreprise->id)->sum('montant');
         $montant_total_accorde_du_projet_de_lentreprise=Projet::where('entreprise_id', $devi->entreprise->id)->sum('montant_accorde');
-
         $mail_promotrice=$devi->entreprise->promotrice->email_promoteur;
         $chef_de_zone= User::where('zone', $devi->entreprise->region)->orWhere('zone', $devi->entreprise->region_affectation)->first();
         $e_msg="Vous avez des devis qui sont en attentes de validation.";
@@ -361,9 +371,13 @@ else{
                    'motif_du_rejet'=>$request->raison, 
                    'observation'=> $request->observation,  
                ]);
+               Insertion_Journal('Devis','Modification');
             $this->create_historique($devi->id, $new_statut, $request->raison, $request->observation );
+            Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+
         }
         else{
+           // dd('ooo');
             if($devi->statut=='soumis'){
                 $new_statut='transmis_au_chef_de_projet';
                 $titre='Chef de projet';
@@ -376,21 +390,21 @@ else{
                 }
                 else{
                     $new_statut='validé';
-                    $titre='Chef de Zone';
-                    $e_msg="Votre devis à été validée. Merci de consulter la plateforme.";
+                    $titre='chers Promoteur';
+                    $e_msg="Votre devis à été validé. Merci de consulter la plateforme.";
                     $mail=$mail_promotrice;
-                    
                 }
             }
             
-        
             $devi->update([
                 'statut'=>$new_statut
             ]);
+           // dd($mail);
             Insertion_Journal('Devis','Modification');
             $this->create_historique($devi->id, $new_statut, null, null);
+            Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
         }
-        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+       
         flash("Devis validée avec succès avec success !!!")->success();
         return $action;
     }

@@ -22,6 +22,7 @@ class PromotriceController extends Controller
         ->orWhere("mobile_promoteur", $request->mobile_promoteur)
         ->orWhere("email_promoteur", $request->email_promoteur)
         ->first();
+        //dd($promotrice);
      }
      
      else{
@@ -59,7 +60,6 @@ class PromotriceController extends Controller
      */
     public function create()
     {
-       
         $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
         $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
         $nb_annee_experience=Valeur::where("parametre_id", env('PARAMETRE_TRANCHE_EXPERIENCE'))->get();

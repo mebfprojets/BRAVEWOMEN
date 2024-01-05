@@ -28,6 +28,7 @@
                     <th class="text-center">Entreprise</th>
                     <th class="text-center">Secteur d'activité</th>
                     <th class="text-center">Score</th>
+                    <th class="text-center">Resultat Préselection</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -85,6 +86,9 @@
                         <td class="text-center" style="width: 5%;">
                            {{ $entreprise->noteTotale + $entreprise->note_critere_qualitatif }}
                         </td>
+                        <td class="text-center" style="width: 5%;">
+                            {{ $entreprise->decision_du_comite_phase1 }}
+                         </td>
                         {{-- <td class="text-center">{{ $entreprise->secteur_activite }}</td> --}}
                         {{-- <td class="text-center">
                             <a href="{{ route("projet.edit",$entreprise->projet->id) }}">Detail sur le projet</a>

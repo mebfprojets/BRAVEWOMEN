@@ -853,6 +853,7 @@ function controler_de_doublon_promotrice(champ_controle){
                     success: function (data) {
                         console.log(data);
                          if(data){
+                            
                             $(".message_doublon").show();
                             $(".code_promoteur").text(data.code_promoteur)
                             $("#"+champ_controle).val("")

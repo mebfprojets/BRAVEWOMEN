@@ -87,7 +87,7 @@
                                                                 <div class="form-group">
                                                                     <label class=" control-label" for="">Numéro <span class="text-danger">*</span></label>
                                                                     <div class="input-group">
-                                                                        <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." onchange="controler_de_doublon_promotrice()" required>
+                                                                        <input type="text" id="numero_identite" name="numero_identite" value="{{old('numero_identite')}}" class="form-control" placeholder="numéro.." onchange="controler_de_doublon_promotrice('numero_identite')" required>
                                                                     </div>
                                                                     @if ($errors->has('numero_identite'))
 										                                <span class="help-block text-danger">

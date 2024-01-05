@@ -9,7 +9,7 @@
                 <div class="block">
                     <!-- Form Validation Example Title -->
                     <div class="block-title">
-                        <h2> Situation de la contrepartie versée par<strong>{{ $entreprise->denomination }}</strong></h2>
+                        <h2> Situation de la contrepartie versée par <strong>{{ $entreprise->denomination }}</strong></h2>
                             <a href="#modal-add-account" data-toggle="modal" onclick="initialiser_contrepartie_id('contrepartie_modif')" class="btn btn-success pull-right"><span><i class="fa fa-plus"></i></span>Contrepartie</a>
                             <a  href="{{ route('banque.beneficiaires') }}"  class="btn btn-danger pull-right"><span><i class="fa fa-plus"></i></span>Fermer</a>
                     </div>

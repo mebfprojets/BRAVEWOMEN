@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('beneficiaires_bank', 'active') 
-
 @section('content')
 <div class="block full">
     <div class="block-title">
@@ -11,7 +10,6 @@
             <thead>
                 <tr>
                     <th class="text-center">N°</th>
-                    {{-- <th class="text-center" style="width:10px;" >Code promoteur</th> --}}
                     <th class="text-center">Code bénéficiaire</th>
                     <th class="text-center">Numéro de compte</th>
                     <th class="text-center">Entreprise</th>
@@ -34,10 +32,10 @@
                         @endphp
                     <tr>
                          <td class="text-center" style="width: 2%">{{ $i }}</td>
+                        <td class="text-center" style="width: 2%"> {{ $entreprise->code_promoteur }}</td>
                          <td class="text-center">
                                 {{ $entreprise->num_ss_compte }}
                         </td>
-                        <td class="text-center" style="width: 2%"> {{ $entreprise->code_promoteur }}</td>
 
                         <td class="text-center" style="width: 5%;" >
                             {{ $entreprise->denomination }}

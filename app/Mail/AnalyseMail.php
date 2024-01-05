@@ -38,6 +38,6 @@ class AnalyseMail extends Mailable
         $e_nom = $this->name;
         $e_msg = $this->msg;
         $e_view = $this->view;
-        return $this->view($e_view, compact('e_msg', 'e_nom'))->subject(env('OBJET_ASSISTANCE'));
+        return $this->view($e_view, compact('e_msg', 'e_nom'))->subject(env('OBJET_ANALYSE_DEVIS'));
     }
 }
