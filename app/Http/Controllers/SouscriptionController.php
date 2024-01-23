@@ -47,7 +47,6 @@ class SouscriptionController extends Controller
         $active='souscription_analyse_ugp';
         $active_principal="pme";
         $titre="A analyser par l'UGP";
-       
         $categorieentreprise= $request->typeentreprise;
         ($categorieentreprise=='mpme')?($active='souscription_analyse_ugp'):($active='souscription_analyse_ugp');
         ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
@@ -70,7 +69,6 @@ public function listersouscriptionParZone(){
         $active='souscription_par_zone';
         $active_principal="pme";
         $titre="de la zone"." ".getlibelle(Auth::user()->zone);
-        //where statuts = 0 pour n'afficher que les souscription qui sont terminées
         $entreprises = Entreprise::where("status",'!=',0)->where('region', Auth::user()->zone)->where('entrepriseaop',null)->get();
         return view("souscriptions.prevalidable", compact("entreprises","active","titre","active_principal"));
     }
