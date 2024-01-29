@@ -201,7 +201,8 @@ public function facture_de_ma_zone(){
      */
     public function store(Request $request)
     {
-
+       // dd($request->file('image1'));
+        
         $images = $request->images;
         $champ_nombre_dimage = $request->champ_nombre_dimage;
         $devi=Devi::find($request->devi_id);

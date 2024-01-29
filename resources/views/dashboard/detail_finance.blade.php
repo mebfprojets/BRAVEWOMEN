@@ -334,7 +334,7 @@
 </div>
 
 
-<div class="col-md-12 col-md-offset-1 block full" style="margin-left: 10px;">
+<div  class="col-md-12 col-md-offset-1 block full" style="margin-left: 10px;">
     <!-- Your Plan Widget -->
     
           <!-- Tags Title -->
@@ -359,39 +359,42 @@
         <hr>
     <div class="row">
         <div class="col-md-6 divscrolable">
-                <p style="border-bottom: 1px solid black">Situation des PCA selectionnés par zone </p>
+                <p style="border-bottom: 1px solid black">Situation des subventions debloquees </p>
                 <div class='divscrolable'>
                     <table class="styled-table">
                         <tr>
                         <th >Zone</th>
-                           
+                        @foreach($subvention_par_secteur_dactivites as $subvention_par_secteur_dactivite)
+                           <td>{{ $subvention_par_secteur_dactivite->secteur }}</td> 
+                       @endforeach
+                        
                         </tr>
                         <tr>
-                        <th>Nombre</th>
-                            
-                        </tr>
                         <tr>
-                            <th>Montant des Projets</th>
-                            
+                            <th>Total des subventions debloquees</th>
+                            @foreach($subvention_par_secteur_dactivites as $subvention_par_secteur_dactivite)
+                              <td>{{ format_prix($subvention_par_secteur_dactivite->montant) }}</td> 
+                            @endforeach
                         </tr>
                     </table>
                 </div>
         </div>
         <div class="col-md-6 divscrolable">
-            <p style="border-bottom: 1px solid black">Situation des PCA selectionnés par zone </p>
+            <p style="border-bottom: 1px solid black">Situation de la contrepartie mobilisee par secteur d'activite </p>
             <div class='divscrolable'>
                 <table class="styled-table">
                     <tr>
                     <th >Zone</th>
-                       
+                       @foreach($contrepartie_par_secteur_dactivites as $contrepartie_par_secteur_dactivite)
+                           <td>{{ $contrepartie_par_secteur_dactivite->secteur }}</td> 
+                       @endforeach
                     </tr>
                     <tr>
-                    <th>Nombre</th>
-                       
-                    </tr>
                     <tr>
-                        <th>Montant des Projets</th>
-                       
+                        <th>Total contrepartie</th>
+                        @foreach($contrepartie_par_secteur_dactivites as $contrepartie_par_secteur_dactivite)
+                           <td>{{ format_prix($contrepartie_par_secteur_dactivite->montant) }}</td> 
+                       @endforeach
                     </tr>
                 </table>
             </div>

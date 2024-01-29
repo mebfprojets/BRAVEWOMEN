@@ -21,14 +21,14 @@ class PrestataireController extends Controller
      */
     public function index()
     {
-    if (Auth::user()->can('parametre.create')) {
+    if (Auth::user()->can('changer_statut_facture_ou_devis')) {
         $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
         $prestataires= Prestataire::all();
         $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_COMPETENCE_PRESTATAIRE_ID') )->get();
         return view('prestataires.index', compact('prestataires', 'regions', 'secteur_activites'));
     }
     else{
-        flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
+        flash("Vous n'avez pas le droit d'acceder à cette ressource. Veillez contacter l'administrateur!!!")->error();
         return redirect()->back();
     }
     }
@@ -55,6 +55,7 @@ class PrestataireController extends Controller
      */
     public function store(Request $request)
     {
+    if (Auth::user()->can('changer_statut_facture_ou_devis')) {
         $lastOne = DB::table('prestataires')->latest('id')->first();
         if($lastOne){
         $code_prestataire="BWBF-PRES-00". $lastOne->id+1;}
@@ -73,6 +74,11 @@ class PrestataireController extends Controller
             'code_prestaire' => $code_prestataire
         ]);
         return redirect()->route('prestataire.index');
+    }
+    else{
+        flash("Vous n'avez pas le droit d'acceder à cette ressource. Veillez contacter l'administrateur!!!")->error();
+        return redirect()->back();
+    }
     }
 
     /**

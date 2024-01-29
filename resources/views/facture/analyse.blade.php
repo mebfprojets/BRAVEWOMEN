@@ -219,9 +219,10 @@
                 
             </div>
             <div class="modal-body">
-
+                   {{count($facture->images_des_biens) }}
                 <div>
                     @foreach ($facture->images_des_biens as $image_de_bien )
+                        
                         <div class="col-md-6">  
                             <img class="cadre_image" src= "{{ Storage::disk('local')->url($image_de_bien->url_image) }}" alt="">
                         </div>

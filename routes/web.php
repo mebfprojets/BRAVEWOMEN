@@ -263,7 +263,7 @@ Route::get("/dashboard/listeallsouscription", [DashboradController::class, 'list
 Route::get("/souscription/view/{id}", [EntrepriseController::class, 'view'])->name('entreprise.view');
 Route::get("/souscription/rechercher", [SouscriptionController::class, 'afficherrechercher'])->name("souscription.rechercher");
 Route::get("rechercher/filtre/", [SouscriptionController::class,'filtrerdata'])->name("filtrerdata");
-Route::get("/pca/par_secteur_dactivite",[DashboarController::class,'pca_par_secteur_dactivite'])->name("pca.par_secteur_dactivite");
+Route::get("/pca/par_secteur_dactivite",[DashboradController::class,'pca_par_secteur_dactivite'])->name("pca.par_secteur_dactivite");
 Route::resource("activites", ActiviteController::class);
 Route::get('/activite/import/view', [ActiviteController::class, "return_view_import"])->name('activite.import_view');
 Route::post("activite/import/store",  [ActiviteController::class, "chargerActivite"])->name('activite.import_store');

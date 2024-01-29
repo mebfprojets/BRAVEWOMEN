@@ -3,12 +3,7 @@
 @section('dashboard_view', 'active')
 @section('content')
 <div class="col-md-12 col-md-offset-1 block full" style="margin-left: 10px;">
-    <!-- Your Plan Widget -->
-    
-          <!-- Tags Title -->
-          <!-- END Tags Title -->
 
-          <!-- Tags Content -->
 <div class="row">
     <div class="col-md-6 ">
         <div class="block">

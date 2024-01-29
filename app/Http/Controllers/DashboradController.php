@@ -369,6 +369,22 @@ $contrepartie_par_banque= DB::table('entreprises')
                                     ->groupBy('banques.id',"banques.nom")
                                     ->select("banques.id","banques.nom", DB::raw("SUM(accomptes.montant) as montant"))
                                     ->get();
+$contrepartie_par_secteur_dactivites= DB::table('entreprises')
+                                    ->join('banques','entreprises.banque_id','=','banques.id')
+                                    ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null)
+                                    ->leftjoin('accomptes','accomptes.entreprise_id','=','entreprises.id')
+                                    ->leftjoin('valeurs','entreprises.secteur_activite','=','valeurs.id')
+                                    ->groupBy("entreprises.secteur_activite","valeurs.libelle")
+                                    ->select("entreprises.secteur_activite","valeurs.libelle as secteur", DB::raw("SUM(accomptes.montant) as montant"))
+                                    ->get();
+$subvention_par_secteur_dactivites= DB::table('entreprises')
+                                    ->join('banques','entreprises.banque_id','=','banques.id')
+                                    ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null)
+                                    ->leftjoin('subventions','subventions.entreprise_id','=','entreprises.id')
+                                    ->leftjoin('valeurs','entreprises.secteur_activite','=','valeurs.id')
+                                    ->groupBy("entreprises.secteur_activite","valeurs.libelle")
+                                    ->select("entreprises.secteur_activite","valeurs.libelle as secteur", DB::raw("SUM(subventions.montant_subvention) as montant"))
+                                    ->get();
 
     $mobilisation_par_categorie= DB::table('entreprises')
                                     ->leftjoin('accomptes','accomptes.entreprise_id','=','entreprises.id')
@@ -447,7 +463,7 @@ $subvention_valide_par_banque= DB::table('entreprises')
                                                     'mobilisation_par_categorie','mobilisation_par_banque','nombre_de_pca','fond_mobilise',
                                                     'total_souscription_enregistres','total_contrepartie_verse', 'total_subvention_verse',
                                                     'nombre_devis_soumis', 'montant_devis_soumis', 'montant_devi_valide', 'montant_facture_valide',
-                                                    'montant_facture_payee','montant_facture_soumise'));
+                                                    'montant_facture_payee','montant_facture_soumise','contrepartie_par_secteur_dactivites','subvention_par_secteur_dactivites'));
   }
   elseif($type_detail=='pca'){
    // $investissment
@@ -524,7 +540,6 @@ $pca_aop_selectionne_par_secteurs= DB::table('entreprises')
                         ->select( "entreprises.secteur_activite as secteur_dactivite" , DB::raw("COUNT(entreprises.secteur_activite) as nombre"), DB::raw("SUM(projets.montant_accorde) as montant"))
                         ->groupBy('entreprises.secteur_activite')
                         ->get();
-
  $pca_par_secteurs= DB::table('entreprises')
                         ->join('projets','projets.entreprise_id','=','entreprises.id')
                         ->select( "entreprises.secteur_activite as secteur_dactivite" , DB::raw("COUNT(entreprises.secteur_activite) as nombre"), DB::raw("SUM(projets.montant_demande) as montant"))
@@ -542,7 +557,6 @@ $pca_enregistre_par_categories= DB::table('entreprises')
                         ->groupBy('entreprises.aopOuleader')
                         ->select('entreprises.aopOuleader as categorie', DB::raw("COUNT(projets.id) as nombre"))
                         ->get();
-              
 $pca_enregistes_par_banque= DB::table('entreprises')
                             ->join('projets',function($join){
                                 $join->on('projets.entreprise_id','=','entreprises.id')
@@ -552,7 +566,7 @@ $pca_enregistes_par_banque= DB::table('entreprises')
                         ->groupBy('banques.nom')
                         ->select('banques.nom as nom_banque', DB::raw("COUNT(projets.id) as nombre"), DB::raw("SUM(projets.montant_demande) as montant"))
                         ->get();
-                       // dd($pca_enregistes_par_banque);
+                     
 $pca_aop_enregistes_par_banque= DB::table('entreprises')
                                 ->join('projets',function($join){
                                     $join->on('projets.entreprise_id','=','entreprises.id')

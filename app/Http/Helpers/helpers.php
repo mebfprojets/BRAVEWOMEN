@@ -8,6 +8,8 @@ use App\Models\Valeur;
 use App\Models\Indicateur;
 use App\Models\Facture;
 use App\Models\Entreprise;
+use App\Models\Projet;
+use App\Models\InvestissementProjet;
 use App\Models\Infoentreprise;
 use App\Models\Journal;
 use Illuminate\Support\Facades\Storage;
@@ -187,11 +189,21 @@ function Insertion_Journal($table,$operation)
         ]);
     }
 }
+
                     if(!function_exists('taux_execution_budget')){
                         function taux_execution_budget($prevu, $depense){
                            $taux=  $depense/$prevu*100 ;
                           $taux= number_format($taux, 2, '.', '');
                             return $taux;
+                        }
+                    }
+                    if(!function_exists('return_info_enveloppe')){
+                        function return_info_enveloppe(){
+                           $total_enveloppe=  env('total_enveloppe_MPME') + env('total_enveloppe_AOP'); ;
+                          $montant_accorde = InvestissementProjet::where('statut','validé')->sum('subvention_demandee_valide');
+                          $montant_restant= $total_enveloppe - $montant_accorde;
+                          $infos= [$total_enveloppe,$montant_accorde,$montant_restant];
+                            return $infos;
                         }
                     }
 

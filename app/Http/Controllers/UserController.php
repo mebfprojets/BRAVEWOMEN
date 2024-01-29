@@ -181,7 +181,7 @@ class UserController extends Controller
     }
 public function updateuser(Request $request, User $user)
         {
-        if (Auth::user()->can('user.create')) {
+     
             $user->update([
                     'name' => $request ['nom'],
                     'prenom'=> $request ['prenom'],
@@ -197,11 +197,7 @@ public function updateuser(Request $request, User $user)
             }
             flash("Utilisateur modifié avec succès!!!")->error();
             return redirect()->back();
-        }
-        else{
-            flash("Vous n'avez pas le droit d'acceder à cette resource. Veillez contacter l'administrateur!!!")->error();
-            return redirect()->back();
-        }
+      
 }
 public function verifier_conformite_cpt(Request $request){ 
     $entreprises=Entreprise::where('code_promoteur',$request->code_promoteur)->where("participer_a_la_formation",1)->where("decision_du_comite_phase1","selectionnee")->get();

@@ -113,7 +113,7 @@
                               <div class="small-box bg-default">
                                 <div class="inner">
                                   <h3> {{ $nombre_de_pca }}<sup style="font-size: 20px"></sup></h3>
-                                  <p>PCA enregistrés</p>
+                                  <span></span><p>PCA enregistrés</p> 
                                 </div>
                                 <div class="icon">
                                   <i class="ion ion-stats-bars"></i>

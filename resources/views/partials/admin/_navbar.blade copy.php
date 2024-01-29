@@ -299,7 +299,7 @@
                         @endcan
                         @can('lister_devis_soumis', Auth::user())
                              <li class="@yield('devis_analyse')">
-                                <a href="{{ route("devi.de_mazone") }}">  Devis à analyser</a>
+                                <a href="{{ route("devi.de_mazone") }}">  Devis à analyserss</a>
                             </li> 
                         @endcan
                         {{-- @can('lister_all_devis', Auth::user())
