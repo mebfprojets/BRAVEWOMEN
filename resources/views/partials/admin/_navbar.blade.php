@@ -96,6 +96,9 @@
                             <li class="@yield('souscription_retenue')">
                                     <a href="{{ route("souscription_retenue") }}?typeentreprise=mpme"> Retenues </a>
                             </li>
+                            <li class="@yield('mpme_rejete')">
+                                <a href="{{ route("souscription.rejete") }}?typeentreprise=mpme"> Rejetees </a>
+                            </li>
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('pme_retenu_par_zone')">
@@ -137,6 +140,9 @@
                        @can('souscription.listerRetenues', Auth::user())
                             <li class="@yield('aop_retenu')">
                                     <a href="{{ route("souscription_retenue") }}?typeentreprise=aop"> Retenues </a>
+                            </li>
+                            <li class="@yield('aop_rejete')">
+                                <a href="{{ route("souscription.rejete") }}?typeentreprise=aop"> Rejetees </a>
                             </li>
                             <li class="@yield('aop_post_analyse') loaddata">
                                 <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=aop" onclick="loadfunction()"> Bénéficiaires data</a>

@@ -94,7 +94,9 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="#" data-toggle="tooltip" title="Analyser" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
+                            @if($demande->projet->statut=='selectionné')
+                                <a href="{{ route('save_desistement_projet', $demande->projet) }}" data-toggle="tooltip" title="Enregistrer un désistement" class="btn btn-md btn-success"><i class="fa fa-times"></i></a>
+                            @endif
                             </div>
                         </td>
                     </tr>

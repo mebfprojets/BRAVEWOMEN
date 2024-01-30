@@ -89,6 +89,8 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/listeval', [ValeurController::class,"listevakeur"])->name("valeur.listeval");
     Route::get("/souscription/terminees",[SouscriptionController::class, 'listerallsouscriptiontermine'] )->name("souscription.terminee");
     Route::get("/analyse_ugp/souscription",[SouscriptionController::class, 'souscription_a_analyser_par_ugp'] )->name("souscription.analyse_ugp");
+    Route::get("/souscription/rejetees",[SouscriptionController::class, 'listerallsouscriptionrejete'] )->name("souscription.rejete");
+
     Route::get('send/synthese',[EntrepriseController::class, 'sendSyntheseToComite'])->name("send.synthese");
     Route::get('conformite/souscription',[SouscriptionController::class, 'saveConformite'])->name("souscription.saveconformite");
     Route::get('souscription/save/decision',[SouscriptionController::class, 'save_avis_ugp'])->name("souscription.savedecisionugp");
@@ -200,6 +202,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/afficher/document/{document}', [DocumentController::class, 'afficher_document'])->name("documents.afficher");
     Route::get('/modifier/document/', [DocumentController::class, 'modif_document'])->name("document.modif");
     Route::post('storemodif/document', [DocumentController::class, 'modifier_document'])->name("document.modifier");
+    Route::get('desistement/projet/{projet}', [ProjetController::class, 'save_desistement_projet'] )->name('save_desistement_projet');
 
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");

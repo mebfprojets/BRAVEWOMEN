@@ -107,6 +107,19 @@ public function listerlespmeretenueEtFormee(){
 
             return redirect()->back();
     }
+public function listerallsouscriptionrejete( Request $request){
+    $active='souscription_rejete';
+        $active_principal="pme";
+        $titre="Enregistrées";
+        $categorieentreprise= $request->typeentreprise;
+        ($categorieentreprise=='mpme')?($active='mpme_rejete'):($active='aop_rejete');
+        ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
+        ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
+        $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])->where('decision_du_comite_phase1','ajournee')->orderBy('updated_at', 'desc')->get();  
+        return view("souscriptions.liste_de_souscription_rejete", compact("entreprises","active","titre","active_principal"));
+
+}
+
     public function statuersurLasoucriptionPmeParleComitePourLaPhaseFormation(Request $request){
         $id_entreprise= $request->id_entreprise;
         $observation= $request->observation;

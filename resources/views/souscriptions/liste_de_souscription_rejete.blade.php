@@ -27,7 +27,10 @@
                     <th class="text-center">Entreprise</th>
                     <th class="text-center">Secteur d'activité</th>
                     <th class="text-center">Score</th>
+                    <th class="text-center">Avis UGP</th>
+                    <th class="text-center">Commentaire UGP</th>
                     <th class="text-center">Resultat Préselection</th>
+                    <th class="text-center">Commentaire comite</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -85,11 +88,18 @@
                         <td class="text-center" style="width: 5%;">
                            {{ $entreprise->noteTotale + $entreprise->note_critere_qualitatif }}
                         </td>
-                        
+                        <td class="text-center" style="width: 5%;">
+                            {{ $entreprise->decision_ugp }}
+                        </td>
+                        <td class="text-center" style="width: 5%;">
+                            {{ $entreprise->observation_ugp }}
+                        </td>
                         <td class="text-center" style="width: 5%;">
                             {{ $entreprise->decision_du_comite_phase1 }}
                         </td>
-                        
+                        <td class="text-center" style="width: 5%;">
+                            {{ $entreprise->commentaire_membre_comite_phase1 }}
+                         </td>
                         
                         <td class="text-center" style="width: 7%;">
                             <div class="btn-group">
