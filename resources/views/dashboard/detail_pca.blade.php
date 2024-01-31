@@ -86,9 +86,53 @@
 </div>
 </div>
 <div class="row">
+    
     <div class="col-sm-6">
         <p style="background-color:white; text-align: center">Situation des MPME</p>
         <!-- Billing Address Block -->
+        <div class="row">
+            <div class="col-sm-6 col-lg-4">
+                <!-- Widget -->
+                <a href="page_ready_article.html" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                       
+                        <h3 class="widget-content text-right animation-pullDown">
+                           Montant de la subvention MPME<br>
+                           <hr>
+                           <center><strong>{{ format_prix(env('total_enveloppe_MPME'))}} FCFA</strong></center>
+                        </h3>
+                    </div>
+                </a>
+                <!-- END Widget -->
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <!-- Widget -->
+                <a href="page_comp_charts.html" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                       
+                        <h3 class="widget-content text-right animation-pullDown">
+                            Montant de la Subvention accordee<br>
+                            <hr>
+                            <center><strong>{{ format_prix(return_info_enveloppe()[4])}} FCFA</strong></center>
+                         </h3>
+                    </div>
+                </a>
+                <!-- END Widget -->
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <!-- Widget -->
+                <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                        <h3 class="widget-content text-right animation-pullDown">
+                            Montant de la Subvention Restante<br>
+                            <hr>
+                            <center><strong>{{ format_prix( env('total_enveloppe_MPME') - return_info_enveloppe()[4])}} FCFA</strong></center>
+                        </h3>
+                    </div>
+                </a>
+                <!-- END Widget -->
+            </div>
+        </div>
         <div class="block">
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
@@ -209,6 +253,49 @@
     </div>
     <div class="col-sm-6">
         <p style="background-color:white; text-align: center">Situation AOP/Leader</p>
+        <div class="row">
+            <div class="col-sm-6 col-lg-4">
+                <!-- Widget -->
+                <a href="page_ready_article.html" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                       
+                        <h3 class="widget-content text-right animation-pullDown">
+                           Montant de la subvention AOP<br>
+                           <hr>
+                           <center><strong>{{  format_prix(env('total_enveloppe_AOP'))}} FCFA</strong></center>
+                        </h3>
+                    </div>
+                </a>
+                <!-- END Widget -->
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <!-- Widget -->
+                <a href="page_comp_charts.html" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                       
+                        <h3 class="widget-content text-right animation-pullDown">
+                            Montant de la Subvention accordee<br>
+                            <hr>
+                            <center><strong>{{ format_prix(return_info_enveloppe()[3])}} FCFA</strong></center>
+                         </h3>
+                    </div>
+                </a>
+                <!-- END Widget -->
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <!-- Widget -->
+                <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                        <h3 class="widget-content text-right animation-pullDown">
+                            Montant de la Subvention Restante<br>
+                            <hr>
+                            <center><strong>{{ format_prix( env('total_enveloppe_AOP') - return_info_enveloppe()[2])}} FCFA</strong></center>
+                        </h3>
+                    </div>
+                </a>
+                <!-- END Widget -->
+            </div>
+        </div>
         <div class="block">
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">

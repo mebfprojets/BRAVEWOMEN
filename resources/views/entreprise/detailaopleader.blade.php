@@ -847,7 +847,7 @@
                                 </table>
                             </div>
 <div class="col-md-3 ">
-                                    <h4>Nombre de PME partenaires dans les zones du projet</h4>
+                                    <h4>Montant de vos achats auprès d'autres PME détenues par des femmes</h4>
                                     <table class="table table-condensed table-bordered" style="text-align: center">
                                     <thead style="text-align: center !important">
                                             <tr>
@@ -863,7 +863,7 @@
                                                 {{getlibelle($nombre_de_pme_partenaires_de_la_zone->annee)}}
                                             </td>
                                             <td>
-                                                {{$nombre_de_pme_partenaires_de_la_zone->quantite}} MPME
+                                                {{format_prix($nombre_de_pme_partenaires_de_la_zone->quantite)}} 
                                             </td>
                                         </tr>
                                     @endforeach

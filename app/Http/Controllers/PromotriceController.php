@@ -264,7 +264,6 @@ class PromotriceController extends Controller
     }
     public function searchmpme(Request $request){
         $promoteur = Promotrice::where("code_promoteur", $request->code_promoteur)->first();
-     
         //Ce code promoteur n'existe pas dans la base de données
         if($promoteur==null){
             return view("invalide", compact("promoteur"));
@@ -275,18 +274,17 @@ class PromotriceController extends Controller
         $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","mpme")->where("conforme",null)->get();
         //nombre de nouvelle entreprise enregistré pas le promoteur
         $nbre_ent_nn_traite = count($entreprise_nn_traite);
+       
      // Verifions s'il y'a une entreprise en son nom lors de la phase une
-        
-        // S'il n'ya pas d'entreprise traitée
+    // S'il n'ya pas d'entreprise traitée
         if(!$entreprise_traite){
+            
             if($promoteur->suscription_etape==2){
                 $entreprise= Entreprise::where("promotrice_id",$promoteur->id)->first();
-               // dd($promoteur->suscription_etape);
                 $entreprise=$entreprise->id;
                 return view("validateStep1", compact("promoteur","entreprise",'nbre_ent_nn_traite'));
             }
             elseif($promoteur->suscription_etape==1 || $promoteur->suscription_etape==null ){
-              // dd($promoteur->suscription_etape);
               
                 return view("validateStep2", compact("promoteur"));
             }
@@ -298,17 +296,19 @@ class PromotriceController extends Controller
             //S'il a une entreprise 
         else{
             // Verifions si une de ses entreprise à un PCA
-           
+           // dd($nbre_ent_nn_traite);
             $projet=  DB::table('entreprises')
                         ->join('projets','projets.entreprise_id','entreprises.id')
                         ->where('entreprises.aopOuleader',"mpme")
                         ->where('entreprises.code_promoteur', $promoteur->code_promoteur)
                         ->first();
-                       
+                    //dd($projet);
             if($projet){
+               // dd('dde');
                 return view("invalide", compact("promoteur"));
             }
             else{
+                
                 if($promoteur->suscription_etape==2){
                     $entreprise= Entreprise::where("promotrice_id",$promoteur->id )->first();
                     $entreprise=$entreprise->id;
