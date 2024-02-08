@@ -9,8 +9,9 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Valeur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReinitialiseMail;
 use Illuminate\Support\Facades\Auth;
-
 class UserController extends Controller
 {
     public function __construct()
@@ -95,7 +96,18 @@ class UserController extends Controller
         return redirect()->back();
     }
     }
-
+public function reinitialize(Request $request){
+            $user= User::find($request->id);
+            $password = generate_password(8);
+            $pass=$password;
+            $user->update([
+                'password' => bcrypt($pass)
+            ]);
+            $e_msg='Votre Mot de passe a ete initialise. Le nouveau mot de passe est : '.$password ;
+            $titre= 'REINITIALISATION DE MOT DE PASSE BRAVE WOMEN';
+            $mail= $user->email;
+            Mail::to($mail)->queue(new ReinitialiseMail($titre, $e_msg,'mails.reinitializeMail'));
+}
     /**
      * Display the specified resource.
      *

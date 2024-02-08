@@ -10,6 +10,9 @@
             <thead>
                 <tr>
                     <th class="text-center">N°</th>
+                    <th class="text-center">Region</th>
+                    <th class="text-center">Promotrice</th>
+
                     <th class="text-center">Code bénéficiaire</th>
                     <th class="text-center">Numéro de compte</th>
                     <th class="text-center">Entreprise</th>
@@ -32,6 +35,9 @@
                         @endphp
                     <tr>
                          <td class="text-center" style="width: 2%">{{ $i }}</td>
+                        <td class="text-center" style="width: 2%"> {{ getlibelle($entreprise->region) }}</td>
+                        <td class="text-center" style="width: 2%"> {{ $entreprise->promotrice->nom }} {{ $entreprise->promotrice->prenom }}</td>
+
                         <td class="text-center" style="width: 2%"> {{ $entreprise->code_promoteur }}</td>
                          <td class="text-center">
                                 {{ $entreprise->num_ss_compte }}

@@ -847,7 +847,6 @@ public function invest_modifier(Request $request){
     $invest= InvestissementProjet::find($request->invest_id);
     $projet= Projet::find($invest->projet_id);
 $projet_montant= $projet->investissements->sum('montant') -  $invest->montant + reformater_montant2($request->cout);
-//dd($projet_montant);
 if((($projet->entreprise->aopOuleader=='aop' ||$projet->entreprise->aopOuleader=='leader') && $projet_montant >60000000)|| ($projet->entreprise->aopOuleader=='mpme' && $projet_montant >18000000)  )
 {
     flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
@@ -1020,7 +1019,6 @@ public function modif_piecej(Request $request){
 public function modifier_piecej(Request $request){
     $piecejointe= Piecejointe::find($request->piece_id);
     $piecejointe_type=$piecejointe->type_piece;
-    
 if($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_DEVIS')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
@@ -1065,7 +1063,42 @@ public function liste_des_devis_asuivre_par_projet(Projet $projet){
     return view('devi.listeasuivre',compact('devis'));
 }
 
-public function save_desistement_projet(Projet $projet){
+public function save_desistement_projet(Projet $projet, Request $request){
+    //dd($projet);
+if($projet->entreprise->accomptes()->sum('montant') == 0){
+    $file = $request->file('declaration_desistement');
+    $extension=$file->getClientOriginalExtension();
+    $fileName = $projet->entreprise->code_promoteur.'.'.$extension;
+    $chaine='public/declaration_desistement';
+    $chaine= $request['declaration_desistement']->storeAs($chaine, $fileName);
+
+    Piecejointe::create([
+        'type_piece'=>env("VALEUR_PIECE_DECLARATION_DESISTEMENT"),
+          'entreprise_id'=>$projet->entreprise->id,
+          'url'=>$chaine,
+      ]);
+      foreach($projet->investissements as $investissement){
+       // dd($investissement);
+            $investissement->update([
+                'statut'=>'rejeté',
+                'montant_valide'=>0,
+                'apport_perso_valide'=> 0,
+                'subvention_demandee_valide'=>0,
+            ]);
+           
+    }
+    $projet->update([
+            'desister'=>1, 
+            'montant_accorde'=>0,
+            'statut'=>'rejeté'
+    ]);
+    flash("Le desistement a ete enregistre avec success !!!")->success();
+    return redirect()->back();
+}
+else{
+    flash("Impossible d'enregistrer un desistement pour ce projet car un versement a ete fait par la promotrice !!!")->error();
+    return redirect()->back();
+} 
     
 }
     /**

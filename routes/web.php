@@ -90,6 +90,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get("/souscription/terminees",[SouscriptionController::class, 'listerallsouscriptiontermine'] )->name("souscription.terminee");
     Route::get("/analyse_ugp/souscription",[SouscriptionController::class, 'souscription_a_analyser_par_ugp'] )->name("souscription.analyse_ugp");
     Route::get("/souscription/rejetees",[SouscriptionController::class, 'listerallsouscriptionrejete'] )->name("souscription.rejete");
+    Route::get("/reinitialise/password",[UserController::class, 'reinitialize'] )->name("user.reinitialize");
 
     Route::get('send/synthese',[EntrepriseController::class, 'sendSyntheseToComite'])->name("send.synthese");
     Route::get('conformite/souscription',[SouscriptionController::class, 'saveConformite'])->name("souscription.saveconformite");
@@ -120,7 +121,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/get_view', [EntrepriseController::class, "return_view"])->name('form.import');
     Route::post("simple-excel/import",  [EntrepriseController::class, "chargerGeoData"])->name('excel.import');
     Route::get('Lister/factures/parZone', [FactureController::class, 'facture_soumises'])->name('facture.mazone');
-    Route::get('visualiser/facture/{facture}', [FactureController::class, 'show'])->name('facture.show');
+    Route::get('facture/{facture}', [FactureController::class, 'show'])->name('facture.show');
     Route::get("changerStatus/facture", [FactureController::class, 'changerStatus'])->name('facture.changerstatus');
     Route::get("devi/demazone", [DeviController::class, 'devis_de_ma_zone'])->name('devi.de_mazone');
     Route::get("devi/analyse", [DeviController::class, 'analyse_de_devis'])->name('devi.aanalyse');
@@ -202,7 +203,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/afficher/document/{document}', [DocumentController::class, 'afficher_document'])->name("documents.afficher");
     Route::get('/modifier/document/', [DocumentController::class, 'modif_document'])->name("document.modif");
     Route::post('storemodif/document', [DocumentController::class, 'modifier_document'])->name("document.modifier");
-    Route::get('desistement/projet/{projet}', [ProjetController::class, 'save_desistement_projet'] )->name('save_desistement_projet');
+    Route::post('desistement/projet/{projet}', [ProjetController::class, 'save_desistement_projet'] )->name('save_desistement_projet');
 
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");

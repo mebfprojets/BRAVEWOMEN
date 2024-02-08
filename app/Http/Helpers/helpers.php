@@ -226,6 +226,16 @@ function Insertion_Journal($table,$operation)
                             return $taux." %";
                         }
                     }
+                    if(!function_exists('generate_password')){
+                        function generate_password($taille){
+                            $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                            $string = '';
+                            for($i=0; $i<$taille; $i++){
+                                $string .= $chars[rand(0, strlen($chars)-1)];
+                            }
+                            return $string;
+                        }
+                    }
                     if(!function_exists('nbre_beneficiaire_ayant_augmente_nbre_ind')){
                 function nbre_beneficiaire_ayant_augmente_nbre_ind($indicateur){
                     $nbre_entreprise= DB::table('impacts')

@@ -3,9 +3,6 @@
 @section('administration-banque', 'active')
 @section('content')
 <div class="col-md-10">
-        <!-- Basic Form Elements Title -->
-
-                <!-- Form Validation Example Block -->
                 <div class="block">
                     <!-- Form Validation Example Title -->
                     <div class="block-title">
@@ -37,7 +34,8 @@
                     <td>{{format_date($accompte->date_versement)}}</td>
                     <td>{{format_prix($accompte->montant) }}</td>
                     <td>
-                    <a href="{{ route('account.getRecu',$accompte)}}" title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+                      <a href="{{ route('account.getRecu',$accompte)}}" title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+                   
                     </td>
                     <td>
                     @if(count($entreprise->factures)==0)

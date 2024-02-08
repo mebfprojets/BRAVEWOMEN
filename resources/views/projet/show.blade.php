@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('administration', 'active')
-@section('administration-valeur', 'active')
+@section('pca', 'active')
+@section('analyse', 'active')
 @section('content')
 <div class="row">
 <div class="col-md-6 offset-md-3">
@@ -14,6 +14,9 @@
         <div class="block-title">
             <div class="block-options pull-right">
                 <a onclick="window.history.back();" class="btn btn-sm btn-success"><i class="fa fa-repeat"></i> Fermer</a>
+                @if($projet->statut=='selectionné')
+                <a href="#modal-save-desistement" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Desister </a>
+                @endif
                 {{-- <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default toggle-bordered enable-tooltip" data-toggle="button" title="Toggles .form-bordered class"></a> --}}
             </div>
             <h2><strong>Detail</strong> sur le plan de continuité des Activité</h2>
@@ -278,6 +281,41 @@
 </div>
 
 @endsection
+@section('modal_part')
+<div id="modal-save-desistement" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistrer un desistement</h2>
+            </div>
+            <div class="modal-body" style="margin-left:15px;">
+                <form id="form-validation" method="POST"  action="{{ route('save_desistement_projet', $projet) }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">
+            <div class="row">
+            <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8">
+                <label class=" control-label" for="declaration_desistement">Joindre la declaration<span class="text-danger">*</span></label>
+                <input class="form-control col-md-6" type="file" name="declaration_desistement" id="declaration_desistement" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('declaration_desistement');" placeholder="Joindre une copie de la declaration de desistement" required>  
+                    @if ($errors->has('declaration_desistement'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('declaration_desistement') }}</strong>
+                    </span>
+                    @endif
+            </div>
+            </div>   
+                <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Enregistrer</button>
+                </div>
+            </div>
+            </form>
+        </div>
+            </div>
+            <!-- END Modal Body  modal-devis-edit -->
+        </div>
+    </div>
 <div id="modal-evaluer-pca" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -419,6 +457,7 @@
         </div>
     </div>
 </div> 
+@endsection
 <script>
          function recupererprojet_id(id_projet){
             //alert(id_projet);

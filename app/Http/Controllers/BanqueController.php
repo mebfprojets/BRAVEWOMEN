@@ -131,7 +131,16 @@ class BanqueController extends Controller
             $entreprises= Entreprise::where('resultat_kyc', 'concluant')->where("date_de_signature_accord_beneficiaire",'!=',null)->where("date_de_creation_compte",'!=',null)->where("banque_id",Auth::user()->banque_id)->get();
         }
         elseif(Auth::user()->banque_id==null){
-            $entreprises= Entreprise::where('resultat_kyc', 'concluant')->where("date_de_signature_accord_beneficiaire",'!=',null)->get();
+            if(Auth::user()->zone==100){
+               $entreprises= Entreprise::where('resultat_kyc', 'concluant')->where("date_de_signature_accord_beneficiaire",'!=',null)->get();
+            }
+            else{
+               $entreprises= Entreprise::where('resultat_kyc', 'concluant')
+                                        ->Where('region', Auth::user()->zone)
+                                        ->where("date_de_signature_accord_beneficiaire",'!=',null)
+                                        ->get();
+            }
+        
         }
             return view("banque.beneficiaires",compact("entreprises"));
         }
@@ -139,18 +148,18 @@ class BanqueController extends Controller
             flash("Vous n'avez pas le droit d'acceder à cette ressource. Bien vouloir contacter l'administrateur !!!")->success();
             return redirect()->back();
         }
+    
     }
     public function mobilisation_de_fond_par_banque(){
         $contrepartie_par_banks= DB::table('accomptes')
-        ->join('entreprises','accomptes.entreprise_id','=','entreprises.id')
-        ->where('entreprises.banque_id',Auth::user()->banque_id)
-        ->get();
-    
-$subvention_par_banks= DB::table('subventions')
-        ->join('entreprises','subventions.entreprise_id','=','entreprises.id')
-        ->where('entreprises.banque_id',Auth::user()->banque_id)
-        ->select('subventions.montant_subvention as montant' , 'subventions.date_subvention as date_subvention', 'entreprises.denomination', 'entreprises.telephone_entreprise')
-        ->get();
+                                ->join('entreprises','accomptes.entreprise_id','=','entreprises.id')
+                                ->where('entreprises.banque_id',Auth::user()->banque_id)
+                                ->get();
+        $subvention_par_banks= DB::table('subventions')
+                                ->join('entreprises','subventions.entreprise_id','=','entreprises.id')
+                                ->where('entreprises.banque_id',Auth::user()->banque_id)
+                                ->select('subventions.montant_subvention as montant' , 'subventions.date_subvention as date_subvention', 'entreprises.denomination', 'entreprises.telephone_entreprise')
+                                ->get();
         return view('banque.mobilisation', compact('contrepartie_par_banks','subvention_par_banks'));
     }
 public function demande_de_payement_par_banque(Request $request){

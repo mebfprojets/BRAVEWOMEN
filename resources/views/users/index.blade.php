@@ -47,19 +47,15 @@
                     <td>{{$user->email}}</td>
                     <td>{{ $user->telephone}}</td>
                     <td>{{ $user->login}}</td>
-                    {{-- <td class="col-md-1">
-                        <label class="switch switch-danger "><input type="checkbox" onclick="idstatus({{ $user->id }})"
-                             @if($user->status == 1)
-                                checked
-                            @endif
-                            value="1"><span></span></label>
-                    </td> --}}
                     <td class="text-center">
-                        {{-- @can('user.update',Auth::user()) --}}
+                        @can('user.update',Auth::user()) 
                             <div class="btn-group">
                                 <a href="{{ route('user.edit',$user) }}" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i></a>
                             </div>
-                        {{-- @endcan --}}
+                            <div class="btn-group">
+                                <a href="#modal-user-reinitialise" data-toggle="modal" title="télécharger" class="btn btn-xs btn-success"  onclick="recup_id('{{$user->id}}')"><i class="fa fa-repeat"></i>  </a>
+                            </div>
+                        @endcan 
                     </td>
 
                 </tr>
@@ -70,14 +66,13 @@
         </div>
 
 @endsection
-@section('modalSection')
-
+@section('modal_part')
 <div id="modal-user-reinitialise" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header text-center">
-                    <h2 class="modal-title"><i class="fa fa-pencil"></i> Confirmation</h2>
+                    <h2 class="modal-title"><i class="fa fa-pencil"></i> Reinitialiser le mot de passe</h2>
                 </div>
                 <!-- END Modal Header -->
 
@@ -85,12 +80,12 @@
                 <div class="modal-body form-bordered">
 
                             <div>
-                                <p>Voulez-vous vraiment Reinitialiser?</p>
+                                <p>Voulez-vous vraiment reinitialiser le mot de passe de l'utilisateur? Un mot de passe aleatoire sera envoye par mail.</p>
                             </div>
-                            <input type="hidden" name="id_table" id="id_table">
+                            <input type="hidden" name="user_pass" id="id_user_pass">
                             <div class="text-right">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-sm btn-primary" onclick="recu_id();">OUI</button>
+                                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Fermer</button>
+                                <button type="button" class="btn btn-sm btn-warning" onclick="recu_id();">Reinitialiser</button>
                             </div>
 
                 </div>
@@ -149,7 +144,7 @@
 
                 <!-- Modal Body -->
                 <div class="modal-body">
-                           <input type="hidden" name="id_table" id="id_table">
+                           <input type="hidden" name="id_tableb" id="id_table">
                             <p>Voulez-vous vraiment Supprimer l'utilisateur</p>
                         <div class="form-group form-actions">
                             <div class="text-right">
@@ -171,9 +166,6 @@
                 <div class="modal-header text-center">
                     <h2 class="modal-title"><i class="fa fa-pencil"></i> Confirmation</h2>
                 </div>
-                <!-- END Modal Header -->
-
-                <!-- Modal Body -->
                 <div class="modal-body">
 
                             <div>
@@ -196,7 +188,6 @@
 
     function detailUser(id){
                 var id=id;
-
                 $.ajax({
                     url: url,
                     type:'GET',
@@ -225,30 +216,24 @@
 
            });
         }
-        function delConfirm (id){
-            //alert(id);
-            $(function(){
-                //alert(id);
-                document.getElementById("id_table").setAttribute("value", id);
-            });
-
+        function recup_id(id){
+                //console.log(id);
+                document.getElementById('id_user_pass').setAttribute("value", id);
         }
 
         function recu_id(){
-            //var id= document.getElementById('id_table').value;
             $(function(){
-                var id= $("#id_table").val();
-
-               //alert(id);
+                var id= $("#id_user_pass").val();
+                var url = "{{ route('user.reinitialize') }}";
                 $.ajax({
                     url: url,
                     type:'GET',
                     data: {id: id} ,
                     error:function(){alert('error');},
                     success:function(){
+                    
                         $('#modal-user-reinitialise').hide();
-                        location.reload();
-
+                        //location.reload();
                     }
                 });
             });

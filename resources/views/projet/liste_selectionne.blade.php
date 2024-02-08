@@ -75,8 +75,8 @@
                         <td class="text-center">{{ $projet->observations}}</td>
                         <td class="text-center"> 
                             <div class="btn-group">
-                                <a href="{{ route('projet.analyse',$projet) }}" data-toggle="tooltip" title="Analyser" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
-                        @can('enregistrer_kyc',Auth::user())
+                                <a href="{{ route('projet.show',$projet) }}" data-toggle="tooltip" title="Afficher les details" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
+                          @can('enregistrer_kyc',Auth::user())
                             @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc==null)
                                 <a  href="#modal-demande-de-kyc" data-toggle="modal"title="Enregistrer une demande de KYC"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-warning" ><i class="gi gi-direction"></i> </a>
                             @endif
@@ -106,6 +106,41 @@
 </div>
 @endsection
 @section('modal_part')
+<div id="modal-save-desistement" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistrer un desistement</h2>
+            </div>
+            <div class="modal-body" style="margin-left:15px;">
+                <form id="form-validation" method="POST"  action="{{ route('save_desistement_projet', $projet) }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">
+            <div class="row">
+
+            <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8">
+                <label class=" control-label" for="declaration_desistement">Joindre la declaration<span class="text-danger">*</span></label>
+                <input class="form-control col-md-6" type="file" name="declaration_desistement" id="declaration_desistement" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('declaration_desistement');" placeholder="Joindre une copie de la declaration de desistement" required>  
+                    @if ($errors->has('declaration_desistement'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('declaration_desistement') }}</strong>
+                    </span>
+                    @endif
+            </div>
+            </div>   
+                <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Enregistrer</button>
+                </div>
+            </div>
+            </form>
+        </div>
+            </div>
+            <!-- END Modal Body  modal-devis-edit -->
+        </div>
+    </div>
 <div id="modal-signature-accord-beneficaire" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

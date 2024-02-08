@@ -85,7 +85,7 @@
                         </div>
                             <div class="form-group row">
                               <div class="col-sm-4">
-                                <label>Avance demandée.:</label>
+                                <label>Avance demandée:</label>
                               </div>
                               <div class="col-sm-8 mb-3 mb-sm-0">
                                 <label class="fb"> {{ format_prix($devi->montant_avance) }} </label>
@@ -112,15 +112,15 @@
                                   <label>Nom du prestataire:</label>
                                 </div>
                                 <div class="col-sm-8 mb-3 mb-sm-0">
-                                  <label class="fb"> {{$devi->prestataire->code_prestaire}} {{$devi->prestataire->nom_responsable}} {{$devi->prestataire->prenom_responsable}}</label>
+                                  <label class="fb"> {{$devi->prestataire->code_prestaire}} {{ $devi->prestataire->nom_responsable }} {{$devi->prestataire->prenom_responsable}}</label>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-4">
-                                  <label>N de compte.:</label>
+                                  <label>N de compte:</label>
                                 </div>
                                 <div class="col-sm-8 mb-3 mb-sm-0">
-                                  <label class="fb"> {{ $devi->compte_bank_prestataire }} à la {{ $devi->compte_bank_prestataire }} </label>
+                                  <label class="fb"> {{ $devi->compte_bank_prestataire }} à la {{ $devi->nom_bank_prestataire }} </label>
                                 </div>
                             </div>
                             <hr>

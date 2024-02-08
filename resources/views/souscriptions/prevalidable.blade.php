@@ -71,7 +71,6 @@
                         <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->nom }} {{ $entreprise->promotrice->prenom }}</td>
                         <td class="text-center" style="width: 5%;">{{ $entreprise->promotrice->telephone_promoteur }}</td>
                         <td class="text-center" style="width: 5%;">
-                            {{-- <a href="{{ route("entreprise.edit", $entreprise) }}"> {{ $entreprise->denomination }} </a> --}}
                            {{ $entreprise->denomination }}
                         </td>
                         <td class="text-center" style="width: 5%;">

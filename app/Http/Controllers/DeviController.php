@@ -28,15 +28,15 @@ class DeviController extends Controller
     {
         $this->middleware('auth');
     }
-    
-        public function get_file_emplacement($input_name,$file, $designation,){
-            $code_promoteur=Auth::user()->code_promoteur;
-            $extension=$file->getClientOriginalExtension();
-            $fileName = $designation.'.'.$extension;
-            $emplacement='public/'.$input_name.'/'.$code_promoteur; 
-            $url_store= $file->storeAs($emplacement, $fileName);
-            return $url_store;
-        }
+    public function get_file_emplacement($input_name,$file, $designation,)
+    {
+        $code_promoteur=Auth::user()->code_promoteur;
+        $extension=$file->getClientOriginalExtension();
+        $fileName = $designation.'.'.$extension;
+        $emplacement='public/'.$input_name.'/'.$code_promoteur; 
+        $url_store= $file->storeAs($emplacement, $fileName);
+        return $url_store;
+    }
     public function create_historique($devi_id, $statut, $motif, $observation){
         $date = new \DateTime();
         $date= $date->format('Y-m-d');
@@ -71,9 +71,7 @@ class DeviController extends Controller
     $prestataires= Prestataire::all();
     $entreprise= Entreprise::where('code_promoteur', Auth::user()->code_promoteur)->where('decision_du_comite_phase1','selectionnee')->first();   
     $devis= Devi::where('user_id', Auth::user()->id)->orderBy('updated_at', 'desc')->get();
-    //dd( $entreprise->projet);
     $ligne_projets= InvestissementProjet::where('statut','validé')->where('projet_id', $entreprise->projet->id)->get();
-    //dd($ligne_projets);
      return view('public.devis_beneficiaire',compact('ligne_projets',"devis",'entreprise','prestataires','ligne_projets'));
  }
  public function get_montant(Request $request){
@@ -136,13 +134,6 @@ else{
         else{
             $code_devis="BWBF-DEV-000".'0';
         }
-        //Faire le point sur la somme des devis de la ligne soumis le montant à soumettre
-      // $montant_engange_sur_la_lignedinvestissment= Devi::where('investissement_projets_id',$request->ligne_invest)->sum('montant_devis') +  reformater_montant2($request->montant_devis);
-       //Recuperer la ligne d'investissment
-   
-    //    $ligne_dinvestissement= InvestissementProjet::find($request->ligne_invest);
-      // dd($ligne_dinvestissement);
-    // if($ligne_dinvestissement->montant_valide >$montant_engange_sur_la_lignedinvestissment || $ligne_dinvestissement->montant_valide ==$montant_engange_sur_la_lignedinvestissment){
        $entreprise= Entreprise::find($request->entreprise_id);
        $devis_exist= Devi::where('entreprise_id',$request->entreprise_id)->where('designation',$request->designation)->first();
        if(!$devis_exist){
@@ -172,15 +163,16 @@ else{
             $chef_de_zone= User::where('zone', $devi->entreprise->region)->first();
 
         }
-        $e_msg="Vous avez des devis qui sont en attentes de validation.";
+        $e_msg="Vous avez des devis qui sont en attente de validation.";
         $titre='Chef de Zone';
+        $typeelt='devi';
         $mail=$chef_de_zone->email;
-        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg,'mails.analyseMail',$devi->id,$typeelt));
             $this->create_historique($devi->id,'soumis', null,null);
             flash("Devis soumis avec succès avec success !!!")->success();
        }
        else{
-         flash("Ce Devis a été  déjà enregistré !!!")->error();
+         flash("Ce Devis a été déjà enregistré!!!")->error();
        }
             return redirect()->route('profil.mesdevis');
     
@@ -352,6 +344,7 @@ else{
         $e_msg="Vous avez des devis qui sont en attentes de validation.";
         $titre='Chef de Zone';
         $mail=$chef_de_zone->email;
+        $typeelt='devi';
        // $e_msg="Vous avez des devis qui sont en attentes de validation.";
         ($devi->statut == 'soumis')?($action='chef_de_zone'):($action='autre');
         if($request->raison || $request->observation){
@@ -377,8 +370,9 @@ else{
 
         }
         else{
-           // dd('ooo');
+            
             if($devi->statut=='soumis'){
+                //dd($devi->statut);
                 $new_statut='transmis_au_chef_de_projet';
                 $titre='Chef de projet';
                 $mail= env('emailChefdeProjet');
@@ -402,7 +396,7 @@ else{
            // dd($mail);
             Insertion_Journal('Devis','Modification');
             $this->create_historique($devi->id, $new_statut, null, null);
-            Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+            Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$devi->id,$typeelt));
         }
        
         flash("Devis validée avec succès avec success !!!")->success();

@@ -266,7 +266,8 @@ public function facture_de_ma_zone(){
         $e_msg="Vous avez des factures qui sont en attentes de validation.";
         $titre='Chef de Zone';
         $mail=$chef_de_zone->email;
-        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+        $typeelt='facture';
+        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
         $this->create_historique($facture->id, "soumis", null, null );
         flash("La facture été soumise avec  success !!!")->success();
         return redirect()->back();
@@ -320,7 +321,14 @@ public function facture_de_ma_zone(){
          'raison_rejet'=>'',
     ]);
     Insertion_Journal('factures','modification');
-    flash("La facture a été modifié et soumise avec  success !!!")->success();
+    $chef_de_zone= User::where('zone', $facture->entreprise->region)->orWhere('zone', $facture->entreprise->region_affectation)->first();
+        $e_msg="Vous avez des factures qui sont en attentes de validation.";
+        $titre='Chef de Zone';
+        $mail=$chef_de_zone->email;
+        $typeelt='facture';
+        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
+        $this->create_historique($facture->id, "soumis", null, null );
+      flash("La facture a été modifié et soumise avec  success !!!")->success();
         return redirect()->route('facture.liste',[$devi]);
 }
 //Cette fonction permet de verifier si le montant de la facture soumise ne depasse pas le montant du devis 
@@ -350,8 +358,9 @@ public function changerStatus(Request $request){
     $date = new \DateTime();
     $mail_promotrice=$facture->entreprise->promotrice->email_promoteur;
     $chef_de_zone= User::where('zone', $facture->entreprise->region)->orWhere('zone', $facture->entreprise->region_affectation)->first();
-    $e_msg="Vous avez des factures qui sont en attentes de validation.";
+    $e_msg="Vous avez des factures qui sont en attente de validation.";
     $titre='Chef de Zone';
+    $typeelt='facture';
     $mail=$chef_de_zone->email;
    // Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
     $date= $date->format('Y-m-d');
@@ -384,15 +393,22 @@ public function changerStatus(Request $request){
         if($facture->statut=='soumis'){
             $new_statut='transmis_au_chef_de_projet';
             $mail= env('emailChefdeProjet');
+         Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
+
         }
         else{
+            $entreprise= $facture->devi->entreprise;
             $new_statut='validé';
+            $banque_users = User::where('banque_id',$entreprise->banque_id)->get();
+            foreach($banque_users as $banque_user){
+                Mail::to($banque_user->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
+            }
+
         }
         $facture->update([
             'statut'=>$new_statut, 
             'date_de_validation'=>$date,
         ]);
-        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
         $this->create_historique($facture->id, $new_statut, null, null);
         Insertion_Journal('factures','modification');
        }

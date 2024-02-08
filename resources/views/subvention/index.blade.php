@@ -34,7 +34,11 @@
                     <td>{{format_date($subvention->date_subvention)}}</td>
                     <td>{{format_prix($subvention->montant_subvention) }}</td>
                     <td>
-                        <a href="{{ route('subvention.getRecu',$subvention)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+                        @if($subvention->copie_recu != 'recu non fourni')
+                            <a href="{{ route('subvention.getRecu',$subvention)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+                            @else
+                                Recu non disponible
+                        @endif
                     </td>
                     <td>
                         @if(count($entreprise->factures) ==0)

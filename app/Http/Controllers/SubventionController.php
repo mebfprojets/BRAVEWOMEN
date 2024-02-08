@@ -69,7 +69,7 @@ class SubventionController extends Controller
             $copie_du_recu= $request->copie_du_recu->store('public/recu_subvention_beneficiaire');
         }
         else{
-            $copie_du_recu=null;
+            $copie_du_recu='recu non fourni';
         }
            Subvention::create([
                'entreprise_id'=>$request['entreprise_id'],

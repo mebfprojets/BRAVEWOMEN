@@ -258,7 +258,6 @@
                 <!-- Widget -->
                 <a href="page_ready_article.html" class="widget widget-hover-effect1">
                     <div class="widget-simple">
-                       
                         <h3 class="widget-content text-right animation-pullDown">
                            Montant de la subvention AOP<br>
                            <hr>
@@ -289,7 +288,7 @@
                         <h3 class="widget-content text-right animation-pullDown">
                             Montant de la Subvention Restante<br>
                             <hr>
-                            <center><strong>{{ format_prix( env('total_enveloppe_AOP') - return_info_enveloppe()[2])}} FCFA</strong></center>
+                            <center><strong>{{ format_prix( env('total_enveloppe_AOP') - return_info_enveloppe()[3])}} FCFA</strong></center>
                         </h3>
                     </div>
                 </a>

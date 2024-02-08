@@ -45,7 +45,6 @@ class recepisseMail extends Mailable
         $details['email'] = $promoteur->email;
         $details['nom'] = $promoteur->nom;
         $details['prenom'] = $promoteur->prenom;
-       // dd($qrcode);
         return $this->view('recepisse',compact('details'))->attachData($pdf->output(), "recépissé.pdf");
     }
 }
