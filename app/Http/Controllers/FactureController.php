@@ -16,7 +16,7 @@ use App\Mail\AnalyseMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use PDF;    
 class FactureController extends Controller
 {
 
@@ -92,25 +92,39 @@ public function facture_de_ma_zone(){
 
  }
  public function facture_valide_par_banque(Entreprise $entreprise){
+if(Auth::user()->banque_id){
     $facture_ids= DB::table('factures')
-                    ->join('entreprises',function($join){
-                        $join->on('factures.entreprise_id','=','entreprises.id')
-                        ->where('factures.statut', 'validé');
-                    })
-                    ->where('entreprises.banque_id', Auth::user()->banque_id)
-                    ->select('factures.id as facture_id')
-                    ->get();
-                    //dd($facture_ids);
+            ->join('entreprises',function($join){
+                $join->on('factures.entreprise_id','=','entreprises.id')
+                ->where('factures.statut', 'validé');
+            })
+            ->where('entreprises.banque_id', Auth::user()->banque_id)
+            ->select('factures.id as facture_id')
+            ->get();
+
+}else{
+    $facture_ids= DB::table('factures')
+                ->join('entreprises',function($join){
+                    $join->on('factures.entreprise_id','=','entreprises.id')
+                    ->where('factures.statut', 'validé');
+                })
+                ->select('factures.id as facture_id')
+                ->get();
+}
     $factures=[];
     foreach($facture_ids as $fact){
         $facture= Facture::find($fact->facture_id);
         $factures[]= $facture;
     }
-                    //dd($factures);
-       // $factures=Facture::where('entreprise_id', $entreprise->id)->where('statut', 'validé')->get();
         return view('facture.aanalyser', compact('factures'));
  }
-
+public function generer_lettre_de_paiement(Facture $facture){
+    $devi= Devi::find($facture->devi_id);
+    $entreprise= Entreprise::find($devi->entreprise_id);
+    
+    $pdf = PDF::loadView('pdf.lettre_de_paiement', compact('facture', 'devi', 'entreprise'));
+    return  $pdf->download('Lettre de demande de paiement .pdf');
+}
  public function store_paiement(Request $request){
     if(Auth::user()->can('enregistrer_paiement')){
         $facture = Facture::find($request->facture_id);

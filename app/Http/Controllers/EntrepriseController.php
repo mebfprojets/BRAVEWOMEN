@@ -187,6 +187,7 @@ else{
      */
     public function store(Request $request)
     {
+        return redirect()->back();
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
@@ -269,12 +270,7 @@ else{
             $promoteur->update([
                 "suscription_etape"=>2,
             ]);
-        // }
-        // if($entreprises->count()==1){
-        //     $promoteur->update([
-        //         "etape_suscription2"=>2,
-        //     ]);
-        // }
+       
         foreach($rentabilite_criteres as $rentabilite_critere){
             foreach($annees as $annee){
                 $variable=$rentabilite_critere->id.$annee->id;
@@ -468,6 +464,7 @@ else{
 
     public function genereRecpisse(Request $request)
     {
+        return route()->back(); 
         $promoteur= Promotrice::where("slug", $request->promoteur)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
         $chef_de_zone= User::where("zone",$entreprise->region)->first();
@@ -591,6 +588,7 @@ else{
      */
     public function update(Request $request, Entreprise $entreprise)
     {
+        return redirect()->back();
         $promoteur= Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->where("description_du_projet",null)->orderBy('created_at','desc')->first();
      if($entreprise->aopOuleader == "mpme"){

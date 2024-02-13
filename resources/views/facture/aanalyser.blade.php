@@ -50,6 +50,8 @@
                             <div class="btn-group">
                              {{-- @can('formation.update', Auth::user()) --}}
                                 <a href="{{ route('facture.show',$facture) }}?action=analyser" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('facture.generer_dem_paiement',$facture) }}" data-toggle="tooltip" title="Genere la lettre de demande de paiement" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
+
                             {{-- @endcan --}}
                             </div>
                     </td>

@@ -79,7 +79,8 @@ class EntrepriseaopController extends Controller
   }
     }
     public function store(Request $request)
-    {        
+    {       
+        return redirect()->back();
         $cat_entreprise=$request->cat_entreprise;
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->whereIn("aopOuleader",["aop","leader"])->where("conforme",null)->get();

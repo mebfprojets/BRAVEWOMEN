@@ -51,7 +51,18 @@ class SouscriptionController extends Controller
         ($categorieentreprise=='mpme')?($active='souscription_analyse_ugp'):($active='souscription_analyse_ugp');
         ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
         ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
+    if(Auth::user()->zone==100){
         $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])->where("decision_du_comite_phase1",null)->orderBy('updated_at', 'desc')->get();  
+    }
+    else{
+        $entreprises = Entreprise::where(['entrepriseaop'=>$categorieentreprise, "status"=>!(0)])
+                                    ->Where("decision_du_comite_phase1",null)
+                                    ->Where(function ($query) {
+                                        $query->orwhere('region',Auth::user()->zone)
+                                         ->orwhere('region_affectation', Auth::user()->zone);
+                                    })
+                                    ->orderBy('updated_at', 'desc')->get();
+    }
         return view("souscriptions.liste_de_souscription_soumis_a_ugp", compact("entreprises","active","titre","active_principal"));
     }
 public function listersouscriptionpostpreanalyse(Request $request){
@@ -69,9 +80,14 @@ public function listersouscriptionParZone(){
         $active='souscription_par_zone';
         $active_principal="pme";
         $titre="de la zone"." ".getlibelle(Auth::user()->zone);
-        $entreprises = Entreprise::where("status",'!=',0)->where('region', Auth::user()->zone)->where('entrepriseaop',null)->get();
+        $entreprises = Entreprise::where("status",'!=',0)
+                                    ->where('region', Auth::user()->zone)
+                                    ->orWhere('region_affectation', Auth::user()->zone)
+                                    ->where('entrepriseaop',null)->get();
+        $entreprises= $entreprises->where('phase_de_souscription', 2);
+        //$entreprises = Entreprise::where("status",'!=',0)->where('region', Auth::user()->zone)->where('entrepriseaop',null)->get();
         return view("souscriptions.prevalidable", compact("entreprises","active","titre","active_principal"));
-    }
+}
 public function listerlespmeretenueEtFormee(){
     $active='PME_formee';
     $titre='Liste des entreprises PME formés';

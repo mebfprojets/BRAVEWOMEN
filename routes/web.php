@@ -125,9 +125,10 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get("changerStatus/facture", [FactureController::class, 'changerStatus'])->name('facture.changerstatus');
     Route::get("devi/demazone", [DeviController::class, 'devis_de_ma_zone'])->name('devi.de_mazone');
     Route::get("devi/analyse", [DeviController::class, 'analyse_de_devis'])->name('devi.aanalyse');
-    Route::get("facture/analyse", [FactureController::class, 'analyse_de_facture'])->name('facture.aanalyse');
+    Route::get("/factures/aanalyse", [FactureController::class, 'analyse_de_facture'])->name('facture.aanalyse');
     Route::get("Liste/des_factures", [FactureController::class, 'index'])->name('facture.index');
     Route::get('Liste_facture_validee_par_banque', [FactureController::class, 'facture_valide_par_banque'])->name('facture.a_payer_de_par_banque');
+    Route::get('genere/lettre/demande_de_paiement/{facture}', [FactureController::class, 'generer_lettre_de_paiement'])->name('facture.generer_dem_paiement');
     Route::post('store/paiement/facture', [FactureController::class, 'store_paiement'])->name('facture.storepaiement');
     Route::get('confirmer/facture', [FactureController::class, 'confirmer_facture'])->name('facture.confirmer');
     Route::resource('prestataire', PrestataireController::class);

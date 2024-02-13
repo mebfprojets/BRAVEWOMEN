@@ -76,7 +76,7 @@ class PromotriceController extends Controller
      */
     public function store(Request $request)
     {
-        //return redirect()->back();
+        return redirect()->back();
         $proportiondedepences= Valeur::where('parametre_id', 31)->get();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $this->email = $request->email_promoteur;

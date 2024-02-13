@@ -79,8 +79,7 @@ class DeviController extends Controller
     return  $invest;
  }
  public function devis_de_ma_zone(){
-    //Selectionner les entreprises relevants de ma zone et
-    // pour les AOP/leader qui sont hors de la zone de couverture du projet les devis sont affectés au chef de zone de Ouaga 
+     
     if (Auth::user()->can('analyser_devis')) {
     $entreprises= Entreprise::where('region', Auth::user()->zone)->orWhere('region_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get('id');
     $devis = Devi::whereIn('entreprise_id', $entreprises)->where('statut', 'soumis')->orderBy('updated_at', 'desc')->get();
@@ -366,7 +365,8 @@ else{
                ]);
                Insertion_Journal('Devis','Modification');
             $this->create_historique($devi->id, $new_statut, $request->raison, $request->observation );
-            Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+            Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$devi->id,$typeelt));
+           
 
         }
         else{
