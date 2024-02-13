@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '870dbf672c9791eb81eba959df3d26d904ed2790',
+        'reference' => 'eb295baf06071419fa92a0ddce7f0c7e8e41947f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -523,7 +523,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '870dbf672c9791eb81eba959df3d26d904ed2790',
+            'reference' => 'eb295baf06071419fa92a0ddce7f0c7e8e41947f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -805,6 +805,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpoffice/math' => array(
+            'pretty_version' => '0.1.0',
+            'version' => '0.1.0.0',
+            'reference' => 'f0f8cad98624459c540cdd61d2a174d834471773',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpoffice/math',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'phpoffice/phpexcel' => array(
             'pretty_version' => '1.8.1',
             'version' => '1.8.1.0',
@@ -820,6 +829,15 @@
             'reference' => '6e81cf39bbd93ebc3a4e8150444c41e8aa9b769a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpoffice/phpspreadsheet',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'phpoffice/phpword' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'reference' => 'e76b701ef538cb749641514fcbc31a68078550fa',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpoffice/phpword',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -982,8 +1000,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(

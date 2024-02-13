@@ -118,12 +118,33 @@ if(Auth::user()->banque_id){
     }
         return view('facture.aanalyser', compact('factures'));
  }
-public function generer_lettre_de_paiement(Facture $facture){
+public function generer_lettre_de_paiement2(Facture $facture){
     $devi= Devi::find($facture->devi_id);
     $entreprise= Entreprise::find($devi->entreprise_id);
     
     $pdf = PDF::loadView('pdf.lettre_de_paiement', compact('facture', 'devi', 'entreprise'));
     return  $pdf->download('Lettre de demande de paiement .pdf');
+}
+public function generer_lettre_de_paiement(Facture $facture){
+    $devi= Devi::find($facture->devi_id);
+    $entreprise= Entreprise::find($devi->entreprise_id);
+    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('/Applications/MAMP/htdocs/BRAVEWOMEN/templatesWord/demande_de_paiement.docx');
+    //$dateJr= date("d-m-Y");
+    //$templateProcessor->setValue('date', dateToFrench($dateJr,'j F Y'));
+    
+    $templateProcessor->setValue('NomDeLaBanque', $entreprise->banque->nom);
+    $templateProcessor->setValue('NomDeLaPromotrice', $entreprise->promotrice->nom);
+    $templateProcessor->setValue('PrenomDeLaPromotrice', $entreprise->promotrice->prenom);
+    $templateProcessor->setValue('NomDelentreprise', $devi->entreprise->denomination);
+    $templateProcessor->setValue('PrenomDeLaPromotrice', $entreprise->banque->nom);
+    $templateProcessor->setValue('designationDuDevi', $devi->designation);
+    $templateProcessor->setValue('MontantDelaFactureEnLettre',int2str($facture->montant));
+    $templateProcessor->setValue('MontantDelaFacture',  $facture->montant);
+    $templateProcessor->setValue('PourcentageDepaiement',  $facture->montant/$devi->montant_devis*100);
+    $templateProcessor->setValue('NomDeprestataire',$devi->prestataire->denomination_entreprise);
+    header('Content-Type: application/octet-stream');
+    header("Content-Disposition: attachment; filename= lettre_de_demande.docx");
+    $templateProcessor->saveAs('php://output');
 }
  public function store_paiement(Request $request){
     if(Auth::user()->can('enregistrer_paiement')){

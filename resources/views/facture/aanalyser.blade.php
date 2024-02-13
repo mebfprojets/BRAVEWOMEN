@@ -50,9 +50,9 @@
                             <div class="btn-group">
                              {{-- @can('formation.update', Auth::user()) --}}
                                 <a href="{{ route('facture.show',$facture) }}?action=analyser" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
-                                <a href="{{ route('facture.generer_dem_paiement',$facture) }}" data-toggle="tooltip" title="Genere la lettre de demande de paiement" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
-
-                            {{-- @endcan --}}
+                            @can('lister_devis_transmis_au_pm', Auth::user())
+                                <a href="{{ route('facture.generer_dem_paiement',$facture) }}" data-toggle="tooltip" title="Genere la lettre de demande de paiement" class="btn btn-lg btn-danger"><i class="fa fa-file"></i></a>
+                            @endcan
                             </div>
                     </td>
                 </tr>
