@@ -17,6 +17,9 @@
                 @if($projet->statut=='selectionné')
                 <a href="#modal-save-desistement" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Desister </a>
                 @endif
+                @if($projet->statut=='rejeté')
+                  <a href="#modal-save-repeche" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Repecher le PCA </a>
+                @endif
                 {{-- <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default toggle-bordered enable-tooltip" data-toggle="button" title="Toggles .form-bordered class"></a> --}}
             </div>
             <h2><strong>Detail</strong> sur le plan de continuité des Activité</h2>
@@ -193,7 +196,9 @@
     <table class="table table-vcenter table-condensed table-bordered  valdetail"   >
         <thead>
         <h4>Les investissements</h4>
-                <tr>
+                <tr
+                
+                >
                     <th>N°</th>
                     <th>Designation</th>
                     <th>Coût total</th>
@@ -206,7 +211,13 @@
           </thead>
           <tbody id="tbadys">
     @foreach($projet->investissements as $key => $investissement)
-    <tr>
+    <tr 
+        @if($investissement->statut == 'validé' )
+        style="color:green;"
+        @elseif($investissement->statut == 'rejeté')
+        style="color:red;"
+        @endif
+    >
             <td>
             {{ $key + 1 }}
             </td>
@@ -339,9 +350,7 @@
                             </span>
                             @endif
                         </div>  
-                    
                     @endforeach
-               
                 <div class="form-group form-actions">
                     <div class="col-md-8 col-md-offset-4">
                         <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
@@ -388,6 +397,26 @@
         </div>
     </div>
 </div>
+<div id="modal-save-repeche" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Confirmation</h2>
+            </div>
+            <div class="modal-body">
+                       <input type="hidden" name="projet_id_repecher" id="projet_id_repecher" value="{{ $projet->id }}">
+                        <p>Voulez-vous repecher ce projet ? Ce projet sera soumis a la modification de la beneficiaire et reintroduit dans le circuit de validation. </p>
+                    <div class="form-group form-actions">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-sm btn-primary" onclick="repecher_le_pca();">OUI</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="valider_lanalyse" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -405,7 +434,6 @@
                         </div>
                     </div>
             </div>
-            <!-- END Modal Body -->
         </div>
     </div>
 </div>
@@ -462,6 +490,8 @@
          function recupererprojet_id(id_projet){
             //alert(id_projet);
             document.getElementById("projet_id").setAttribute("value", id_projet);
+            document.getElementById("projet_id_repecher").setAttribute("value", id_projet);
+
 
     }
     function statuer_sur_lanalyse_du_pca(){
@@ -473,6 +503,22 @@
                 url: url,
                 type:'GET',
                 data: {projet_id: projet_id, raison:raison} ,
+                error:function(){alert('error');},
+                success:function(){
+                    $('#modal-confirm-rejet').hide();
+                    location.reload();
+                }
+            });
+            });
+    }
+    function repecher_le_pca(){
+        $(function(){
+            var projet_id= $("#projet_id_repecher").val();
+            var url = "{{ route('pca.repecher') }}";
+            $.ajax({
+                url: url,
+                type:'GET',
+                data: {projet_id: projet_id} ,
                 error:function(){alert('error');},
                 success:function(){
                     $('#modal-confirm-rejet').hide();

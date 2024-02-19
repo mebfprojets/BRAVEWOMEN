@@ -196,7 +196,7 @@
                         <div class="form-group{{ $errors->has('copie_devis1') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                             <label class="control-label" for="listedepresence">Joindre le devis 1 <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input class="form-control col-md-6" type="file" name="copie_devis1" onchange="VerifyUploadSizeIsOK('copie_devis1');"  id="copie_devis1" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres" required>
+                                <input class="form-control col-md-6" type="file" name="copie_devis1" onchange="VerifyUploadSizeIsOK_lourd('copie_devis1');"  id="copie_devis1" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres" required>
                                 <span class="input-group-addon"><i class="gi gi-user"></i></span>
                             </div>
                             @if ($errors->has('copie_devis1'))
@@ -208,7 +208,7 @@
                         <div class="form-group{{ $errors->has('copie_devis2') ? ' has-error' : '' }} col-md-5" style="margin-left:10px;">
                             <label class="control-label" for="listedepresence">Joindre le devis 2 <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input class="form-control" type="file" name="copie_devis2" id="copie_devis2" onchange="VerifyUploadSizeIsOK('copie_devis2');"  accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres" required>
+                                <input class="form-control" type="file" name="copie_devis2" id="copie_devis2" onchange="VerifyUploadSizeIsOK_lourd('copie_devis2');"  accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres" required>
                                 <span class="input-group-addon"><i class="gi gi-user"></i></span>
                             </div>
                             @if ($errors->has('copie_devis2'))
@@ -317,7 +317,7 @@
                         </div>
                         <div class="form-group{{ $errors->has('copie_devis') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                             <label class="control-label" for="listedepresence">Joindre le devis <span class="text-danger">*</span></label>
-                            <input class="form-control" type="file" name="copie_devis" id="copie_devis" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('copie_devis');"   placeholder="Charger une copie de fiche d'analyse des offres" style="width: 100%">
+                            <input class="form-control" type="file" name="copie_devis" id="copie_devis" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK_lourd('copie_devis');"   placeholder="Charger une copie de fiche d'analyse des offres" style="width: 100%">
                             @if ($errors->has('copie_devis'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('copie_devis') }}</strong>
@@ -396,7 +396,7 @@
                         <div class="form-group{{ $errors->has('copie_devis1') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                             <label class="control-label" for="listedepresence">Joindre le devis 1 <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input class="form-control col-md-6" type="file" name="copie_devis1" onchange="VerifyUploadSizeIsOK('copie_devis1');"  id="copie_devis1" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres">
+                                <input class="form-control col-md-6" type="file" name="copie_devis1" onchange="VerifyUploadSizeIsOK_lourd('copie_devis1');"  id="copie_devis1" accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres">
                                 <span class="input-group-addon"><i class="gi gi-user"></i></span>
                             </div>
                             @if ($errors->has('copie_devis1'))
@@ -408,7 +408,7 @@
                         <div class="form-group{{ $errors->has('copie_devis2') ? ' has-error' : '' }} col-md-5" style="margin-left:10px;">
                             <label class="control-label" for="listedepresence">Joindre le devis 2 <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input class="form-control" type="file" name="copie_devis2" id="copie_devis2" onchange="VerifyUploadSizeIsOK('copie_devis2');"  accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres">
+                                <input class="form-control" type="file" name="copie_devis2" id="copie_devis2" onchange="VerifyUploadSizeIsOK_lourd('copie_devis2');"  accept=".pdf, .jpeg, .png"   placeholder="Charger une copie de fiche d'analyse des offres">
                                 <span class="input-group-addon"><i class="gi gi-user"></i></span>
                             </div>
                             @if ($errors->has('copie_devis2'))

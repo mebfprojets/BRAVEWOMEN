@@ -139,7 +139,7 @@ public function generer_lettre_de_paiement(Facture $facture){
     $templateProcessor->setValue('PrenomDeLaPromotrice', $entreprise->banque->nom);
     $templateProcessor->setValue('designationDuDevi', $devi->designation);
     $templateProcessor->setValue('MontantDelaFactureEnLettre',int2str($facture->montant));
-    $templateProcessor->setValue('MontantDelaFacture',  $facture->montant);
+    $templateProcessor->setValue('MontantDelaFacture',  format_prix($facture->montant));
     $templateProcessor->setValue('PourcentageDepaiement',  $facture->montant/$devi->montant_devis*100);
     $templateProcessor->setValue('NomDeprestataire',$devi->prestataire->denomination_entreprise);
     header('Content-Type: application/octet-stream');

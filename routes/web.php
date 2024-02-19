@@ -145,6 +145,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::post('/rejetter/investissements', [ProjetController::class, 'rejetter_investissement'])->name('rejeter.investissement');
     Route::post('add/investissement', [ProjetController::class, 'add_investissement'])->name('add.investissement'); 
     Route::get('/pca/valider/analyse', [ProjetController::class, 'valider_analyse'])->name('pca.valider_analyse');
+    Route::get('/repecher/pca', [ProjetController::class, 'repecher_pca'])->name('pca.repecher');
     Route::get('/save/pca_statut/comite', [ProjetController::class, 'savedecisioncomite'])->name('pca.savedecisioncomite');
     Route::get('/liste_dattente/pca/comite', [ProjetController::class, 'put_pca_to_liste_dattente'])->name('pca.liste_dattente');
     Route::get('/pca/liste_dattente', [ProjetController::class, 'lister_pca_liste_dattente'])->name('pca.lister_liste_dattente');

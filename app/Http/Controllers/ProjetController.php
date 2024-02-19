@@ -183,7 +183,13 @@ class ProjetController extends Controller
                 $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)->where('aopOuleader','mpme')->get();
             }
             else{
-                $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)->where('region', Auth::user()->zone)->orWhere('region_affectation', Auth::user()->zone)->where('aopOuleader','mpme')->get();
+                $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)
+                                                            ->where('aopOuleader','mpme')
+                                                            ->Where(function ($query) {
+                                                                $query->orwhere('region',Auth::user()->zone)
+                                                                ->orwhere('region_affectation', Auth::user()->zone);
+                                                            })
+                                                            ->get();
             }
             $type_entreprise='suivi_physique_mpme';
         }
@@ -192,7 +198,14 @@ class ProjetController extends Controller
                 $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)->whereIn('aopOuleader',['leader','aop'])->get();
             }
             else{
-                $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)->where('region', Auth::user()->zone)->orWhere('region_affectation', Auth::user()->zone)->whereIn('aopOuleader',['leader','aop'])->get();
+                $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)
+                                                            ->orWhere('region_affectation', Auth::user()->zone)
+                                                            ->whereIn('aopOuleader',['leader','aop'])
+                                                            ->Where(function ($query) {
+                                                                $query->orwhere('region',Auth::user()->zone)
+                                                                ->orwhere('region_affectation', Auth::user()->zone);
+                                                            })->get();
+                                                         
             }
              $type_entreprise='suivi_physique_aop';
         }
@@ -369,6 +382,7 @@ public function save_date_creation_compte(Request $request){
 }
 public function save_accord_beneficiaire(Request $request){
     if ($request->hasFile('accord_beneficiaire')) {
+       // dd($request->all());
         $entreprise= Entreprise::find($request->entreprise);
         $date_de_signature= date('Y-m-d', strtotime($request->date_de_signature));
         if($request->banque!=''){
@@ -690,6 +704,29 @@ public function put_pca_to_liste_dattente(Request $request){
         'liste_dattente_observations'=>$request->observation,
     ]);
 }
+public function repecher_pca(Request $request){
+    $projet=Projet::find($request->projet_id);
+    $projet->update([
+        'motif_du_rejet_de_lanalyse'=>null,
+        'statut'=>'soumis',
+        'avis_chefdezone'=>null,
+        'observation_chefdezone'=>null,
+        'avis_ugp'=>null,
+        'observation_ugp'=>null,
+    ]);
+    foreach($projet->investissements as $investissement){
+            $investissement->update([
+                'statut'=>null,
+                'montant_valide'=>null,
+                'apport_perso_valide'=> null,
+                'subvention_demandee_valide'=> null,
+            ]);
+    }
+    foreach($projet->evaluations as $eval){
+        $eval->delete();
+}
+    return redirect()->back();
+}
 public function savedecisioncomite(Request $request){
     $projet=Projet::find($request->projet_id);
 //En cas de validation sans statuer sur les lignes dinvestissments toutes les lignes sont automatiquement validées
@@ -904,7 +941,6 @@ public function pca_modifier(Request $request){
         return redirect()->back();
 }
 public function storeaval(Request $request){
-
 if (Auth::user()->can('lister_pca_chef_de_zone')) {
     $projet= Projet::find( $request->projet);
     if ($request->hasFile('grille_devaluation')) {

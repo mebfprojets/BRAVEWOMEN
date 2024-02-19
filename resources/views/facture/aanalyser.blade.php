@@ -28,9 +28,15 @@
                 </tr>
         </thead>
         <tbody>
+                @php
+                $i=0;
+                @endphp
             @foreach($factures as $facture)
+                @php
+                $i++;
+                @endphp
                 <tr>
-                    <td>N</td>
+                    <td>{{ $i }}</td>
                     <td>{{$facture->num_facture}}</td>
                     <td>
                         <a href="{{ route('devi.show',$facture->devi) }}" title="Visualiser" target="_blank" >
@@ -51,7 +57,9 @@
                              {{-- @can('formation.update', Auth::user()) --}}
                                 <a href="{{ route('facture.show',$facture) }}?action=analyser" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
                             @can('lister_devis_transmis_au_pm', Auth::user())
-                                <a href="{{ route('facture.generer_dem_paiement',$facture) }}" data-toggle="tooltip" title="Genere la lettre de demande de paiement" class="btn btn-lg btn-danger"><i class="fa fa-file"></i></a>
+                                @if ($facture->statut=='validé')
+                                    <a href="{{ route('facture.generer_dem_paiement',$facture) }}" data-toggle="tooltip" title="Genere la lettre de demande de paiement" class="btn btn-lg btn-danger"><i class="fa fa-file"></i></a>
+                                @endif
                             @endcan
                             </div>
                     </td>

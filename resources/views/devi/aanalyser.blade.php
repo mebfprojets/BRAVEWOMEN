@@ -27,9 +27,15 @@
                 </tr>
         </thead>
         <tbody>
+                @php
+                    $i=0;
+                @endphp
             @foreach($devis as $devi)
+                @php
+                    $i++;
+                @endphp
                 <tr>
-                    <td>N</td>
+                    <td>{{ $i }}</td>
                     <td>{{$devi->numero_devis}}</td>
                     <td>{{$devi->entreprise->code_promoteur}}</td>
                     <td>{{$devi->entreprise->denomination}}</td>

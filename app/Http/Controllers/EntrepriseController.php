@@ -485,7 +485,6 @@ else{
        // $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate('string'));
          $qrcode =  base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate("Ceci est un recepissé généré par la plateforme BRAVE WOMEN Burkina"."Code didentification:"." ".$promoteur->code_promoteur."_".$promoteur->id."BWBF"));
         $pdf = PDF::loadView('pdf.recepisse', compact('promoteur','entreprise','contact_chef_de_zone','qrcode'));
-       
         return  $pdf->download('récépissé BRAVE WOMEN.pdf');
     }
     /**

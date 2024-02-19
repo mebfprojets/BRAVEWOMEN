@@ -75,6 +75,7 @@
                         <td class="text-center">{{ $projet->observations}}</td>
                         <td class="text-center"> 
                             <div class="btn-group">
+                                
                                 <a href="{{ route('projet.show',$projet) }}" data-toggle="tooltip" title="Afficher les details" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
                           @can('enregistrer_kyc',Auth::user())
                             @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc==null)
@@ -83,6 +84,7 @@
                             @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc!=null && $projet->entreprise->date_realisation_kyc==null)
                                 <a  href="#modal-result-kyc" data-toggle="modal"title="Enregistrer le Resultat de la KYC"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-danger" ><i class="gi gi-bookmark"></i> </a>
                             @endif
+                            <a  href="#modal-signature-accord-beneficaire" data-toggle="modal"title="Enregistrer la signature de l'accord bénéficaiaire"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
                             @if ($projet->entreprise->resultat_kyc=='concluant' && $projet->entreprise->date_de_signature_accord_beneficiaire==null)
                                 <a  href="#modal-signature-accord-beneficaire" data-toggle="modal"title="Enregistrer la signature de l'accord bénéficaiaire"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
                             @endif
@@ -106,41 +108,7 @@
 </div>
 @endsection
 @section('modal_part')
-<div id="modal-save-desistement" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistrer un desistement</h2>
-            </div>
-            <div class="modal-body" style="margin-left:15px;">
-                <form id="form-validation" method="POST"  action="{{ route('save_desistement_projet', $projet) }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">
-            <div class="row">
 
-            <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8">
-                <label class=" control-label" for="declaration_desistement">Joindre la declaration<span class="text-danger">*</span></label>
-                <input class="form-control col-md-6" type="file" name="declaration_desistement" id="declaration_desistement" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('declaration_desistement');" placeholder="Joindre une copie de la declaration de desistement" required>  
-                    @if ($errors->has('declaration_desistement'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('declaration_desistement') }}</strong>
-                    </span>
-                    @endif
-            </div>
-            </div>   
-                <div class="form-group form-actions">
-                <div class="col-md-8 col-md-offset-4">
-                    <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Enregistrer</button>
-                </div>
-            </div>
-            </form>
-        </div>
-            </div>
-            <!-- END Modal Body  modal-devis-edit -->
-        </div>
-    </div>
 <div id="modal-signature-accord-beneficaire" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -151,7 +119,7 @@
             <div class="modal-body" style="margin-left:15px;">
                 <form id="form-validation" method="POST"  action="{{ route('save_accord_beneficiaire') }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">
+                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaires" >
             <div class="row">
                 <div class="form-group col-md-6">
                     <label class=" control-label" for="example-chosen">Selectionner la banque<span class="text-success">*</span></label>
@@ -346,11 +314,11 @@
       function recupererentreprise_id(entreprise){
             document.getElementById("id_entreprise").setAttribute("value", entreprise);
             document.getElementById("id_entreprise_2").setAttribute("value", entreprise);
-            document.getElementById("id_entreprise_beneficaire").setAttribute("value", entreprise);
+            document.getElementById("id_entreprise_beneficaires").setAttribute("value", entreprise);
+          
             document.getElementById("id_entreprise_demmande_ss_compte").setAttribute("value", entreprise);
             document.getElementById("id_entreprise_creation_ss_compte").setAttribute("value", entreprise);
-
-            
+           
 
     }
     function delConfirm(id){
@@ -368,10 +336,7 @@
                      dataType: 'json',
                      error:function(data){alert("Erreur");},
                      success: function (data) {
-
-
                          var options = '';
-
                          for (var x = 1; x < data.length; x++) {
                              var rout= '{{ route("valeurs.edit",":id")}}';
                              var rout = rout.replace(':id', data[x]['id']);

@@ -269,7 +269,9 @@ else{
         $e_msg="Vous avez des devis qui sont en attentes de validation.";
         $titre='Chef de Zone';
         $mail=$chef_de_zone->email;
-        Mail::to($chef_de_zone->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+        $typeelt='devi';
+        Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$devi->id,$typeelt));
+        //Mail::to($chef_de_zone->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
         flash("Devis modifié avec succès avec success !!!")->success();
         return redirect()->route('profil.mesdevis');
     

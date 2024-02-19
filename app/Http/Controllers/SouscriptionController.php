@@ -85,7 +85,7 @@ public function listersouscriptionParZone(){
                                     ->orWhere('region_affectation', Auth::user()->zone)
                                     ->where('entrepriseaop',null)->get();
         $entreprises= $entreprises->where('phase_de_souscription', 2);
-        //$entreprises = Entreprise::where("status",'!=',0)->where('region', Auth::user()->zone)->where('entrepriseaop',null)->get();
+        
         return view("souscriptions.prevalidable", compact("entreprises","active","titre","active_principal"));
 }
 public function listerlespmeretenueEtFormee(){
