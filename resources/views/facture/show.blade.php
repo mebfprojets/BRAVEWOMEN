@@ -7,6 +7,12 @@
       <span ><img src="{{ asset('img/upload_img.jpeg') }}" alt="" width="35"></span> <span><p>Visualiser les biens acquis en image</p></span>
     </a>
 </div>
+
+<div class="col-md-4 document_style">
+    <a class="" href="#modal-rapport-suivi" data-toggle="modal">
+      <span ><img src="{{ asset('img/upload_img.jpeg') }}" alt="" width="35"></span> <span><p>Visualiser le rapport du dernier suivi</p></span>
+    </a>
+</div>
 <div class="row">
 @if($facture->statut=='payée')
     <div class="col-md-3 document_style">
@@ -86,13 +92,6 @@
                             </div>
                             
                             @endif
-                            
-                            {{-- @if($facture->statut=='soumis' || $facture->statut=='transmis_au_chef_de_projet')
-                            <div class="form-group">
-                                <a href="#modal-confirm-devis" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Valider</a>
-                                <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
-                            </div>
-                            @endif --}}
 
                     </div>
                     <div class="col-lg-8 img-bg" style="cursor: pointer;">
@@ -139,8 +138,9 @@
   </div>
   </div>
 @endsection
+@section('modal_part')
 <div id="modal-images-biens" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog-lg">
         <div class="modal-content" style="height: 150%">
             <!-- Modal Header -->
             <div class="modal-header text-center">
@@ -150,17 +150,73 @@
                 
             </div>
             <div class="modal-body">
-
+                   {{count($facture->images_des_biens) }}
                 <div>
                     @foreach ($facture->images_des_biens as $image_de_bien )
-                        <div class="col-md-4">  
-                            <img class="cadre_image" src= "{{ Storage::disk('local')->url($image_de_bien->url_image) }}" alt="" width="100%">
+                        
+                        <div class="col-md-6">  
+                            <img class="cadre_image" src= "{{ Storage::disk('local')->url($image_de_bien->url_image) }}" alt="">
                         </div>
                     @endforeach
                 </div>
                
 
             </div>
+            <!-- END Modal Body -->
+        </div>
+    </div>
+</div>
+<div id="modal-rapport-suivi" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-md">
+        <div class="modal-content" style="height: 150%">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"> Images des Biens acquis 
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">X</button>
+                </h2>
+            </div>
+            <div class="modal-body">
+        @if($suiviExecution)
+                <div class='row'>
+                    <div class="col-md-6">
+                        <div class="col-md-4">
+                            <p>Date du suivi : </p>
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{ format_date($suiviExecution->date_visite) }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-4">
+                            <p>Taux de réalisation : </p>
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{ $suiviExecution->taux_de_realisation }} %</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-4">
+                            <p>Observation: </p>
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{ $suiviExecution->observation }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach ($suiviExecution->images_de_suivis as $images_de_suivi )
+                        <div class="col-md-4">  
+                            <img class="cadre_image" src= "{{ Storage::disk('local')->url($images_de_suivi->url_image) }}" alt="">
+                        </div>
+                    @endforeach
+                </div>
+               
+                @else
+                    <p>Aucun rapport de suivi n'a été soumis pour ce devis</p>
+                 @endif
+            </div>
+        
+
             <!-- END Modal Body -->
         </div>
     </div>
@@ -212,6 +268,7 @@
         </div>
     </div>
 </div>
+@endsection
 <script>
      function changer_statut_devis(){
         $(function(){

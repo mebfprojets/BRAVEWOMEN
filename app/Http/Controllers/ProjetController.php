@@ -731,7 +731,6 @@ public function savedecisioncomite(Request $request){
     $projet=Projet::find($request->projet_id);
 //En cas de validation sans statuer sur les lignes dinvestissments toutes les lignes sont automatiquement validées
     if($request->avis=='selectionné'){
-       // dd($projet->investissements);
         foreach($projet->investissements as $investissement){
             if($investissement->statut==null){
                 $investissement->update([
