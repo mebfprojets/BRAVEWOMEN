@@ -128,10 +128,8 @@ public function generer_lettre_de_paiement2(Facture $facture){
 public function generer_lettre_de_paiement(Facture $facture){
     $devi= Devi::find($facture->devi_id);
     $entreprise= Entreprise::find($devi->entreprise_id);
+    $denomination_prestataire= htmlspecialchars($devi->prestataire->denomination_entreprise);
     $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('/Applications/MAMP/htdocs/BRAVEWOMEN/templatesWord/demande_de_paiement.docx');
-    //$dateJr= date("d-m-Y");
-    //$templateProcessor->setValue('date', dateToFrench($dateJr,'j F Y'));
-    
     $templateProcessor->setValue('NomDeLaBanque', $entreprise->banque->nom);
     $templateProcessor->setValue('NomDeLaPromotrice', $entreprise->promotrice->nom);
     $templateProcessor->setValue('PrenomDeLaPromotrice', $entreprise->promotrice->prenom);
@@ -141,7 +139,7 @@ public function generer_lettre_de_paiement(Facture $facture){
     $templateProcessor->setValue('MontantDelaFactureEnLettre',int2str($facture->montant));
     $templateProcessor->setValue('MontantDelaFacture',  format_prix($facture->montant));
     $templateProcessor->setValue('PourcentageDepaiement',  $facture->montant/$devi->montant_devis*100);
-    $templateProcessor->setValue('NomDeprestataire',$devi->prestataire->denomination_entreprise);
+    $templateProcessor->setValue('NomDeprestataire',$denomination_prestataire);
     header('Content-Type: application/octet-stream');
     header("Content-Disposition: attachment; filename= lettre_de_demande.docx");
     $templateProcessor->saveAs('php://output');

@@ -73,9 +73,9 @@
 <script>
     $(document).ready(function() {
 	var upload_number = 2;
+
 	$('#attachMore').click(function() {
-    //alert('oko');
-		//add more file
+    
 		var moreUploadTag = '';
 		moreUploadTag += '<div class="element"><label for="upload_file"' + upload_number + '>Joindre une image '  + '</label>';
 		moreUploadTag += '<input type="file" accept=" .jpeg, .png"  id="upload_file' + upload_number + '" name="image' + upload_number + '"/>';
@@ -83,7 +83,6 @@
 		$('<dl id="delete_file' + upload_number + '">' + moreUploadTag + '</dl>').fadeIn('slow').appendTo('#moreImageUpload');
     $('#champ_nombre_dimage').val(upload_number)
     upload_number++;
-   
 	});
 });
 function del_file(eleId) {

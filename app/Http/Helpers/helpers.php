@@ -147,8 +147,7 @@ if (!function_exists('getlibelle')) {
                     if(!function_exists('kyc_entreprise_is_valide')){
                         function kyc_entreprise_is_valide($code_promoteur){
                             $entreprise = Entreprise::where('code_promoteur',$code_promoteur)->where('decision_du_comite_phase1', 'selectionnee')->first();
-                           
-                        if($entreprise->resultat_kyc== 'concluant' && $entreprise->date_de_creation_compte !=null){
+                        if($entreprise->resultat_kyc= 'concluant' && $entreprise->date_de_creation_compte !=null){
                             return true;
                         }else{
                            return false;
