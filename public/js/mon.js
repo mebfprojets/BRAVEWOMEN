@@ -1,4 +1,8 @@
 
+    $(document).ready(function() {
+      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+    })
+ 
     $('#error').hide();
     $('#autre_occupation').hide();
     $('#autre_formation').hide();
@@ -163,7 +167,8 @@ function VerifyUploadSizeIsOK(docsize)
    var val= fld.value;
   // alert(val)
    var ext = val.split(".");
-    ext = ext[ext.length-1].toLowerCase();  
+    ext = ext[ext.length-1].toLowerCase(); 
+   
    var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
 if (arrayExtensions.lastIndexOf(ext) == -1) {
     alert("Ce type de fichier n'est pas autorisé. Seul les extensions : jpg, jpeg, png et pdf sont autorisés");
@@ -185,7 +190,8 @@ function VerifyUploadSizeIsOK_lourd (docsize)
    var fld = document.getElementById(docsize);
    var val= fld.value;
    var ext = val.split(".");
-    ext = ext[ext.length-1].toLowerCase();  
+    ext = ext[ext.length-1].toLowerCase(); 
+   
    var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
 if (arrayExtensions.lastIndexOf(ext) == -1) {
     alert("Ce type de fichier n'est pas autorisé. Seul les extensions : jpg, jpeg, png et pdf sont autorisés");

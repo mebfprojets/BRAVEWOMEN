@@ -24,12 +24,12 @@
                   $i=0;
                 @endphp
                 @foreach($devis as $devis)
-                @php
+                        @php
                            $i++;
                         @endphp
                     <tr>
-                        <td>{{ $devis->numero_devis }}</td>
-                        <td>{{ $devis->statut }}</td>
+                        <td>{{$devis->numero_devis }}</td>
+                        <td>{{$devis->statut }}</td>
                         <td>{{$devis->designation}}</td>
                         <td>{{$devis->prestataire->code_prestaire }} {{$devis->prestataire->nom_responsable }}{{$devis->prestataire->prenom_responsable }}</td>
                         <td>{{format_prix($devis->montant_devis)}}</td>
@@ -41,7 +41,7 @@
                                 @if($devis->statut=='validé')
                                      <a href="{{ route('facture.liste', $devis) }}" data-toggle="modal"  data-toggle="tooltip" title="Demandes des paiements" class="btn btn-md btn-danger"><i class="fa fa-money"></i></a>
                                 @endif
-                                     <a onclick="edit_devis({{ $devis->id }});" href="#modal-devis-details" data-toggle="modal"  data-toggle="tooltip" title="Edit" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
+                                     <a onclick="({{ $devis->id }});" href="#modal-devis-details" data-toggle="modal"  data-toggle="tooltip" title="Edit" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
                                 </div>
                         </td>
                     </tr>
@@ -66,7 +66,6 @@
                     {{ csrf_field() }}
                     <input type="hidden" id='entreprise_id' name="entreprise_id" value="{{ $entreprise->id }}">
             <div class="row">
-                
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
                     <label class="control-label" for="name">Objet  : <span class="text-danger">*</span></label>
                         <div class="input-group">
@@ -102,7 +101,6 @@
             <fieldset >
                         <legend>Prestataire designé</legend>
                     <div class="row">
-                        
                         <div class="form-group col-md-6" style="margin-left:10px;">
                                 <label class=" control-label" for="example-chosen">Prestataires<span class="text-danger">*</span></label>
                                 <div class="input-group col-md-12">
@@ -258,18 +256,7 @@
                             <textarea id="motif" type="text" rows="2" cols="55" name="motif" disabled value="{{ old('montant_devis') }}"> </textarea>
                         </div>
                 </div>
-                {{-- <div class="form-group col-md-4" style="margin-left:10px;">
-                    <label class=" control-label" for="example-chosen">Investissement<span class="text-danger">*</span></label>
-                    <div class="input-group col-md-12">
-                        <select id='valeur_id'class=" form-control" tabindex="-1" aria-hidden="true" name="ligne_invest" required>
-                            <option value="">Selectionner la ligne concernée</option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                            @foreach ($ligne_projets as  $ligne_projet)
-                                    <option value="{{ $ligne_projet->id  }}" {{ old('prestatataire') == $ligne_projet->id ? 'selected' : '' }}
-                                     > {{ getlibelle($ligne_projet->designation)}}</option>
-                            @endforeach
-                        </select>
-                      </div>
-                 </div> --}}
+               
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
                     <label class="control-label" for="name">Objet : <span class="text-danger">*</span></label>
                         <div class="input-group">
@@ -293,7 +280,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                     <label class="control-label" for="fiche_de_description">Description de l'acquisition <span class="text-danger">*</span></label>
-                    <textarea name="description" id="" cols="60" rows="4" required></textarea>
+                    <textarea name="description" id="description_u" cols="60" rows="4" required></textarea>
                     @if ($errors->has('description'))
                         <span class="help-block">
                             <strong>{{ $errors->first('description') }}</strong>
@@ -338,18 +325,7 @@
                             </div>
                             <span class='depassement_du_montant_du_devis' style="color:red; display:none;"><p>Vous ne pouvez plus deposer un devis de ce montant. Verifier la disponibilité des fond à votre niveau: le paiement de l'accompte</p></span>
                         </div>
-                        {{-- <div id="avance" class="form-group{{ $errors->has('avance_exige') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
-                            <label class="control-label" for="avance_exige">Avance demandée<span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input id="avance_exige_u" type="text" class="form-control money" name="avance_exige" onchange="calculer_pourcentage('avance_exige_u','montant_devis_u','montant_devis_cache','avance')" placeholder="Renseigner l'avance demandée par le prestataire" value="{{ old('avance_exige') }}" required autofocus>
-                                    <span class="input-group-addon"><i class="gi gi-money"></i></span>
-                                @if ($errors->has('avance_exige'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('avance_exige') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                    </div> --}}
+                        
                     <div id="" class="form-group{{ $errors->has('nbre_paiement') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                         <label class="control-label" for="nbre_paiement">Nombre de paiement<span class="text-danger">*</span></label>
                         <div class="input-group">
@@ -497,7 +473,7 @@ function update_champ(valeur_id, montant_devis){
                     }
                 });
 }
-    function edit_devis(id){
+function edit_devis(id){
                 var id=id;
                 var url = "{{ route('devi.modif') }}";
                 $.ajax({
@@ -553,5 +529,5 @@ function update_champ(valeur_id, montant_devis){
                      
                     }
                 });
-        }
+}
 </script>

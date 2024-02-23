@@ -298,9 +298,9 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistrer un desistement</h2>
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Soumettre un nouveau devis</h2>
             </div>
-            <div class="modal-body" style="margin-left:15px;">
+            <div class="modal-body">
                 <form id="form-validation" method="POST"  action="{{ route('save_desistement_projet', $projet) }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">

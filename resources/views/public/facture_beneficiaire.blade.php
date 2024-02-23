@@ -38,9 +38,9 @@
                   $i=0;
                 @endphp
                 @foreach($facs as $facture)
-                @php
-                           $i++;
-                        @endphp
+                    @php
+                        $i++;
+                    @endphp
                     <tr>
                         <td>{{ $i}}</td>
                         <td>{{ $facture->num_facture }}</td>
@@ -53,11 +53,7 @@
                                      {{-- <a onclick="edit_facture({{ $facture->id }});" href="#modal-facture-edit" data-toggle="modal"  data-toggle="tooltip" title="Edit" class="btn btn-md btn-default"><i class="fa fa-pencil"></i></a> --}}
                                      <a href="{{ route('facture.edit', $facture ) }}" class="btn btn-md btn-default"  title="Modifier la facture"><i class="fa fa-pencil"></i></a>
                                  @endif
-                                    
                                  <a href="{{ route('facture.view', $facture ) }}" class="btn btn-md btn-default"  title="Visualiser la facture"><i class="fa fa-eye"></i></a>
-                                    
-
-                                     {{-- <a href="" data-toggle="modal"  data-toggle="tooltip" title="Demandes des paiements" class="btn btn-md btn-danger"><i class="fa fa-eye"></i></a> --}}
                                 </div>
                         </td>
                     </tr>

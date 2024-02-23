@@ -9,6 +9,8 @@ use App\Models\Entreprise;
 use App\Models\InvestissementProjet;
 use App\Models\Promotrice;
 use App\Models\Valeur;
+use App\Models\Prestataire;
+use App\Models\Facture;
 use App\Models\Coach;
 use App\Models\Devi;
 use Illuminate\Support\Facades\DB;
@@ -216,6 +218,18 @@ class ProjetController extends Controller
         return redirect()->back();
     }
     }
+public function execution_de_pca(Entreprise $entreprise){
+    if(Auth::user()->can('acceder_aux_pca_selectionne')) { 
+        $projet=Projet::where('entreprise_id', $entreprise->id)->first();
+        $devis= Devi::where('entreprise_id',$entreprise->id)->get();
+        $facs= Facture::where('entreprise_id',$entreprise->id)->get();
+        $piecejointes=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE")])->orderBy('updated_at', 'desc')->get();
+        $piecejointes= $piecejointes->unique('type_piece');
+        $prestataires=Prestataire::all();
+
+        return view('projet.execution', compact('projet', 'entreprise','piecejointes','prestataires','devis','facs'));
+    }
+}
 public function lister_pca_selectionne_par_zone(Request $request){
     if (Auth::user()->can('acceder_aux_pca_selectionne')) { 
          $banques= Banque::all();

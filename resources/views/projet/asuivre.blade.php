@@ -56,6 +56,7 @@
                             @can('suivre_execution_pca',Auth::user()) 
                                 <a href="{{ route('devis_asuivre_par_projet',$entreprise->projet) }}" data-toggle="tooltip" title="Suivre l'exécution des devis" class="btn btn-md btn-success"><i class="fa fa-info-circle"></i></a>
                                 <a href="{{ route('acquisition.par_entreprise',$entreprise) }}" data-toggle="tooltip" title="Lister les acquisitions de l'entreprise" class="btn btn-md btn-warning"><i class="hi hi-shopping-cart"></i></a>
+                                <a href="{{ route('executer.pca',$entreprise) }}" data-toggle="tooltip" title="Executer le plan d'affaire" class="btn btn-md btn-danger"><i class="fa fa-hourglass-half"></i></a>
                             @endcan
                        
                             </div>

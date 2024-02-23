@@ -176,7 +176,10 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::post('/image_suivi_modifier/modifier',[DeviController::class, 'modifier_suivi_image'])->name('image_suivi.modifier');
     Route::post('/suivi_image/store',[DeviController::class, 'ajouter_image_suivi'])->name('image_suivi.store');
 
-    Route::get('/projet/asuivre', [ProjetController::class, 'liste_des_projets_asuivre'])->name("projet.asuivre");
+    Route::get('/projet/asuivre', [ProjetController::class, 'liste_des_projets_asuivre'])->name("projet.asuivre"); 
+
+    Route::get('/projet/executer/{entreprise}', [ProjetController::class, 'execution_de_pca'])->name("executer.pca"); 
+   
     Route::get('/devis/asuivre/projet/{projet}', [ProjetController::class, 'liste_des_devis_asuivre_par_projet'])->name("devis_asuivre_par_projet");
     Route::post('/acquisition/store/', [AcquisitionController::class, 'store'])->name("acquisition.store");
     Route::get('/acquisition/create_view/', [AcquisitionController::class, 'create'])->name("acquisition.create");

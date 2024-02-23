@@ -239,6 +239,11 @@ public function generer_lettre_de_paiement(Facture $facture){
         $images = $request->images;
         $champ_nombre_dimage = $request->champ_nombre_dimage;
         $devi=Devi::find($request->devi_id);
+        if(Auth::user()->code_promoteur==null){
+            $statut= 'transmis_au_chef_de_projet';
+        }else{
+            $statut= 'soumis';
+        }
     if($devi->factures->sum('montant') + reformater_montant2($request->montant_facture) > $devi->montant_devis){
         flash("Cette facture ne peut pas etre soumis pour depassement du montant du devis !")->error();
         return redirect()->back();
@@ -274,7 +279,7 @@ public function generer_lettre_de_paiement(Facture $facture){
             'url_copie_rib'=> $copie_rib,
             'identite_beneficiaire'=> $request->identite_beneficiaire,
             'moyen_de_paiement_mobile'=> $request->type_de_paiement_mobile,
-            'statut'=>'soumis',
+            'statut'=>$statut,
         ]);
         $emplacement='public/image_aquisitions/'.$devi->entreprise->code_promoteur;
         //Stocker les images de la facture
@@ -338,11 +343,16 @@ public function generer_lettre_de_paiement(Facture $facture){
     if($request->hasFile('copie_rib_u')){
         $copie_rib=$this->get_file_emplacement('copie_rib',$request->file('copie_rib_u'),$facture->devi_id,$facture->num_facture);
     }
+    if(Auth::user()->code_promoteur==null){
+        $statut= 'transmis_au_chef_de_projet';
+    }else{
+        $statut= 'soumis';
+    }
     $devi=$facture->devi;
     $facture->update([
         'montant'=>reformater_montant2($request->montant_facture),
         'mode_de_paiement'=>$request->mode_de_paiement,
-        'statut'=>"soumis",
+        'statut'=>$statut,
         'numero_de_telephone'=>$request->numero_de_telephone,
          'numero_de_compte'=>$request->numero_de_compte,
          'nom_de_banque'=>$request->nom_de_banque,
@@ -362,7 +372,14 @@ public function generer_lettre_de_paiement(Facture $facture){
         Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
         $this->create_historique($facture->id, "soumis", null, null );
       flash("La facture a été modifié et soumise avec  success !!!")->success();
+      if(Auth::user()->code_promoteur==null){
+        return redirect()->route('executer.pca',[$facture->entreprise]);
+      }
+      else{
         return redirect()->route('facture.liste',[$devi]);
+
+      }
+       
 }
 //Cette fonction permet de verifier si le montant de la facture soumise ne depasse pas le montant du devis 
 // et si un paiement total du devis est demande de s'assurer si le taux de realisation du devis est à 100%
@@ -546,7 +563,11 @@ public function changerStatus(Request $request){
     public function edit(Facture $facture)
     {
         $devi= $facture->devi;
-        return view('public.editfacture',compact('facture','devi'));
+        if(Auth::user()->code_promoteur==null){
+            return view('facture.modifier',compact('facture','devi'));
+        }else{
+            return view('public.editfacture',compact('facture','devi'));
+        }
     }
 
     /**

@@ -119,6 +119,11 @@ else{
      */
     public function store(Request $request)
     {
+        if(Auth::user()->code_promoteur==null){
+            $statut= 'transmis_au_chef_de_projet';
+        }else{
+            $statut= 'soumis';
+        }
         if ($request->hasFile('copie_devis') && $request->hasFile('fiche_analyse') && $request->hasFile('copie_devis2') && $request->hasFile('copie_devis1'))  {
             $designation=$request->designation;
 
@@ -148,7 +153,7 @@ else{
              'montant_avance'=>0,
              'entreprise_id'=>$request->entreprise_id,
              'user_id'=>Auth::user()->id,
-             'statut'=>'soumis',
+             'statut'=> $statut,
              'nombre_de_paiement'=>$request->nombre_depaiement,
              'copie_devis_1'=>$copie_devis1,
              'copie_devis_2'=>$copie_devis2,
@@ -173,7 +178,8 @@ else{
        else{
          flash("Ce Devis a été déjà enregistré!!!")->error();
        }
-            return redirect()->route('profil.mesdevis');
+       
+            return redirect()->back();
     
     }
 
@@ -221,6 +227,11 @@ else{
     public function enr_modification(Request $request){
         $devi= Devi::find($request->devi_id);
         $designation=$request->designation;
+        if(Auth::user()->code_promoteur==null){
+            $statut= 'transmis_au_chef_de_projet';
+        }else{
+            $statut= 'soumis';
+        }
         if($request->fiche_analyse){
            $fiche_analyse= $this->get_file_emplacement('fiche_analyse',$request->file('fiche_analyse'),$designation);
             $devi->update([
@@ -256,7 +267,7 @@ else{
             'montant_devis'=>reformater_montant2($request->montant_devis),
             'nombre_de_paiement'=>$request->nbre_paiement,
             //'montant_avance'=>reformater_montant2($request->avance_exige),
-            'statut'=>"soumis"
+            'statut'=> $statut
         ]);
         Insertion_Journal('Devis','Modification');
         if($devi->entreprise->region_affectation!=null){
@@ -273,9 +284,8 @@ else{
         Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$devi->id,$typeelt));
         //Mail::to($chef_de_zone->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
         flash("Devis modifié avec succès avec success !!!")->success();
-        return redirect()->route('profil.mesdevis');
+        return redirect()->back();
     
-
     }
 
     /**

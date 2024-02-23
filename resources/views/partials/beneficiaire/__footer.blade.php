@@ -1,17 +1,4 @@
 
-
-
-{{-- script pour le select2  --}}
-{{-- <script src="{{ asset("assets_beneficiare/assets/libs/jquery/jquery.min.js") }}"></script>
-<script src="{{ asset("assets_beneficiare/assets/libs/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
-<script src="{{ asset("assets_beneficiare/assets/libs/metismenu/metisMenu.min.js") }}"></script>
-<script src="{{ asset("assets_beneficiare/assets/libs/simplebar/simplebar.min.js") }}"></script>
-<script src="{{ asset("assets_beneficiare/assets/libs/node-waves/waves.min.js") }}"></script>
-
-<script src="{{ asset("assets_beneficiare/assets/js/pages/form-advanced.init.js") }}"></script> --}}
-{{--Fin du  script pour le select2  --}}
-
-  <!-- js placed at the end of the document so the pages load faster -->
   <script src="{{asset('js/vendor/bootstrap.min.js') }}"></script>
   <script src="{{asset('js/vendor/jquery.min.js') }} "></script>
   <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
@@ -73,9 +60,7 @@
 <script>
     $(document).ready(function() {
 	var upload_number = 2;
-
-	$('#attachMore').click(function() {
-    
+$('#attachMore').click(function(){
 		var moreUploadTag = '';
 		moreUploadTag += '<div class="element"><label for="upload_file"' + upload_number + '>Joindre une image '  + '</label>';
 		moreUploadTag += '<input type="file" accept=" .jpeg, .png"  id="upload_file' + upload_number + '" name="image' + upload_number + '"/>';

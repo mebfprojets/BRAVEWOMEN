@@ -933,6 +933,46 @@ $('.input_banque').datepicker({
 
 
 });
+function verifier_montant(montant_champ, devi_id,  facture_id ){
+        var montant= $("#"+montant_champ).val();
+        var devi_id= $("#"+devi_id).val();
+        var facture_id= $("#"+facture_id).val();
+       var mode_paiement= $('#mode_de_paiement').val();
+       // alert(mode_paiement);
+//Verifier si le montant de la demande de paiment est supérieur à 2 million le paiement mobile n'est pas possible
+    if(mode_paiement=='paiement_mobile' && (montant > 2000000)){
+            alert('Cette demande de paiement sera rejetée le car les paiements mobiles ne doivent pas exceder 2 million ')
+        }
+       if(montant > 2000000){
+          $('#mode_de_paiement option[value="paiement_mobile"]').attr('disabled', true);;
+        }
+        else{
+          $('#mode_de_paiement option[value="paiement_mobile"]').attr('disabled', false);;
+        }
+       
+        var url = "{{ route('verifier_montant') }}";
+        $.ajax({
+                 url: url,
+                  type: 'GET',
+                  data: {montant: montant, devi_id:devi_id, facture_id:facture_id},
+                  dataType: 'json',
+                  error:function(data){alert("Erreur");},
+                  success: function (data) {
+                 
+                   if(data==1){
+                          $(".depassement_du_montant_du_devis").show();
+                            $(".soumettre_facture").prop('disabled', true);
+                          format_montant(montant_champ);
+                   }
+                   else{
+                        $(".depassement_du_montant_du_devis").hide();
+                          $(".soumettre_facture").prop('disabled', false);
+                          format_montant(montant_champ);
+                   }
+                  }
+                  });
+
+  }
     
 </script>
 
