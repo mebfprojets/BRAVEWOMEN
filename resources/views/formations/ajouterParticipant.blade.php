@@ -1,5 +1,7 @@
 @extends('layouts.admin')
+@section('souscription','active')
 @section('formation', 'active')
+@section('all_formation', 'active')
 {{-- @section('formation-sessions', 'active') --}}
 
 @section('content')
@@ -20,6 +22,8 @@
         <thead>
                 <tr>
                     <th>Selectionner</th>
+                    <th>Region</th>
+                    <th>Province</th>
                     <th>Denomination</th>
                     <th>code_promoteur</th>
                     <th>telephone_promoteur</th>
@@ -32,6 +36,8 @@
                         <input type="hidden" id="formation" value="{{ $formation->id }}">
                         <input type="checkbox" name="" id="{{ $entreprise->id }}" value="{{ $entreprise->id }}">
                     </td>
+                    <td>{{getlibelle($entreprise->region)}}</td>
+                    <td>{{getlibelle($entreprise->province)}}</td>
                     <td>{{$entreprise->denomination}}</td>
                     <td>{{$entreprise->promotrice->code_promoteur}}</td>
                     <td>{{$entreprise->promotrice->telephone_promoteur}}</td>
@@ -59,6 +65,8 @@
         <thead>
             <tr>
                 <th>Cocher</th>
+                <th>Region</th>
+                <th>Province</th>
                 <th>Denomination</th>
                 <th>code_promoteur</th>
                 <th>telephone_promoteur</th>
@@ -72,6 +80,8 @@
             <td>
                 <input type="checkbox" name="" id="{{ $participant->entreprise->id }}" value="{{ $participant->entreprise->id }}">
             </td>
+            <td>{{getlibelle($entreprise->region)}}</td>
+            <td>{{getlibelle($entreprise->province)}}</td>
             <td>{{$participant->entreprise->denomination}}</td>
             <td>{{$participant->entreprise->promotrice->code_promoteur}}</td>
             <td>{{$participant->entreprise->promotrice->telephone_promoteur}}</td>

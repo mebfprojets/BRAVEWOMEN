@@ -78,7 +78,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('copie_rib') ? ' has-error' : '' }} col-md-6 " >
                     <label class="control-label" for="listedepresence">Joindre une copie du RIB <span class="text-success">*</span></label>
-                        <input class="form-control docsize col-md-6"  type="file" name="copie_rib_u" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
+                        <input class="form-control docsize col-md-6"  type="file" name="copie_rib_u" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
                     @if ($errors->has('copie_rib_u'))
                         <span class="help-block">
                             <strong>{{ $errors->first('copie_rib_u') }}</strong>
@@ -145,21 +145,10 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="row champ_paiement_cheque_ou_virement_u" >
-                <div class="form-group{{ $errors->has('copie_rib') ? ' has-error' : '' }} col-md-6 " >
-                    <label class="control-label" for="listedepresence">Joindre une copie du RIB <span class="text-success">*</span></label>
-                        <input class="form-control docsize col-md-6"  type="file" name="copie_rib" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
-                    @if ($errors->has('copie_rib_u'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('copie_rib') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div> --}}
             
             <div class="form-group{{ $errors->has('facture_file') ? ' has-error' : '' }} col-md-6" style="margin-left:15px;">
                 <label class="control-label" for="listedepresence">Copie du dossier de demande de paiement <span class="text-success">*</span></label>
-                    <input class="form-control docsize"  type="file" name="facture_file_u" id="facture_file_u" accept=".pdf, .jpeg, .png" max="{{ $devi->montant_devis }}"  onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Joindre une copie du dossier de demande de paiement">
+                    <input class="form-control docsize"  type="file" name="facture_file_u" id="facture_file_u" accept=".pdf, .jpeg, .png" max="{{ $devi->montant_devis }}"  onchange="VerifyUploadSizeIsOK_lourd('facture_file');" placeholder="Joindre une copie du dossier de demande de paiement">
                 @if ($errors->has('facture_file_u'))
                     <span class="help-block">
                         <strong>{{ $errors->first('facture_file_u') }}</strong>
@@ -260,7 +249,7 @@
                 <div class="form-group{{ $errors->has('piece_file') ? ' has-error' : '' }} col-md-10" style="margin-left:10px;">
                     <label  class="control-label col-md-4"  class="control-label" for="piece_file">Joindre la nouvelle piece jointe <span class="text-danger">*</span></label>
                     <div class="input-group col-md-6">
-                        <input class="form-control docsize"  type="file" name="image_bien" id="piece_file" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('piece_file');" placeholder="Charger la nouvelle piece">
+                        <input class="form-control docsize"  type="file" name="image_bien" id="piece_file" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('piece_file');" placeholder="Charger la nouvelle piece">
                         <span class="input-group-addon"><a href="#" class="empty_field" onclick="empty_input_file('piece_file')">Vider le champ</a></span>
                     </div>
                     @if ($errors->has('piece_file'))
@@ -299,7 +288,7 @@
                 <div class="form-group{{ $errors->has('piece_file') ? ' has-error' : '' }} col-md-10" style="margin-left:10px;">
                     <label  class="control-label col-md-4"  class="control-label" for="piece_file">Joindre la nouvelle piece jointe <span class="text-danger">*</span></label>
                     <div class="input-group col-md-6">
-                        <input class="form-control docsize"  type="file" name="image_bien" id="piece_file" accept=".jpg, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('piece_file');" placeholder="Charger la nouvelle piece">
+                        <input class="form-control docsize"  type="file" name="image_bien" id="piece_file" accept=".jpg, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('piece_file');" placeholder="Charger la nouvelle piece">
                         <span class="input-group-addon"><a href="#" class="empty_field" onclick="empty_input_file('piece_file')">Vider le champ</a></span>
                     </div>
                     @if ($errors->has('piece_file'))

@@ -70,20 +70,20 @@ class ProjetController extends Controller
        $categorie_investissments=Valeur::where('parametre_id', 38)->get();
        $promoteur = Promotrice::where('code_promoteur',Auth::user()->code_promoteur)->first();
        $nombre_de_clients= Valeur::where('id', 7085)->get();
-       $entreprise = Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where('participer_a_la_formation', 1)->first();
-       $projet= Projet::where('entreprise_id', $entreprise->id )->first();
+       $entreprises = Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where('participer_a_la_formation', 1)->get();
+    //    $projet= Projet::where('entreprise_id', $entreprise->id )->first();
        $coachs= Coach::all();
        $banques= Banque::all();
        $proportiondedepence=Proportion_de_depense_promotrice::where('promotrice_id', $promoteur->id )->get();
             (count($proportiondedepence) == 0)?($afficherproportion=1):($afficherproportion=0);
         $annees=Valeur::where('parametre_id',16 )->get();
-            if(!$projet){
-            return view('projet.create', compact('coachs','categorie_investissments','proportiondedepences', "nombre_de_clients", 'annees', 'afficherproportion', 'entreprise','banques'));
-            }
-            else{
-                flash("Vous avez déjà soumis votre Plan de continuté des activité. Veillez contacter l'administrateur!!!")->error();
-                return redirect()->back();
-            }
+            // if(!$projet){
+            return view('projet.create', compact('coachs','categorie_investissments','proportiondedepences', "nombre_de_clients", 'annees', 'afficherproportion', 'entreprises','banques'));
+            // }
+            // else{
+            //     flash("Vous avez déjà soumis votre Plan de continuté des activité. Veillez contacter l'administrateur!!!")->error();
+            //     return redirect()->back();
+            // }
     }
     public function lister(Request $request){
         $banques= Banque::all();
@@ -103,7 +103,6 @@ class ProjetController extends Controller
             elseif($request->statut=='analyse'){
                 if($type_entreprise=='mpme'){
                     $projets = Projet::whereIn('statut' ,['a_affecter_au_membre_du_comite','analyse'])->where('type_entreprise','mpme')->where('avis_chefdezone','!=',null)->where('avis_ugp',null)->orderBy('updated_at', 'desc')->get();
-                    //$projets = Projet::whereIn('statut',['soumis','analyse'])->where('avis_chefdezone',null)->where('type_entreprise', 'mpme')->whereIn('type_entreprise','mpme')->where('zone_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
                     $type_entreprise='pca_mpme';
                 }
                 else{
@@ -178,8 +177,51 @@ class ProjetController extends Controller
         return redirect()->back();
     }
     }
+    public function lister_pca_rejetes(Request $request){
+        if (Auth::user()->can('acceder_aux_pca_selectionne')) { 
+         $banques= Banque::all();
+         $type_entreprise= $request->type_entreprise;
+        if($type_entreprise=='mpme'){
+            $projets = Projet::whereIn('statut', ['rejeté'])->where('type_entreprise', 'mpme')->orderBy('updated_at', 'desc')->get();
+            $type_entreprise='pca_mpme';
+        }
+        else{
+           $projets = Projet::whereIn('statut', ['rejeté'])->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'desc')->get();
+           $type_entreprise='pca_aop';
+        }
+        $texte= "Liste des  PCA/PA  rejété par le comité";
+        $page= 'pca_rejete';
+        return view("projet.liste_rejetes", compact('projets','banques','page','texte','type_entreprise'));
+     }
+     else{
+        flash("Vous ne disposez pas du droit d'access à cette liste. Bien vouloir contacter l'administrateur")->error(); 
+        return redirect()->back();
+    }
+    }
+    public function lister_pca_repeches(Request $request){
+        if (Auth::user()->can('acceder_aux_pca_selectionne')) { 
+         $banques= Banque::all();
+         $type_entreprise= $request->type_entreprise;
+        if($type_entreprise=='mpme'){
+            $projets = Projet::where('raison_repeche','!=',null)->where('type_entreprise', 'mpme')->orderBy('updated_at', 'desc')->get();
+            $type_entreprise='pca_mpme';
+        }
+        else{
+           $projets = Projet::where('raison_repeche','!=',null)->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'desc')->get();
+           //dd($projets);
+           $type_entreprise='pca_aop';
+        }
+        $texte= "Liste des  PCA/PA  repeches pour la phase d'extension";
+        $page= 'pca_repecher';
+        return view("projet.liste_rejetes", compact('projets','banques','page','texte','type_entreprise'));
+     }
+     else{
+        flash("Vous ne disposez pas du droit d'access à cette liste. Bien vouloir contacter l'administrateur")->error(); 
+        return redirect()->back();
+    }
+    }
     public function liste_des_projets_asuivre(Request $request){
-        if (Auth::user()->can('suivre_execution_pca')) {
+        if(Auth::user()->can('suivre_execution_pca')){
         if($request->type_entreprise=='mpme'){
             if(Auth::user()->zone==100){
                 $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)->where('aopOuleader','mpme')->get();
@@ -201,7 +243,7 @@ class ProjetController extends Controller
             }
             else{
                 $entreprises_projets_retenus= Entreprise::where("date_de_creation_compte",'!=',null)
-                                                            ->orWhere('region_affectation', Auth::user()->zone)
+                                                           // ->orWhere('region_affectation', Auth::user()->zone)
                                                             ->whereIn('aopOuleader',['leader','aop'])
                                                             ->Where(function ($query) {
                                                                 $query->orwhere('region',Auth::user()->zone)
@@ -209,6 +251,7 @@ class ProjetController extends Controller
                                                             })->get();
                                                          
             }
+           // dd($entreprises_projets_retenus);
              $type_entreprise='suivi_physique_aop';
         }
         return view('projet.asuivre', compact('entreprises_projets_retenus','type_entreprise'));
@@ -217,17 +260,17 @@ class ProjetController extends Controller
         flash("Vous ne disposez pas du droit d'access à cette liste. Bien vouloir contacter l'administrateur")->error(); 
         return redirect()->back();
     }
-    }
+}
 public function execution_de_pca(Entreprise $entreprise){
     if(Auth::user()->can('acceder_aux_pca_selectionne')) { 
         $projet=Projet::where('entreprise_id', $entreprise->id)->first();
         $devis= Devi::where('entreprise_id',$entreprise->id)->get();
+        $devis_valides= Devi::where('entreprise_id',$entreprise->id)->where('statut','validé')->get();
         $facs= Facture::where('entreprise_id',$entreprise->id)->get();
         $piecejointes=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE")])->orderBy('updated_at', 'desc')->get();
         $piecejointes= $piecejointes->unique('type_piece');
         $prestataires=Prestataire::all();
-
-        return view('projet.execution', compact('projet', 'entreprise','piecejointes','prestataires','devis','facs'));
+        return view('projet.execution', compact('devis_valides','projet', 'entreprise','piecejointes','prestataires','devis','facs'));
     }
 }
 public function lister_pca_selectionne_par_zone(Request $request){
@@ -299,7 +342,7 @@ $i=0;
 foreach($rows as $row){
     $datas[]= array('code_promoteur'=>$row['code_promoteur'],'date_de_demande'=>$row['date_demande_kyc'], 'date_du_resultat'=>$row['date_resultat_kyc'], 'resultat'=>$row['resultat']);
 }
-//Supprimer les anciennes données avant l'import 
+
 foreach($datas as $data){
     $entreprise=Entreprise::where('code_promoteur', $data['code_promoteur'])->where("participer_a_la_formation",1)->first();
     $pj= Projet::where('entreprise_id',$entreprise->id)->first();
@@ -505,7 +548,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('plan_de_continute');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'plan_de_continute'.'.'.$extension;
-                $emplacement='public/pca'; 
+                $emplacement='public/pca/'.$entreprise->aopOuleader.'/'; 
                 $urlplan_de_continute= $request['plan_de_continute']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_PCA"),
@@ -521,7 +564,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('synthese_plan_de_continute');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'synthese_plan_de_continute'.'.'.$extension;
-                $emplacement='public/synthese_pca'; 
+                $emplacement='public/synthese_pca/'.$entreprise->aopOuleader.'/'; 
                 $urlsynthese_plan_de_continute= $request['synthese_plan_de_continute']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"),
@@ -537,7 +580,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('devis_des_investissements');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'devis_des_investissements'.'.'.$extension;
-                $emplacement='public/devis_des_investissement_ala_soumission'; 
+                $emplacement='public/devis_des_investissement_ala_soumission/'.$entreprise->aopOuleader.'/'; 
                 $urldevis_des_investissements= $request['devis_des_investissements']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_DEVIS"),
@@ -553,7 +596,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('copie_document_foncier');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'copie_document_foncier'.'.'.$extension;
-                $emplacement='public/foncier'; 
+                $emplacement='public/foncier/'.$entreprise->aopOuleader.'/'; 
                 $urlcopie_document_foncier= $request['copie_document_foncier']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_FONCIER"),
@@ -569,7 +612,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('attestation_de_formation');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'attestation_de_formation'.'.'.$extension;
-                $emplacement='public/attestation_de_formation'; 
+                $emplacement='public/attestation_de_formation'.$entreprise->aopOuleader.'/'; 
                 $urlattestation_de_formation= $request['attestation_de_formation']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_ATTESTATION"),
@@ -618,12 +661,12 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
             }
 
         flash("Projet soumis avec success !!!")->success();
-               return redirect()->route('profil.beneficiaire');
+               return redirect()->route('profil.beneficiaire',return_liste_entreprise_par_user(Auth::user()->id)[0]);
         }
     }
     else{
         flash("Erreur de chargement des pieces jointes.Bien vouloir reprendre la création du projet !!!")->error();
-               return redirect()->route('profil.beneficiaire');
+               return redirect()->route('profil.beneficiaire',return_liste_entreprise_par_user(Auth::user()->id)[0]);
     }
        
     }
@@ -719,7 +762,9 @@ public function put_pca_to_liste_dattente(Request $request){
     ]);
 }
 public function repecher_pca(Request $request){
-    $projet=Projet::find($request->projet_id);
+    //dd($request->all());
+    $projet=Projet::find($request->projet_id_repecher);
+    $raison_repeche= $request->raison_repeche;
     $projet->update([
         'motif_du_rejet_de_lanalyse'=>null,
         'statut'=>'soumis',
@@ -727,6 +772,9 @@ public function repecher_pca(Request $request){
         'observation_chefdezone'=>null,
         'avis_ugp'=>null,
         'observation_ugp'=>null,
+    ]);
+    $projet->update([
+        'raison_repeche'=> $raison_repeche
     ]);
     foreach($projet->investissements as $investissement){
             $investissement->update([
@@ -781,6 +829,12 @@ $entreprise->update([
 return redirect('administrator/lister_les_pca?statut=a_affecter_au_membre_du_comite');
 }
 
+
+public function synthese_execution_de_pca(){
+    $projets = Projet::where('statut', 'selectionné')->orderBy('updated_at', 'desc')->get();
+    return view('projet.synthese_execution',compact('projets'));
+    
+}
 
     /**
      * Display the specified resource.
@@ -1011,37 +1065,38 @@ else{
 public function add_piecej_to_projet(Request $request){
    // dd($request->projet_id);
     $projet= Projet::find($request->projet_id);
+    $cat_entreprise=$projet->entreprise->aopOuleader;
     $type_piece=$request->type_piece;
 if($type_piece==env('VALEUR_ID_DOCUMENT_DEVIS')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'devis_des_investissements'.'.'.$extension;
-    $chaine='public/devis_des_investissement_ala_soumission'; 
+    $chaine='public/devis_des_investissement_ala_soumission/'.$cat_entreprise; 
 }
 elseif( $type_piece==env('VALEUR_ID_DOCUMENT_PCA')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'plan_de_continute'.'.'.$extension;
-    $chaine='public/pca';
+    $chaine='public/pca/'.$cat_entreprise;
 }
 elseif( $type_piece==env('VALEUR_ID_DOCUMENT_SYNTHESE_PCA')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'synthese_plan_de_continute'.'.'.$extension;
-    $chaine='public/synthese_pca'; 
+    $chaine='public/synthese_pca/'.$cat_entreprise; 
 }
 elseif($type_piece==env('VALEUR_ID_DOCUMENT_FONCIER')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'copie_document_foncier'.'.'.$extension;
-    $chaine='public/foncier';
+    $chaine='public/foncier/'.$cat_entreprise;
 
 }
 elseif($type_piece==env('VALEUR_ID_DOCUMENT_ATTESTATION')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'attestation_de_formation'.'.'.$extension;
-    $chaine='public/attestation_de_formation';
+    $chaine='public/attestation_de_formation/'.$cat_entreprise;
 
 }
     $urlpiece= $request['piece_file']->storeAs($chaine, $fileName);
@@ -1068,36 +1123,37 @@ public function modif_piecej(Request $request){
 public function modifier_piecej(Request $request){
     $piecejointe= Piecejointe::find($request->piece_id);
     $piecejointe_type=$piecejointe->type_piece;
+   $cat_entreprise=$piecejointe->entreprise->aopOuleader;
 if($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_DEVIS')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'devis_des_investissements'.'.'.$extension;
-    $chaine='public/devis_des_investissement_ala_soumission'; 
+    $chaine='public/devis_des_investissement_ala_soumission/'.$cat_entreprise; 
 }
 elseif( $piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_PCA')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'plan_de_continute'.'.'.$extension;
-    $chaine='public/pca';
+    $chaine='public/pca/'.$cat_entreprise;
 }
 elseif( $piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_SYNTHESE_PCA')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'synthese_plan_de_continute'.'.'.$extension;
-    $chaine='public/synthese_pca'; 
+    $chaine='public/synthese_pca/'.$cat_entreprise; 
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_FONCIER')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'copie_document_foncier'.'.'.$extension;
-    $chaine='public/foncier';
+    $chaine='public/foncier/'.$cat_entreprise;
 
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_ATTESTATION')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'attestation_de_formation'.'.'.$extension;
-    $chaine='public/attestation_de_formation';
+    $chaine='public/attestation_de_formation/'.$cat_entreprise;
 }
     if ($request->hasFile('piece_file')) {
         $urlpiece= $request->piece_file->storeAs($chaine,$fileName);
@@ -1127,7 +1183,7 @@ if($projet->entreprise->accomptes()->sum('montant') == 0){
           'url'=>$chaine,
       ]);
       foreach($projet->investissements as $investissement){
-       // dd($investissement);
+       
             $investissement->update([
                 'statut'=>'rejeté',
                 'montant_valide'=>0,

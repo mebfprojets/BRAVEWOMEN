@@ -42,12 +42,15 @@
         <ul class="sidebar-menu" id="nav-accordion">
           <p class="centered"><a href="profile.html"><img src="{{ asset("img/logo-bravebf4.PNG") }}" class="img-circle" width="80"></a></p>
           <h5 class="centered">{{ Auth::user()->name }} {{ Auth::user()->prenom }}</h5>
-          <li class="mt">
-            <a class="@yield('profil')" href="{{ route("profil.beneficiaire") }}">
-              <i class="fa fa-dashboard"></i>
-              <span>Mon Profil</span>
-              </a>
-          </li>
+        @foreach (return_liste_entreprise_par_user(Auth::user()->id) as $entreprise)
+        <li class="mt">
+          <a class="@yield('profil')" href="{{ route("profil.beneficiaire",$entreprise) }}">
+            <i class="fa fa-dashboard"></i>
+            <span>{{ $entreprise->denomination }}</span>
+            </a>
+        </li>
+        @endforeach
+          
           <li class="sub">
             <a class="@yield('pca')" href="{{ route('projet.create') }}">
               <i class="fa fa-dashboard"></i>

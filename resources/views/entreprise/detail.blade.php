@@ -17,17 +17,16 @@
                     <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Conforme<i class="fa fa-check"></i></a>
                 @endcan
                 @endif
-                @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif === null)) 
-                @can('avisqualitative_ugp', Auth::user()) 
-                    <a href="#modal-note-critere-qualitatif-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="Noter les critères qualitatifs" class="btn btn-md btn-danger ">Noter les critères qualitatifs<i class="fa fa-check-square-o"></i></a>
-                @endcan
-            @endif
+                @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif == null)) 
+                    @can('avisqualitative_ugp', Auth::user()) 
+                        <a href="#modal-note-critere-qualitatif-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="Noter les critères qualitatifs" class="btn btn-md btn-danger ">Noter les critères qualitatifs<i class="fa fa-check-square-o"></i></a>
+                    @endcan
+                @endif
              @if(!($entreprise->note_critere_qualitatif == null) && $entreprise->decision_ugp==null)
              @can('avisfinal_ugp', Auth::user()) 
                 <a href="#modal-decision-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="La décision de l'ugp" class="btn btn-md btn-danger avis_ugp">Avis final UGP<i class="fa fa-check-square-o"></i></a>
              @endcan 
            @endif 
-        
                             <div class="block full">
                                 <!-- Block Tabs Title -->
                                 <div class="block-title">
@@ -1021,14 +1020,37 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    
                                         <div  id="condanation" class="form-group row">
-                                            <p class="col-md-7 control-label labdetail"><span class="">Total : </span> </p>
+                                            <p class="col-md-7 control-label labdetail"><span class="">Note quantitative : </span> </p>
                                                 <p class="col-md-5" >
                                                 <span class="valdetail">
                                                 @empty($entreprise->noteTotale)
                                                      Informations non disponible
                                                 @else
                                                     {{$entreprise->noteTotale}}
+                                                @endempty
+                                            </span></p>
+                                        </div>
+                                        <div  id="condanation" class="form-group row">
+                                            <p class="col-md-7 control-label labdetail"><span class="">Note qualitative : </span> </p>
+                                                <p class="col-md-5" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->note_critere_qualitatif)
+                                                     Informations non disponible
+                                                @else
+                                                    {{$entreprise->note_critere_qualitatif}}
+                                                @endempty
+                                            </span></p>
+                                        </div>
+                                        <div  id="condanation" class="form-group row">
+                                            <p class="col-md-7 control-label labdetail"><span class="">Total: </span> </p>
+                                                <p class="col-md-5" >
+                                                <span class="valdetail">
+                                                @empty($entreprise->noteTotale)
+                                                     Informations non disponible
+                                                @else
+                                                    {{$entreprise->noteTotale + $entreprise->note_critere_qualitatif}}
                                                 @endempty
                                             </span></p>
                                         </div>

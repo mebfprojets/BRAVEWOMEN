@@ -16,6 +16,8 @@
         <thead>
                 <tr>
                     <th>N</th>
+                    <th>Zone</th>
+                    <th>Banque</th>
                     <th>Num facture</th>
                     <th>Num devis</th>
                     <th>Entreprise</th>
@@ -35,6 +37,8 @@
                     @endphp
                 <tr>
                     <td>{{ $i }}</td>
+                    <td>{{getlibelle($facture->devi->entreprise->region)}}</td>
+                    <td>{{$facture->devi->entreprise->banque->nom}}</td>
                     <td>{{$facture->num_facture}}</td>
                     <td>
                         <a href="{{ route('devi.show',$facture->devi) }}" title="Visualiser" target="_blank" >
@@ -53,7 +57,9 @@
                             <div class="btn-group">
                              {{-- @can('formation.update', Auth::user()) --}}
                                 <a href="{{ route('facture.show',$facture) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
-                            {{-- @endcan --}}
+                                @can('parametre.create', Auth::user())
+                                    <a href="{{ route('facture.rejete',$facture) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-danger"><i class="fa fa-times"></i></a>
+                                 @endcan 
                             </div>
                     </td>
                 </tr>

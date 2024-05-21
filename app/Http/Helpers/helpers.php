@@ -12,6 +12,8 @@ use App\Models\Projet;
 use App\Models\InvestissementProjet;
 use App\Models\Infoentreprise;
 use App\Models\Journal;
+use App\Models\Promotrice;
+
 use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('getlibelle')) {
@@ -196,6 +198,13 @@ function Insertion_Journal($table,$operation)
                             return $taux;
                         }
                     }
+                    if(!function_exists('return_liste_entreprise_par_user')){
+                        function return_liste_entreprise_par_user($user_id){
+                            $user= User::find($user_id);
+                            $entreprises= Entreprise::where('code_promoteur',$user->code_promoteur)->where('participer_a_la_formation','!=',null)->get();
+                            return $entreprises;
+                        }
+                    }
                     if(!function_exists('return_info_enveloppe')){
                         function return_info_enveloppe(){
                            $total_enveloppe=  env('total_enveloppe_MPME') + env('total_enveloppe_AOP'); ;
@@ -326,9 +335,22 @@ function Insertion_Journal($table,$operation)
                         }
                     }
                 }
+//fonction verifier le role 
+if(!function_exists('return_role_adequat')){
+    function return_role_adequat($id_role){
+       $liste_roles= Auth::user()->roles;
+        foreach($liste_roles as $role)
+        {
+            if($role->id==$id_role){
+                return true;
+            }
+        }
+            return false;
+
+    }
+}
 
 //Fonctions utilisés sur l'interface impacts
-
 if(!function_exists('return_taux_des_beneficiaire_ayant_evolue_sur_indicateur')){
     function return_taux_des_beneficiaire_ayant_evolue_sur_indicateur($code_indicateur){
        $indicateur= Indicateur::where('code_indicateur',$code_indicateur)->first()->id;

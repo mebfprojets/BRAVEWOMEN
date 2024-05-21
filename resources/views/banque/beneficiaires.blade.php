@@ -12,7 +12,6 @@
                     <th class="text-center">N°</th>
                     <th class="text-center">Region</th>
                     <th class="text-center">Promotrice</th>
-
                     <th class="text-center">Code bénéficiaire</th>
                     <th class="text-center">Numéro de compte</th>
                     <th class="text-center">Entreprise</th>

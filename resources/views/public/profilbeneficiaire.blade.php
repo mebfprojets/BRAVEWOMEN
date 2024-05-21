@@ -9,11 +9,9 @@
                 <div class="right-divider hidden-sm hidden-xs">
                   
                     <h4>@if($entreprise->projet)
-                    {{ format_prix($montant_du_plan_soumis) }}</h4>
+                    {{ format_prix($entreprise->projet->montant_demande) }}</h4>
                     <h6>MONTANT DU PLAN SOUMIS</h6>
-                    
                     @endif
-                  
                   @if($entreprise->resultat_kyc)
                   <h4 style="color: red">{{ $entreprise->resultat_kyc }}</h4>
                   @else
@@ -706,7 +704,7 @@
             <!-- /row -->
           </div>
           <div id="projet" class="tab-pane">
-            @if($projet)
+            @if($entreprise->projet)
             <div class="row">
               <div class="col-md-5">
                 <div  id="condanation" class="form-group row">
@@ -714,89 +712,89 @@
                     <p class="col-md-4 control-label labdetail"><span class="">Titre du projet: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->titre_du_projet)
+                        @empty($entreprise->projet->titre_du_projet)
                                             Informations non disponible
                                             @endempty
-                             {{$projet->titre_du_projet}}
+                             {{$entreprise->projet->titre_du_projet}}
                     </span></p>
                 </div>
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"><span class="">Montant du projet: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->titre_du_projet)
+                        @empty($entreprise->projet->titre_du_projet)
                                             Informations non disponible
                                             @endempty
-                            {{ format_prix($projet->investissements->sum('montant')) }}
+                            {{ format_prix($entreprise->projet->investissements->sum('montant')) }}
                     </span></p>
                 </div> 
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"><span class="">Subvention demandée: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->titre_du_projet)
+                        @empty($entreprise->projet->titre_du_projet)
                                             Informations non disponible
                                             @endempty
-                            {{ format_prix($projet->investissements->sum('subvention_demandee')) }}
+                            {{ format_prix($entreprise->projet->investissements->sum('subvention_demandee')) }}
                     </span></p>
                 </div> 
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"><span class="">Contrepartie à mobiliser: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->titre_du_projet)
+                        @empty($entreprise->projet->titre_du_projet)
                                             Informations non disponible
                                             @endempty
-                            {{ format_prix($projet->investissements->sum('apport_perso')) }}
+                            {{ format_prix($entreprise->projet->investissements->sum('apport_perso')) }}
                     </span></p>
                 </div> 
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"  style="text-align: justify;"><span class="">Objectifs du projet: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->objectifs)
+                        @empty($entreprise->projet->objectifs)
                                             Informations non disponible
                                             @endempty
-                             {{$projet->objectifs}}
+                             {{$entreprise->projet->objectifs}}
                     </span></p>
                 </div>
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"  style="text-align: justify;"><span class="">Activité Ménée: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->activites_menees)
+                        @empty($entreprise->projet->activites_menees)
                                             Informations non disponible
                                             @endempty
-                             {{$projet->activites_menees}}
+                             {{$entreprise->projet->activites_menees}}
                     </span></p>
                 </div>
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"><span class="">Mes Atouts: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->atouts_promoteur)
+                        @empty($entreprise->projet->atouts_promoteur)
                                             Informations non disponible
                                             @endempty
-                             {{$projet->atouts_promoteur}}
+                             {{$entreprise->projet->atouts_promoteur}}
                     </span></p>
                 </div>
                 <div  id="condanation" class="form-group row">
                     <p class="col-md-4 control-label labdetail"><span class="">Innovations: </span> </p>
                         <p class="col-md-8" >
                         <span class="valdetail">
-                        @empty($projet->innovation)
+                        @empty($entreprise->projet->innovation)
                                             Informations non disponible
                                             @endempty
-                             {{$projet->innovation}}
+                             {{$entreprise->projet->innovation}}
                     </span></p>
                 </div>
-                @if ($projet->statut == 'soumis')
-                    <a href="#modal-pca-update" data-toggle="modal" onclick="edit_pca({{ $projet->id }})"  class="btn btn-success btn-lg ">Modifier le PCA </a>
+                @if ($entreprise->projet->statut == 'soumis')
+                    <a href="#modal-pca-update" data-toggle="modal" onclick="edit_pca({{ $entreprise->projet->id }})"  class="btn btn-success btn-lg ">Modifier le PCA </a>
                 @endif
               </div>
               <!-- /col-md-6 -->
             <div class="col-md-7 detailed">
-                    <h4>Plan d'investissement Soumis @if ($projet->statut!= 'selectionné')<span><a href="#modal-add-invest" data-toggle="modal" onclick="recupererprojet_id({{ $projet->id }})"><i class="fa fa-plus"></i></a></span> @endif</h4> 
+                    <h4>Plan d'investissement Soumis @if ($entreprise->projet->statut!= 'selectionné')<span><a href="#modal-add-invest" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span> @endif</h4> 
                     <table class="table table-condensed table-bordered" style="text-align: center">
                     <thead style="text-align: center !important">
                             <tr>
@@ -808,9 +806,9 @@
                             </tr>
                     </thead>
                     <tbody id="tbadys">
-                @foreach($projet->investissements as $investissment)
+                @foreach($entreprise->projet->investissements as $investissment)
                     <tr >
-                        @if ($projet->statut!='selectionné')
+                        @if ($entreprise->projet->statut!='selectionné')
                             <td>
                                 <a href="#modal-modif-invest" data-toggle="modal"  onclick="edit_investissement({{ $investissment->id }});" >{{getlibelle($investissment->designation)}}</a>
                             </td>
@@ -833,7 +831,7 @@
                     @endforeach
                 </tbody>
                 </table>
-        @if ($projet->statut=='selectionné')
+        @if ($entreprise->projet->statut=='selectionné')
         <h4>Plan d'investissement validé</h4>
         <table class="table table-condensed table-bordered" style="text-align: center">
         <thead style="text-align: center !important">
@@ -846,9 +844,9 @@
                 </tr>
         </thead>
         <tbody id="tbadys">
-        @foreach($projet->investissementvalides as $investissment)
+        @foreach($entreprise->projet->investissementvalides as $investissment)
         <tr >
-            @if ($projet->statut!='selectionné')
+            @if ($entreprise->projet->statut!='selectionné')
                 <td>
                     <a href="#modal-modif-invest" data-toggle="modal"  onclick="edit_investissement({{ $investissment->id }});" >{{getlibelle($investissment->designation)}}</a>
                 </td>
@@ -883,7 +881,7 @@
                     <div class="col-md-11">
                         <div class="block">
                         <div class="block-title">
-                         <h4> Documents du PCA  @if ($projet->statut == 'soumis')<span><a href="#modal-add-piece" data-toggle="modal" onclick="recupererprojet_id({{ $projet->id }})"><i class="fa fa-plus"></i></a></span>@endif</h4> 
+                         <h4> Documents du PCA  @if ($entreprise->projet->statut == 'soumis')<span><a href="#modal-add-piece" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span>@endif</h4> 
                       </div>
                         <div class="table-responsive">
                             <table class="table table-vcenter table-condensed table-bordered listepdf valdetail"   > 
@@ -900,7 +898,7 @@
                                     <td>
                                     {{ $key + 1 }}
                                     </td>
-                                    @if ($projet->statut !='selectionné')
+                                    @if ($entreprise->projet->statut !='selectionné')
                                     <td>
                                         <a href="#modal-modif-pj" data-toggle="modal"  onclick="edit_piecejointe({{ $piecejointe->id }});" > {{getlibelle($piecejointe->type_piece)}} </a>
                                     </td>
@@ -972,7 +970,6 @@
                               <tbody id="tbadys">
                         @foreach($produit_vendus as $key => $produit_vendus)
                         <tr>
-
                                      <td>
                                         {{getlibelle($produit_vendus->annee)}}
                                     </td>
@@ -1012,7 +1009,6 @@
                     <table class="table table-condensed table-bordered" style="text-align: center">
                        <thead style="text-align: center !important">
                                    <tr>
-
                                        <th style="text-align: center; width:1%">Annee</th>
                                        <th style="text-align: center; width:1%">Montant</th>
                                    </tr>

@@ -8,7 +8,7 @@
                 <hr>
             <form id="progress-wizard" action="{{ route('projet.store') }}" method="post" class="form-horizontal" enctype="multipart/form-data">
                 {{ csrf_field() }}
-            <input type="hidden" name="entreprise" value="{{ $entreprise->id }}">
+            {{-- <input type="hidden" name="entreprise" value="{{ $entreprise->id }}"> --}}
             <input type="hidden" name="afficherproportion" value="{{ $afficherproportion }}">
                 <div id="progress-first" class="step">
             @if($afficherproportion==1) 
@@ -49,9 +49,20 @@
                 </div>
             @endif
                 <div class="row"- style="margin-left: 2%">
+                    <div class="form-group col-md-10">
+                        <label class=" control-label" for="example-chosen">Selectionner l'entreprise concernée<span class="text-danger">*</span></label>
+                            <select id="entreprise" name="entreprise"  value="{{old("coach")}}" class="form-control select-select2"  data-placeholder="Selectionner l'entreprise concernée par ce projet .." style="width: 80%;" required>
+                                <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
+                                @foreach ($entreprises as $entreprise )
+                                    @if(!$entreprise->projet)
+                                        <option value="{{ $entreprise->id  }}" {{ old('coach') == $entreprise->id ? 'selected' : '' }}>{{ $entreprise->denomination }} </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                    </div>
                     <div class="form-group col-md-6">
                         <label class=" control-label" for="example-chosen">Selectionner le coach<span class="text-danger">*</span></label>
-                            <select id="coach" name="coach"  value="{{old("coach")}}" class="form-control select2" data-placeholder="Selectionner le coach ayant appuyer à l'elaboration du PCA .." style="width: 80%;" required>
+                            <select id="coach" name="coach"  value="{{old("coach")}}" class="form-control select-select2"  data-placeholder="Selectionner le coach ayant appuyer à l'elaboration du PCA .." style="width: 80%;" required>
                                 <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
                                 @foreach ($coachs as $coach )
                                         <option value="{{ $coach->id  }}" {{ old('coach') == $coach->id ? 'selected' : '' }}>{{ $coach->nom }} {{ $coach->prenom }}</option>
@@ -60,7 +71,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class=" control-label" for="example-chosen">Selectionner votre banque partenaire locale<span class="text-danger">*</span></label>
-                            <select id="region" name="banque_choisi"  value="{{old("region_promoteur")}}"  class="form-control select2" data-placeholder="Selectionner la banque partenaire locale .." style="width: 80%;" required>
+                            <select id="region" name="banque_choisi"  value="{{old("region_promoteur")}}"  class="form-control select-select2"  data-placeholder="Selectionner la banque partenaire locale .." style="width: 80%;" required>
                                 <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
                                 @foreach ($banques as $banque )
                                         <option value="{{ $banque->id  }}" {{ old('banque_choisi') == $banque->id ? 'selected' : '' }}>{{ $banque->nom }}</option>

@@ -364,7 +364,7 @@
                     <h3><strong>Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
-                  <h3> <strong>{{$demandes_aop_de_KYC_concluants_par_banque->sum('nombre') }} </strong></h3>
+                  <h3> <strong>{{format_prix($demandes_aop_de_KYC_concluants_par_banque->sum('montant')) }} </strong></h3>
                 </div>
                 <p>Cout des projets dont le KYC a été concluant par banque.</p>
                 <table class="styled-table center">

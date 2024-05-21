@@ -26,6 +26,7 @@
                     <th class="text-center">Télephone</th>
                     <th class="text-center">Entreprise</th>
                     <th class="text-center">Secteur d'activité</th>
+                    <th class="text-center">Montant du projet</th>
                     <th class="text-center">Score</th>
                     <th class="text-center">Resultat Préselection</th>
                     <th class="text-center">Actions</th>
@@ -82,6 +83,9 @@
                         <td class="text-center" style="width: 5%;">
                            {{ getlibelle($entreprise->secteur_activite) }}
                         </td>
+                        <td class="text-center" style="width: 5%;">
+                            {{ format_prix($entreprise->cout_projet) }}
+                         </td>
                         <td class="text-center" style="width: 5%;">
                            {{ $entreprise->noteTotale + $entreprise->note_critere_qualitatif }}
                         </td>

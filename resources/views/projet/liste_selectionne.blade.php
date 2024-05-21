@@ -76,15 +76,15 @@
                         <td class="text-center"> 
                             <div class="btn-group">
                                 
-                                <a href="{{ route('projet.show',$projet) }}" data-toggle="tooltip" title="Afficher les details" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('projet.show',$projet) }}" data-toggle="tooltip" title="Afficher les details" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
                           @can('enregistrer_kyc',Auth::user())
+                            <a href="{{ route('projet.analyse',$projet) }}" data-toggle="tooltip" title="Analyser" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
                             @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc==null)
                                 <a  href="#modal-demande-de-kyc" data-toggle="modal"title="Enregistrer une demande de KYC"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-warning" ><i class="gi gi-direction"></i> </a>
                             @endif
                             @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc!=null && $projet->entreprise->date_realisation_kyc==null)
                                 <a  href="#modal-result-kyc" data-toggle="modal"title="Enregistrer le Resultat de la KYC"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-danger" ><i class="gi gi-bookmark"></i> </a>
                             @endif
-                            <a  href="#modal-signature-accord-beneficaire" data-toggle="modal"title="Enregistrer la signature de l'accord bénéficaiaire"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
                             @if ($projet->entreprise->resultat_kyc=='concluant' && $projet->entreprise->date_de_signature_accord_beneficiaire==null)
                                 <a  href="#modal-signature-accord-beneficaire" data-toggle="modal"title="Enregistrer la signature de l'accord bénéficaiaire"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
                             @endif
@@ -121,7 +121,7 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="entreprise" id="id_entreprise_beneficaires" >
             <div class="row">
-                <div class="form-group col-md-6">
+               {{-- <div class="form-group col-md-6">
                     <label class=" control-label" for="example-chosen">Selectionner la banque<span class="text-success">*</span></label>
                         <select id="coach" name="banque"  value="{{old("banque")}}"  class="form-control" data-placeholder="Selectionner le banque ayant appuyer à l'elaboration du PCA .." style="width: 80%;">
                             <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
@@ -129,7 +129,7 @@
                                     <option value="{{ $banque->id  }}" {{ old('banque') == $banque->id ? 'selected' : '' }}>{{ $banque->nom }} </option>
                             @endforeach
                         </select>
-                </div>
+                </div>  --}}
             <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-5">
                 <label class=" control-label" for="telephone">Date de signature de l'accord<span class="text-danger">*</span></label>
                 <input id="name" type="text"  class="form-control datepicker" data-date-format="dd-mm-yyyy" name="date_de_signature"  placeholder="Entrer la date de signature de l'accord bénéficiaire ..." required autofocus>    

@@ -17,9 +17,7 @@
                 @if($projet->statut=='selectionné')
                 <a href="#modal-save-desistement" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Desister </a>
                 @endif
-                @if($projet->statut=='rejeté')
-                  <a href="#modal-save-repeche" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Repecher le PCA </a>
-                @endif
+
                 {{-- <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default toggle-bordered enable-tooltip" data-toggle="button" title="Toggles .form-bordered class"></a> --}}
             </div>
             <h2><strong>Detail</strong> sur le plan de continuité des Activité</h2>
@@ -293,40 +291,7 @@
 
 @endsection
 @section('modal_part')
-<div id="modal-save-desistement" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-pencil"></i> Soumettre un nouveau devis</h2>
-            </div>
-            <div class="modal-body">
-                <form id="form-validation" method="POST"  action="{{ route('save_desistement_projet', $projet) }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">
-            <div class="row">
-            <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8">
-                <label class=" control-label" for="declaration_desistement">Joindre la declaration<span class="text-danger">*</span></label>
-                <input class="form-control col-md-6" type="file" name="declaration_desistement" id="declaration_desistement" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('declaration_desistement');" placeholder="Joindre une copie de la declaration de desistement" required>  
-                    @if ($errors->has('declaration_desistement'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('declaration_desistement') }}</strong>
-                    </span>
-                    @endif
-            </div>
-            </div>   
-                <div class="form-group form-actions">
-                <div class="col-md-8 col-md-offset-4">
-                    <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Enregistrer</button>
-                </div>
-            </div>
-            </form>
-        </div>
-            </div>
-            <!-- END Modal Body  modal-devis-edit -->
-        </div>
-    </div>
+
 <div id="modal-evaluer-pca" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -405,14 +370,29 @@
                 <h2 class="modal-title"><i class="fa fa-pencil"></i> Confirmation</h2>
             </div>
             <div class="modal-body">
-                       <input type="hidden" name="projet_id_repecher" id="projet_id_repecher" value="{{ $projet->id }}">
-                        <p>Voulez-vous repecher ce projet ? Ce projet sera soumis a la modification de la beneficiaire et reintroduit dans le circuit de validation. </p>
-                    <div class="form-group form-actions">
-                        <div class="text-right">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-sm btn-primary" onclick="repecher_le_pca();">OUI</button>
-                        </div>
+            <form action="{{ route('pca.repecher') }}" method="post">
+                @csrf
+                <input type="hidden" name="projet_id_repecher" id="projet_id_repecher" value="{{ $projet->id }}">
+                <div class="row">
+                <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8" style="margin-left:10px;">
+                    <label class=" control-label" for="raison_repeche">Enregistrer les causes <span class="text-danger">*</span></label>
+                    <textarea class="form-control col-md-6" name="raison_repeche" id="raison_repeche" cols="30" rows="10" required ></textarea>
+                        @if ($errors->has('raison_repeche'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('raison_repeche') }}</strong>
+                        </span>
+                        @endif
+                    <p>Ce projet sera soumis a la modification de la beneficiaire et reintroduit dans le circuit de validation. </p>
+                </div>
+                </div>               
+                <div class="form-group form-actions">
+                    <div class="text-right">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-sm btn-primary" >Valider</button>
                     </div>
+                </div>
+            </form>
+                    
             </div>
         </div>
     </div>
@@ -514,11 +494,13 @@
     function repecher_le_pca(){
         $(function(){
             var projet_id= $("#projet_id_repecher").val();
+            var raison_repeche= $("#raison_repeche").val();
+        if(raison_repeche != null)
             var url = "{{ route('pca.repecher') }}";
             $.ajax({
                 url: url,
                 type:'GET',
-                data: {projet_id: projet_id} ,
+                data: {projet_id: projet_id, raison_repeche:raison_repeche} ,
                 error:function(){alert('error');},
                 success:function(){
                     $('#modal-confirm-rejet').hide();

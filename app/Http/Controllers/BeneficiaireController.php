@@ -38,9 +38,8 @@ class BeneficiaireController extends Controller
        //dd($entreprise);
        return view('public.espace_beneficiaire',compact("entreprise"));
    }
-   public function showprofil(){
+   public function showprofil(Entreprise $entreprise){
     $promotrice= Promotrice::where('code_promoteur', Auth::user()->code_promoteur)->first();
-    $entreprise= Entreprise::where('code_promoteur', Auth::user()->code_promoteur)->where("participer_a_la_formation",1)->first();
     $projet=Projet::where('entreprise_id', $entreprise->id)->first();
     if($projet){
         $montant_du_plan_soumis=$projet->investissements->sum('montant');
@@ -59,10 +58,10 @@ class BeneficiaireController extends Controller
     $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_SECTEUR_ACTIVITE_ID') )->get();
     $nb_annee_activites= Valeur::where('parametre_id', env('PARAMETRE_NB_ANNEE_EXISTENCE_ENT') )->get();
     $maillon_activites=Valeur::where('parametre_id',7 )->get();
-        $source_appros=Valeur::where('parametre_id',12 )->get();
-        $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
-        $nature_clienteles=Valeur::where('parametre_id',10 )->get();
-        $techno_utilisees= Valeur::where('parametre_id', env('PARAMETRE_TECHNO_UTILISE_ENTREPRISE_ID') )->get();
+    $source_appros=Valeur::where('parametre_id',12 )->get();
+    $sys_suivi_activites=Valeur::where('parametre_id',13 )->get();
+    $nature_clienteles=Valeur::where('parametre_id',10 )->get();
+    $techno_utilisees= Valeur::where('parametre_id', env('PARAMETRE_TECHNO_UTILISE_ENTREPRISE_ID') )->get();
     $niveau_instructions=Valeur::where("parametre_id", env('PARAMETRE_NIVEAU_D_INSTRUCTION'))->get();
     $nb_annee_experience=Valeur::where("parametre_id", env('PARAMETRE_TRANCHE_EXPERIENCE'))->get();
     $piecejointes=Piecejointe::where("entreprise_id",$entreprise->id)->orWhere("promotrice_id", $entreprise->promotrice->id )->orderBy('updated_at', 'desc')->get();
@@ -85,9 +84,6 @@ class BeneficiaireController extends Controller
     $coachs= Coach::all();
     $banques= Banque::all(); 
     $projet_type_pieces= Valeur::whereIn('id',[env('VALEUR_ID_DOCUMENT_DEVIS'),env('VALEUR_ID_DOCUMENT_FONCIER')])->get();
-    //$projet_type_pieces= Valeur::where('parametre_id',[env('VALEUR_ID_DOCUMENT_DEVIS'),env('VALEUR_ID_DOCUMENT_FONCIER'),env('VALEUR_ID_DOCUMENT_PCA'),env('VALEUR_ID_DOCUMENT_SYNTHESE_PCA'),env('VALEUR_ID_DOCUMENT_ATTESTATION')])->get();
-
-    //
         if($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader'){
            $activite_verticale_devs= Entreprise_activite::where('entreprise_id',$entreprise->id)->where('type','verticale')->get();
            $activite_verticale_invests= Entreprise_activite_invest::where('entreprise_id',$entreprise->id)->where('type','verticale')->get();
@@ -100,12 +96,12 @@ class BeneficiaireController extends Controller
             $total_engage= $entreprise->devis_valides->sum('montant_devis');
             $nombre_membres= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7098)->get();
             $pourcentage_femmes= Infoentreprise::where("entreprise_id",$entreprise->id)->where('indicateur', 7099)->get();
-            return view("public.profilbeneficiaire",compact('projet_type_pieces','montant_du_plan_soumis','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','projet','forme_juridiques','total_avoir','total_engage','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros" ,"maillon_activites",'secteur_activites',"regions","nb_annee_experience","niveau_instructions","promotrice","nombre_de_pme_partenaires_de_la_zones","montant_obtenu_aupres_des_institutions_financiaires","montant_des_achats_aupres_des_mpme_des_femmes","nombre_de_pme_partenaires","nombre_membres","pourcentage_femmes","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises","activite_horizontale_devs","activite_verticale_invests","activite_horizontale_invests"));
+            return view("public.profilbeneficiaire",compact('projet_type_pieces','montant_du_plan_soumis','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','forme_juridiques','total_avoir','total_engage','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros" ,"maillon_activites",'secteur_activites',"regions","nb_annee_experience","niveau_instructions","promotrice","nombre_de_pme_partenaires_de_la_zones","montant_obtenu_aupres_des_institutions_financiaires","montant_des_achats_aupres_des_mpme_des_femmes","nombre_de_pme_partenaires","nombre_membres","pourcentage_femmes","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises","activite_horizontale_devs","activite_verticale_invests","activite_horizontale_invests"));
            }
            else{
            
-                return view("public.profilbeneficiaire",compact('projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','projet','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
-           }
+                return view("public.profilbeneficiaire",compact('projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
+        }
       
     //return view('public.profilbeneficiaire', compact("proportion_de_depense_education","proportion_de_depense_sante","proportion_de_depense_bien_materiel","entreprise" ,"promotrice", "niveau_instructions","nb_annee_experience","regions"));
    }

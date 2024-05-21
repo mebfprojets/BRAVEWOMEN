@@ -6,10 +6,7 @@
 <div class="block full">
     <div class="block-title">
         <h2><strong>Liste</strong> des projets {{ $texte }}</h2>
-        @can('enregistrer_kyc',Auth::user())
-            <a  href="#modal-import-result_kyc" data-toggle="modal" class="btn btn-success"><span></span>Enregistrer Resultat de KYC</a>
-            <a  href="#modal-import-creation-ss-compte" data-toggle="modal" class="btn btn-success"><span></span>Charger les dates de création des sous comptes</a>
-        @endcan
+        
     </div>
     <div class="row">
     </div>
@@ -79,31 +76,14 @@
 
                         </td>
                         <td class="text-center">{{ $projet->statut}}</td>
-                        <td class="text-center">{{ $projet->liste_dattente_observations}}</td>
+                        <td class="text-center">{{ $projet->observations}}</td>
                         <td class="text-center">{{ $projet->entreprise->promotrice->telephone_promoteur}} / {{$projet->entreprise->telephone_entreprise}}</td>
                         <td class="text-center">{{ $projet->entreprise->banque->nom}}</td>
 
                         <td class="text-center"> 
                             <div class="btn-group">
                                 <a href="{{ route('projet.analyse',$projet) }}" data-toggle="tooltip" title="Analyser" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
-                        @can('enregistrer_kyc',Auth::user())
-                            @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc==null)
-                                <a  href="#modal-demande-de-kyc" data-toggle="modal"title="Enregistrer une demande de KYC"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-warning" ><i class="gi gi-direction"></i> </a>
-                            @endif
-                            @if ($projet->statut=='selectionné' && $projet->entreprise->date_demande_kyc!=null && $projet->entreprise->date_realisation_kyc==null)
-                                <a  href="#modal-result-kyc" data-toggle="modal"title="Enregistrer le Resultat de la KYC"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-danger" ><i class="gi gi-bookmark"></i> </a>
-                            @endif
-                            @if ($projet->entreprise->resultat_kyc=='concluant' && $projet->entreprise->date_de_signature_accord_beneficiaire==null)
-                                <a  href="#modal-signature-accord-beneficaire" data-toggle="modal"title="Enregistrer la signature de l'accord bénéficaiaire"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
-                            @endif
-                            @if ($projet->entreprise->date_de_demande_creation_compte==null && $projet->entreprise->date_de_signature_accord_beneficiaire!= null)
-                                <a  href="#modal-demande-de-creation-sous-compte" data-toggle="modal"title="Enregistrer la date de demande de création de sous compte"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
-                            @endif
-                            @if ($projet->entreprise->date_de_demande_creation_compte!=null && $projet->entreprise->date_de_creation_compte== null)
-                                <a  href="#modal-creation-sous-compte" data-toggle="modal"title="Enregistrer la date de création de sous compte"  onclick="recupererentreprise_id({{ $projet->entreprise->id }});" class="btn btn-md btn-default" ><i class="fa fa-pencil-square-o"></i> </a>
-                            @endif
-                            
-                        @endcan
+                        
                             
                            
                             </div>
@@ -126,7 +106,7 @@
                 <p>Sélectionnez un fichier Excel (.xlsx) pour importer les informations sur la création des sous comptes.<br><strong>Les colonnes : </strong>Code_promotrice, date_demande_de_creation, date_création</p>
                 <form method="POST" action="{{ route('importer_date_creation_ss_compte') }}" enctype="multipart/form-data" >
                     @csrf
-                    <input type="file" name="fichier"  required>
+                    <input type="file" name="fichier" >
                     <button type="submit" >Importer</button>
                 </form>   
             </div>

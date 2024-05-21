@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('souscription','active')
 @section('formation', 'active')
 @section('all_formation', 'active')
 @section('content')

@@ -74,13 +74,16 @@
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('souscription_par_zone')">
-                                <a href="{{ route("souscription__reparties_par_zone") }}"> Par Zone</a>
+                                <a href="{{ route("souscription__reparties_par_zone") }}?typeentreprise=mpme"> Par Zone</a>
                             </li>
                         @endcan
 			        @can('souscription.liste', Auth::user())
                             <li class="@yield('souscription_soumis_aucomite')">
-                                    <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=mpme"  onclick="loadfunction()"> Bénéficiares data</a>
+                                    <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=mpme&type_resultat=selectionnee"  onclick="loadfunction()"> Bénéficiares data</a>
                             </li>
+                            <li class="@yield('souscription_soumis_aucomite')">
+                                <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=mpme&type_resultat=ajournee"  onclick="loadfunction()"> Rejetées data</a>
+                        </li>
                     @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('souscription_soumis_aucomite')">
@@ -122,6 +125,11 @@
                                 <a href="{{ route("souscription.analyse_ugp") }}?typeentreprise=aop" onclick="loadfunction()"> A analyser</a>
                             </li>
                         @endcan
+                        @can('souscription.listerParZone', Auth::user())
+                            <li class="@yield('souscription_par_zone')">
+                                <a href="{{ route("souscription__reparties_par_zone") }}?typeentreprise=aop"> Par Zone</a>
+                            </li>
+                        @endcan
                         @can('souscription.soumis_au_comite', Auth::user())
                             <li class="@yield('aop_soumis_aucomite')">
                                     <a href="{{ route("soumises_au_comite_technique") }}?typeentreprise=aop"> En Attente d'Analyse</a>
@@ -145,8 +153,12 @@
                                 <a href="{{ route("souscription.rejete") }}?typeentreprise=aop"> Rejetees </a>
                             </li>
                             <li class="@yield('aop_post_analyse') loaddata">
-                                <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=aop" onclick="loadfunction()"> Bénéficiaires data</a>
+                                <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=aop&type_resultat=selectionnee" onclick="loadfunction()"> Bénéficiaires data</a>
                             </li>
+                            <li class="@yield('aop_post_analyse') loaddata">
+                                <a href="{{ route("liste.postpreanalyse") }}?typeentreprise=aop&type_resultat=ajournee"  onclick="loadfunction()"> Rejetées data</a>
+                            </li>
+
                         @endcan
                         @can('souscription.listerParZone', Auth::user())
                             <li class="@yield('aop_retenue_par_zone')">
@@ -223,6 +235,12 @@
                                 <li class="@yield('kyc')">
                                     <a  href="{{ route('liste_demande_kyc') }}?type_entreprise=mpme"> Demandes de KYC</a>
                                 </li>
+                                <li class="@yield('pca_repecher')">
+                                    <a  href="{{ route('projet.pca_repeches') }}?type_entreprise=mpme"></i> Demandes repechées</a>
+                                </li>
+                                <li class="@yield('pca_rejete')">
+                                    <a  href="{{ route('projet.liste_rejetes') }}?type_entreprise=mpme"></i> Demandes rejetées</a>
+                                </li>
                             @endcan
                             
                         </ul>
@@ -271,6 +289,13 @@
                                 <li class="@yield('kyc')">
                                     <a  href="{{ route('liste_demande_kyc') }}?type_entreprise=aop"></i> Demandes de KYC</a>
                                 </li>
+                                <li class="@yield('pca_repecher')">
+                                    <a  href="{{ route('projet.pca_repeches') }}?type_entreprise=aop"></i> Demandes repechées</a>
+                                </li>
+                                <li class="@yield('pca_rejete')">
+                                    <a  href="{{ route('projet.liste_rejetes') }}?type_entreprise=aop"></i> Demandes rejetées</a>
+                                </li>
+                                
                             @endcan
                             
                         </ul>
@@ -298,6 +323,9 @@
                                 </li>
                                 <li class="@yield('suivi_physique_aop')">
                                     <a  href="{{ route('projet.asuivre') }}?type_entreprise=aop"></i> Suivi Physique AOP</a>
+                                </li>
+                                <li class="@yield('synthese_pca')">
+                                    <a  href="{{ route('pca.synthese') }}"></i> Synthese de l'execution</a>
                                 </li>
                                 
                         @endcan
@@ -342,11 +370,12 @@
                                 <a href="{{ route("facture.aanalyse") }}?statut=transmis_au_chef_de_projet"> Facture à analyser</a>
                         </li>
                       @endcan
-                      @can('facture.payer', Auth::user())
+                      @can('lister_facture.a_payer', Auth::user())
                         <li class="@yield('facture_analyse')">
                                 <a href="{{ route("facture.a_payer_de_par_banque") }}"> Factures à payer</a>
                         </li>
                       @endcan
+                      
                        
                     </ul>
                 </li>

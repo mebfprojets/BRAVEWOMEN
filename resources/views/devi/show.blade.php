@@ -184,7 +184,7 @@
       <table  class="table table-vcenter table-condensed table-bordered listepdf">
           <thead>
                   <tr>
-                      
+                      <th>N</th>
                       <th>Utilisateur</th>
                       <th>statut</th>
                       <th>Observations</th>
@@ -192,8 +192,15 @@
                   </tr>
           </thead>
           <tbody>
+                    @php
+                    $i=0;
+                    @endphp
               @foreach($historiques as $historique)
+                      @php
+                      $i++;
+                      @endphp
                   <tr>
+                      <td>{{ $i }}</td>
                       <td>{{ getusername($historique->user_id) }}</td>
                       <td>{{ $historique->statut }}</td>
                       <td>{{ $historique->observation }}</td>

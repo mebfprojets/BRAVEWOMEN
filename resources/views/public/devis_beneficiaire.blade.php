@@ -12,6 +12,7 @@
             <thead>
                     <tr>
                         <th style="width: 5%">Numéro</th>
+                        <th style="width: 5%">Entreprises</th>
                         <th style="width: 5%">Statut</th>
                         <th style="width: 30%">Désignation</th>
                         <th style="width: 20%">Nom du presatataire</th>
@@ -29,6 +30,7 @@
                         @endphp
                     <tr>
                         <td>{{$devis->numero_devis }}</td>
+                        <td>{{$devis->entreprise->denomination }}</td>
                         <td>{{$devis->statut }}</td>
                         <td>{{$devis->designation}}</td>
                         <td>{{$devis->prestataire->code_prestaire }} {{$devis->prestataire->nom_responsable }}{{$devis->prestataire->prenom_responsable }}</td>
@@ -66,7 +68,23 @@
                     {{ csrf_field() }}
                     <input type="hidden" id='entreprise_id' name="entreprise_id" value="{{ $entreprise->id }}">
             <div class="row">
-                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
+                <div class="form-group col-md-6" style="margin-right:5px;">
+                    <label class="control-label">Type de contrat</label>
+                    <div class="input-group">
+                        <div class="radio col-md-6">
+                            <label for="mode_de_virement">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="1" required> National
+                            </label>
+                        </div>
+                        <div class="radio col-md-6">
+                            <label for="type_de_marche">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="2" required> International
+                            </label>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-5" style="margin-left:0px;">
                     <label class="control-label" for="name">Objet  : <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input id="designation" type="text" class="form-control" name="designation" placeholder="Objet du devis" value="{{ old('montant_devis') }}" required autofocus>
@@ -89,7 +107,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
                     <label class="control-label" for="fiche_de_description">Description de l'acquisition <span class="text-danger">*</span></label>
-                    <textarea name="description" id="" cols="60" rows="4" required></textarea>
+                    <textarea name="description" id="" cols="55" rows="4" required></textarea>
                     @if ($errors->has('description'))
                         <span class="help-block">
                             <strong>{{ $errors->first('description') }}</strong>
@@ -256,8 +274,23 @@
                             <textarea id="motif" type="text" rows="2" cols="55" name="motif" disabled value="{{ old('montant_devis') }}"> </textarea>
                         </div>
                 </div>
-               
-                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
+                <div class="form-group col-md-6" style="margin-right:5px;">
+                    <label class="control-label">Type de contrat</label>
+                    <div class="input-group">
+                        <div class="radio col-md-6">
+                            <label for="mode_de_virement">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="1" required> National
+                            </label>
+                        </div>
+                        <div class="radio col-md-6">
+                            <label for="type_de_marche">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="2" required> International
+                            </label>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-5" style="margin-left:0px;">
                     <label class="control-label" for="name">Objet : <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input id="designation_u" type="text" class="form-control" name="designation" placeholder="Objet du devis" value="{{ old('montant_devis') }}" required autofocus>
@@ -269,7 +302,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
+                <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-5" style="margin-left:10px;">
                     <label class="control-label" for="listedepresence">Fiche d'analyse <span class="text-danger">*</span></label>
                         <input class="form-control docsize"   type="file" name="fiche_analyse" id="fiche_analyse"    onchange="VerifyUploadSizeIsOK_lourd('fiche_analyse');" placeholder="Charger une copie de fiche d'analyse des offres">
                     @if ($errors->has('fiche_analyse'))
@@ -278,7 +311,7 @@
                         </span>
                     @endif
                 </div>
-                <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
+                <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-5" style="margin-left:10px;">
                     <label class="control-label" for="fiche_de_description">Description de l'acquisition <span class="text-danger">*</span></label>
                     <textarea name="description" id="description_u" cols="60" rows="4" required></textarea>
                     @if ($errors->has('description'))

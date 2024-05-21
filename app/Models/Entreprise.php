@@ -35,7 +35,9 @@ class Entreprise extends Model
     public function factures(){
         return $this->hasMany(Facture::class);
     }
-
+    public function factures_payes(){
+        return $this->hasMany(Facture::class)->where('statut', 'payée');
+    }
     public function projet(){
         return $this->hasOne(Projet::class);
      }

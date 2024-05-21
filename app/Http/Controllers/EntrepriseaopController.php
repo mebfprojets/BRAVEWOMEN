@@ -38,7 +38,7 @@ class EntrepriseaopController extends Controller
         $regions=Valeur::where('parametre_id',1 )->get();
         $forme_juridiques_aop=Valeur::where('parametre_id',8)->whereNotIn('id',[19,20,21,22])->get();
         //dd($forme_juridiques_aop);
-       $forme_juridiques_leader=Valeur::where('parametre_id',8 )->whereNotIn('id', [23,7105,7103,7106,7107,6708])->get();
+        $forme_juridiques_leader=Valeur::where('parametre_id',8 )->whereNotIn('id', [23,7105,7103,7106,7107,6708])->get();
         $nature_clienteles=Valeur::where('parametre_id',10 )->get();
         $provenance_clients=Valeur::where('parametre_id',9 )->get();
         $maillon_activites=Valeur::where('parametre_id',7 )->get();

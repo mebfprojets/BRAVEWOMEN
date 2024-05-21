@@ -16,6 +16,7 @@
         <thead>
                 <tr>
                     <th>N</th>
+                    <th>Zone</th>
                     <th>Numero devis</th>
                     <th>Code promotteur</th>
                     <th>Entreprise</th>
@@ -38,6 +39,7 @@
                 @endphp
                 <tr>
                     <td>{{ $i }}</td>
+                    <td>{{getlibelle($devi->entreprise->region)}}</td>
                     <td>{{$devi->numero_devis}}</td>
                     <td>{{$devi->entreprise->code_promoteur}}</td>
                     <td>{{$devi->entreprise->denomination}}</td>
@@ -50,7 +52,9 @@
                             <div class="btn-group">
                              {{-- @can('formation.update', Auth::user()) --}}
                                 <a href="{{ route('devi.show',$devi) }}" data-toggle="tooltip" title="Analyser le devis" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
-                            {{-- @endcan --}}
+                            @can('parametre.create', Auth::user())
+                                <a href="{{ route('devis.rejete',$devi) }}" data-toggle="tooltip" title="Rejeter un devis apres validation" class="btn btn-lg btn-danger"><i class="fa fa-times"></i></a>
+                             @endcan 
                             </div>
                     </td>
                 </tr>

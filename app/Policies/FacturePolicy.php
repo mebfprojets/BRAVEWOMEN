@@ -24,6 +24,9 @@ class FacturePolicy
      public function payer_facture(User $user){
         return $this->getPermission($user, 33);
      }
+     public function payer_a_facture(User $user){
+        return $this->getPermission($user, 64);
+     }
     public function getPermission($user,$permission_id){
         foreach($user->roles as $user_role){
             foreach($user_role->permissions as $permission_role){

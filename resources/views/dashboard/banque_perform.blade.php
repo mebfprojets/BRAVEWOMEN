@@ -13,7 +13,7 @@
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left text-warning">
-                            <strong>{{ $facture_payes_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_payes_par_banques->sum('montant')) }})<br><small>Factures à payer</small>
+                            <strong>{{ $facture_payes_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_payes_par_banques->sum('montant')) }})<br><small> Factures Payées</small>
                         </h4>
                     </div>
                 </a>
@@ -21,7 +21,7 @@
                     <div class="widget-simple">
                         
                         <h4 class="text-left text-warning">
-                            <strong>{{ $facture_a_payees_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_a_payees_par_banques->sum('montant')) }})<br><small>Factures Payées</small>
+                            <strong>{{ $facture_a_payees_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_a_payees_par_banques->sum('montant')) }})<br><small>Factures à payer</small>
                         </h4>
                     </div>
                 </a>
@@ -210,35 +210,36 @@
     <div class="row">
         
         <p class="col-md-offset-1 col-md-10 titre_tableau">Respect du délai de paiement des Fournisseurs par banque</p>
-        <div class="col-md-4 graphique_respect_delais_de_paiement" id="delais_de_paiement_boa" >
+       
+        <div class="col-md-4 graphique_respect_delais_de_paiement" id="delais_de_paiement_atlantique">
 
         </div>
         <div class="col-md-4 graphique_respect_delais_de_paiement" id="delais_de_paiement_coris">
 
         </div>
-        <div class="col-md-4 graphique_respect_delais_de_paiement" id="delais_de_paiement_atlantique">
+        <div class="col-md-4 graphique_respect_delais_de_paiement" id="delais_de_paiement_boa" >
 
         </div>
+        
     </div>
-    {{-- <div class="row">
-        <p class="col-md-offset-1 col-md-10 titre_tableau">Stuation des Demandes de paiemnts par Statut et par Banque</p>
-        <div class="col-md-4 graphique_respect_delais_de_paiement" id="perform_banque_boa" style="heigth:100px;">
+    <div class="row">
+        
+        <p class="col-md-offset-2 col-md-8 center titre_tableau" >Nombre de Demandes de paiement rejétés par les banques </p>
+       
+        <div class="col-md-offset-2 col-md-6 graphique_respect_delais_de_paiement" id="demande_depaiement_rejete">
 
         </div>
-        <div class="col-md-4 graphique_respect_delais_de_paiement" id="perform_banque_coris">
-
-        </div>
-        <div class="col-md-4 graphique_respect_delais_de_paiement" id="perform_banque_atlantique">
-
-        </div>
-    </div> --}}
+        
+        
+    </div>
+    
     
     
 </div>
 @endsection
 @section('script_additionnel')
 <script language = "JavaScript">
-    var url = "{{ route('facture.groupbydelaidetraitement') }}?banque_id=1"
+    var url = "{{ route('demandes.rejete_par_les_banques') }}"
       $.ajax({
                  url: url,
                  type: 'GET',
@@ -251,17 +252,19 @@
                  success: function (donnee) {
                         var donnch= new Array();
                         var status = new Array();
+                        
                     for(var i=0; i<donnee.length; i++)
                     {
                       donnch.push({
-                                name: donnee[i].statut_paiement,
-                                data:  parseInt(donnee[i].nombre)} )
+                                name: donnee[i].nom_banque,
+                                y:  parseInt(donnee[i].nombre_de_facture)}  )
                     }
+                   // console.log(donnch)
                     for(var i=0; i<donnee.length; i++)
                             {
-                                    status[i] = donnee[i].statut_paiement
+                                    status[i] = donnee[i].nom_banque
                             }
-                    Highcharts.chart('delais_de_paiement_boa', {
+                    Highcharts.chart('demande_depaiement_rejete', {
                         chart: {
                                     type: 'column'
                                 },
@@ -269,7 +272,7 @@
                                  categories: status
                             },
                         title: {
-                            text: 'BOA'
+                            text: 'Nombre de facture rejétée par les banques'
                         },
                         credits : {
                             enabled: false
@@ -286,7 +289,68 @@
                             }
                         },
                         series: [{
-                            name: 'Nombre',
+                            name: 'Factures',
+                            colorByPoint: true,
+                            data: donnch
+                        }]
+                    });
+
+}
+
+});      
+</script>
+<script language = "JavaScript">
+    var url = "{{ route('facture.groupbydelaidetraitement') }}?banque_id=1"
+      $.ajax({
+                 url: url,
+                 type: 'GET',
+                 dataType: 'json',
+                 error:function(data){
+                    if (xhr.status == 401) {
+                        window.location.href = 'https://www.bravewomen.bf/login';
+                    }
+                },
+                 success: function (donnee) {
+                        var donnch= new Array();
+                        var status = new Array();
+                        
+                    for(var i=0; i<donnee.length; i++)
+                    {
+                      donnch.push({
+                                name: donnee[i].statut_paiement,
+                                y:  parseInt(donnee[i].nombre)}  )
+                    }
+                   // console.log(donnch)
+                    for(var i=0; i<donnee.length; i++)
+                            {
+                                    status[i] = donnee[i].statut_paiement
+                            }
+                    Highcharts.chart('delais_de_paiement_atlantique', {
+                        chart: {
+                                    type: 'column'
+                                },
+                        xAxis: {
+                                 categories: status
+                            },
+                        title: {
+                            text: 'Banque Atlantique'
+                        },
+                        credits : {
+                            enabled: false
+                        },
+                       
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                    showInLegend: true
+                            }
+                        },
+                        series: [{
+                            name: 'Factures',
                             colorByPoint: true,
                             data: donnch
                         }]
@@ -348,7 +412,7 @@
                             }
                         },
                         series: [{
-                            name: 'Nombre',
+                            name: 'Factures',
                             colorByPoint: true,
                             data: donnch
                         }]
@@ -382,7 +446,7 @@
                             {
                                     status[i] = donnee[i].statut_paiement
                             }
-                    Highcharts.chart('delais_de_paiement_atlantique', {
+                    Highcharts.chart('delais_de_paiement_boa', {
                         chart: {
                                     type: 'column'
                                 },
@@ -390,7 +454,7 @@
                                  categories: status
                             },
                         title: {
-                            text: 'Banque Atlantique'
+                            text: 'BOA'
                         },
                         credits : {
                             enabled: false
@@ -407,7 +471,7 @@
                             }
                         },
                         series: [{
-                            name: 'Nombre',
+                            name: 'Factures',
                             colorByPoint: true,
                             data: donnch
                         }]
@@ -460,7 +524,7 @@
                             }
                         },
                         series: [{
-                            name: 'Nombre',
+                            name: 'Factures',
                             colorByPoint: true,
                             data: donnch
                         }]
@@ -524,7 +588,7 @@
                         },
                     
                         series: [{
-                                    name: 'Montant',
+                                    name: 'Factures',
                                     colorByPoint: true,
                                     data: donnch
                                 }]

@@ -168,6 +168,7 @@ function del_file(eleId) {
                    if(data==1){
                           $(".depassement_du_montant_du_devis").show();
                             $(".soumettre_facture").prop('disabled', true);
+                            $("#"+montant_champ).val("");
                           format_montant(montant_champ);
                    }
                    else{
@@ -196,6 +197,7 @@ function verifier_montant_devis(montant_champ, entreprise_id,devi_id){
 
                      $(".depassement_du_montant_du_devis").show();
                        $(".soumettre_facture").prop('disabled', true);
+                       $("#"+montant_champ).val("");
                      format_montant(montant_champ);
               }
               else{

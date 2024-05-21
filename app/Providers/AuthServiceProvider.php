@@ -74,6 +74,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('lister_all_devis',[DevisPolicy::class,'lister_all_devis'] );
         Gate::define('changer_statut_facture_ou_devis',[FacturePolicy::class,'changer_statut_facture_ou_devis'] );
         Gate::define('facture.payer',[FacturePolicy::class,'payer_facture'] );
+        Gate::define('lister_facture.a_payer',[FacturePolicy::class,'payer_a_facture'] );
         Gate::define('analyser_devis',[DevisPolicy::class,'analyser_devis'] );
         Gate::define('lister_chef_de_projet',[ProjetPolicy::class,'lister_chef_de_projet'] );
         Gate::define('donne_verdict_du_comite_pca',[ProjetPolicy::class,'verdict_du_comite_pca'] );

@@ -26,6 +26,8 @@
                     <th class="text-center">Télephone</th>
                     <th class="text-center">Entreprise</th>
                     <th class="text-center">Score</th>
+                    <th class="text-center">Avis de l'UGP</th>
+                    <th class="text-center">Commentaire de l'UGP</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -76,6 +78,8 @@
                         <td class="text-center" style="width: 5%;">
                             {{ $entreprise->noteTotale  + $entreprise->note_critere_qualitatif}} 
                         </td>
+                        <td class="text-center">{{ $entreprise->decision_ugp }}</td>
+                        <td class="text-center">{{ $entreprise->observation_ugp }}</td>
                          
                         <td class="text-center" style="width: 7%;">
                             <div class="btn-group">

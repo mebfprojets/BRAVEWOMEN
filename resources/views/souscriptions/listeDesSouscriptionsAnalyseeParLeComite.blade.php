@@ -21,10 +21,13 @@
                     <th class="text-center" >Denomination</th>
                     <th class="text-center">Télephone</th>
                     <th class="text-center">zone</th>
+                    <th class="text-center">Avis de l'UGP</th>
+                    <th class="text-center">Observation UGP</th>
                     {{-- <th class="text-center">Nombre de votant</th> --}}
                     {{-- <th class="text-center" style="width: 5%;">Decisions des membre</th> --}}
-                    <th class="text-center" style="width: 5%;">Action</th>
+                    <th class="text-center" style="width: 5%;">Valider la Décision</th>
                     <th class="text-center" style="width: 5%;">Décision</th>
+                    <th class="text-center" style="width: 5%;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +47,8 @@
                         <td class="text-center">{{ $entreprise->denomination }}</td>
                         <td class="text-center">{{ $entreprise->promotrice->telephone_promoteur }}</td>
                         <td class="text-center">{{ getlibelle($entreprise->region)}}</td>
+                        <td class="text-center">{{ $entreprise->decision_ugp }}</td>
+                        <td class="text-center">{{ $entreprise->observation_ugp }}</td>
                         {{-- <td class="text-center" style="width: 5%;">{{ count($entreprise->decisions) }} votants</td>
                      <td class="text-center">
                         @foreach($entreprise->decisions as $decision)
@@ -65,6 +70,9 @@
                     <td class="text-center">
                         {{ $entreprise->decision_du_comite_phase1 }}
                     </td> 
+                    <td class="text-center">
+                        <a href="{{ route("entreprise.show",$entreprise) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-md btn-primary"><i class="fa fa-eye"></i></a>
+                    </td>
                     </tr>
                 @endforeach
             </tbody>

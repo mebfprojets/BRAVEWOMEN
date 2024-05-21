@@ -66,26 +66,38 @@ class SouscriptionController extends Controller
         return view("souscriptions.liste_de_souscription_soumis_a_ugp", compact("entreprises","active","titre","active_principal"));
     }
 public function listersouscriptionpostpreanalyse(Request $request){
+    
         $active='souscription_post_preanalyse';
         $active_principal="pme";
         $titre="Analyser par le comité";
         $categorieentreprise= $request->typeentreprise;
+        $type_resultat= $request->type_resultat;
+        
         ($categorieentreprise=='mpme')?($active='souscription_enregistre'):($active='aop_post_analyse');
         ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
         ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
-        $entreprises = Entreprise::where('entrepriseaop', $categorieentreprise )->where('participer_a_la_formation',1)->orderBy('updated_at', 'desc')->get();
+        if($type_resultat=='ajournee'){
+            $entreprises = Entreprise::where('entrepriseaop', $categorieentreprise )->where('decision_du_comite_phase1','ajournee')->orderBy('updated_at', 'desc')->get();
+        }else{
+            $entreprises = Entreprise::where('entrepriseaop', $categorieentreprise)->where('decision_du_comite_phase1','selectionnee')->where('participer_a_la_formation',1)->where('verdit_pca','selectionné')->orderBy('updated_at', 'desc')->get();
+        }
         return view("souscriptions.liste_souscription_postpreanalyse", compact("entreprises","active","titre","active_principal"));
     }
-public function listersouscriptionParZone(){
+public function listersouscriptionParZone(Request $request){
         $active='souscription_par_zone';
-        $active_principal="pme";
+        $categorieentreprise=$request->typeentreprise;
+        ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
+        ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
         $titre="de la zone"." ".getlibelle(Auth::user()->zone);
         $entreprises = Entreprise::where("status",'!=',0)
-                                    ->where('region', Auth::user()->zone)
-                                    ->orWhere('region_affectation', Auth::user()->zone)
-                                    ->where('entrepriseaop',null)->get();
-        $entreprises= $entreprises->where('phase_de_souscription', 2);
-        
+                                    ->where(function ($query) {
+                                        $query->orwhere('region',Auth::user()->zone)
+                                        ->orwhere('region_affectation', Auth::user()->zone);
+                                    })
+                                    ->where('entrepriseaop',$categorieentreprise)
+                                    ->get();
+                                
+        //$entreprises= $entreprises->where('phase_de_souscription', 2);
         return view("souscriptions.prevalidable", compact("entreprises","active","titre","active_principal"));
 }
 public function listerlespmeretenueEtFormee(){
@@ -236,12 +248,22 @@ public function listerallsouscriptionrejete( Request $request){
     $categorieentreprise= $request->typeentreprise;
     $titre="de la zone"." ".getlibelle(Auth::user()->zone);
     $active_principal="pme";
+   // ($categorieentreprise=='mpme')?($active_principal='mpme'):($categorieentreprise='aop');
     $active="pme_retenu_par_zone";
         $categorieentreprise= $request->typeentreprise;
         ($categorieentreprise=='mpme')?($active='pme_retenu_par_zone'):($active='aop_retenue_par_zone');
         ($categorieentreprise=='mpme')?($active_principal="pme"):($active_principal='aop');
         ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
-    $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',$categorieentreprise)->where('region', Auth::user()->zone)->orWhere('region_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+       // dd($categorieentreprise);
+    $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
+                                ->where(function ($query) {
+                                    $query->orwhere('region',Auth::user()->zone)
+                                    ->orwhere('region_affectation', Auth::user()->zone);
+                                })
+                                ->where('entrepriseaop',$categorieentreprise)
+                                ->orderBy('updated_at', 'desc')->get();
+
+   // dd($entreprises);
     return view("souscriptions.retenue", compact("entreprises", "titre","active","active_principal"));
    }
    public function souscriptionsrejetes(Request $request){

@@ -174,6 +174,7 @@
                     <thead>
                             <tr>
                                 <th style="width: 5%">Numéro</th>
+                                <th style="width: 5%">Type de marche</th>
                                 <th style="width: 5%">Statut</th>
                                 <th style="width: 30%">Désignation</th>
                                 <th style="width: 20%">Nom du presatataire</th>
@@ -191,18 +192,22 @@
                                 @endphp
                             <tr>
                                 <td>{{ $devi->numero_devis }}</td>
+                                <td>
+                                    @if ($devi->type_marche==1)
+                                        National
+                                    @elseif($devi->type_marche==2)
+                                        International
+                                    @endif
+                                </td>
                                 <td>{{ $devi->statut }}</td>
                                 <td>{{$devi->designation}}</td>
                                 <td>{{$devi->prestataire->code_prestaire }} {{$devi->prestataire->nom_responsable }}{{$devi->prestataire->prenom_responsable }}</td>
                                 <td>{{format_prix($devi->montant_devis)}}</td>
                                 <td class="text-center">
                                         <div class="btn-group">
-                                         @if($devi->statut=='rejeté')
+                                         @if($devi->statut=='soumis'|| $devi->statut=='rejeté')
                                              <a onclick="edit_devis({{ $devi->id }});" href="#modal-devis-edit" data-toggle="modal"  data-toggle="tooltip" title="Edit" class="btn btn-md btn-default"><i class="fa fa-pencil"></i></a>
-                                        @endif
-                                        @if($devi->statut=='validé')
-                                             <a href="{{ route('facture.liste', $devi) }}" data-toggle="modal"  data-toggle="tooltip" title="Demandes des paiements" class="btn btn-md btn-danger"><i class="fa fa-money"></i></a>
-                                        @endif
+                                         @endif
                                              <a href="{{ route('devi.show', $devi) }}" data-toggle="modal"  data-toggle="tooltip" title="Edit" class="btn btn-md btn-success"><i class="fa fa-eye"></i></a>
                                         </div>
                                 </td>
@@ -252,10 +257,10 @@
                     <td>{{format_prix($facture->montant)}}</td>
                     <td class="text-center">
                             <div class="btn-group">
-                             @if($facture->statut=='rejeté') 
+                             @if(($facture->statut=='soumis' || $facture->statut=='rejeté') && $facture->devi->statut=='validé') 
                                  <a href="{{ route('facture.edit', $facture ) }}" class="btn btn-md btn-default"  title="Modifier la facture"><i class="fa fa-pencil"></i></a>
                              @endif
-                             <a href="{{ route('facture.view', $facture ) }}" class="btn btn-md btn-default"  title="Visualiser la facture"><i class="fa fa-eye"></i></a>
+                             <a href="{{ route('facture.show', $facture ) }}" class="btn btn-md btn-default"  title="Visualiser la facture"><i class="fa fa-eye"></i></a>
                             </div>
                     </td>
                 </tr>
@@ -293,8 +298,23 @@
                             <textarea id="motif" type="text" rows="2" cols="55" name="motif" disabled value="{{ old('montant_devis') }}"> </textarea>
                         </div>
                 </div>
-                
-                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
+                <div class="form-group col-md-6" style="margin-right:5px;">
+                    <label class="control-label">Type de contrat</label>
+                    <div class="input-group">
+                        <div class="radio col-md-6">
+                            <label for="mode_de_virement">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="1" required> National
+                            </label>
+                        </div>
+                        <div class="radio col-md-6">
+                            <label for="type_de_marche">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="2" required> International
+                            </label>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-5" style="margin-left:0px;">
                     <label class="control-label" for="name">Objet : <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input id="designation_u" type="text" class="form-control" name="designation" placeholder="Objet du devis" value="{{ old('montant_devis') }}" required autofocus>
@@ -455,7 +475,23 @@
                     {{ csrf_field() }}
                     <input type="hidden" id='entreprise_id' name="entreprise_id" value="{{ $entreprise->id }}">
             <div class="row">
-                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
+                <div class="form-group col-md-6" style="margin-right:5px;">
+                    <label class="control-label">Type de contrat</label>
+                    <div class="input-group">
+                        <div class="radio col-md-6">
+                            <label for="mode_de_virement">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="1" required> National
+                            </label>
+                        </div>
+                        <div class="radio col-md-6">
+                            <label for="type_de_marche">
+                                <input type="radio" id="type_de_marche" name="type_de_marche" value="2" required> International
+                            </label>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-5" style="margin-left:0px;">
                     <label class="control-label" for="name">Objet  : <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input id="designation" type="text" class="form-control" name="designation" placeholder="Objet du devis" value="{{ old('montant_devis') }}" required autofocus>
@@ -491,16 +527,15 @@
                     <div class="row">
                         <div class="form-group col-md-6" style="margin-left:10px;">
                                 <label class=" control-label" for="example-chosen">Prestataires<span class="text-danger">*</span></label>
-                                <div class="input-group col-md-12">
-                                    <select  class="form-control select-select2" name="prestataire"  data-placeholder="Selectionner le prestataire .." style="width: 100%;" required>
-                                        {{-- <option value="">Selectionner le prestataire</option><!-- Required for data-placeholder attribute to work with Chosen plugin --> --}}
-                                        @foreach ($prestataires as  $prestataire)
-                                            <option></option>
-                                            <option value="{{ $prestataire->id  }}" {{ old('prestatataire') == $prestataire->id ? 'selected' : '' }}
-                                                   > {{ $prestataire->nom_responsable }} {{ $prestataire->prenom_responsable }} / {{ $prestataire->code_prestaire }} </option>
-                                        @endforeach
-                                    </select>
-                                  </div>
+                            <div class="input-group col-md-12">
+                                <select  class="form-control select-select2" name="prestataire"  data-placeholder="Selectionner le prestataire .." style="width: 100%;" required>
+                                    @foreach ($prestataires as  $prestataire)
+                                        <option></option>
+                                        <option value="{{ $prestataire->id  }}" {{ old('prestatataire') == $prestataire->id ? 'selected' : '' }}
+                                                > {{ $prestataire->nom_responsable }} {{ $prestataire->prenom_responsable }} / {{ $prestataire->code_prestaire }} </option>
+                                    @endforeach
+                                </select>
+                                </div>
                         </div>
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-5" style="margin-left:10px;">
                             <label class="control-label" for="name">Montant du devis<span class="text-danger">*</span></label>
@@ -601,7 +636,6 @@
             </div>
             </form>
             </div>
-            <!-- END Modal Body  modal-devis-edit -->
         </div>
     </div>
 </div>
@@ -620,11 +654,16 @@
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-8" style="margin-left:0px;">
                     <label class="control-label" for="name">Selectionne le devis concerne : <span class="text-danger">*</span></label> 
                     <select name="devi_id" id="devi_id_create"  class="select-select2" style="width: 100%;">
-                        @foreach ($devis as $devi )
+                        @foreach ($devis_valides as $devi )
                             <option value="{{  $devi->id }}">{{ $devi->numero_devis }} - {{ $devi->designation }} </option>
                         @endforeach
                     </select>
                 </div> 
+                
+            </div>
+           <div class="row">
+
+         
                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
                     <label class="control-label" for="name">Montant de la facture : <span class="text-danger">*</span></label>
                         <div class="input-group">
@@ -649,8 +688,8 @@
                             <option value="paiement_mobile" >Paiement mobile</option>
                         </select>
                 </div>
-            </div>
             
+            </div>
                 <div class="row champ_paiement_cheque_ou_virement" >
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-6" style="margin-left:0px;">
                         <label class="control-label" for="name">Nom de la banque : <span class="text-danger">*</span></label>
@@ -680,7 +719,7 @@
                     </div>   
                     <div class="form-group{{ $errors->has('copie_rib') ? ' has-error' : '' }} col-md-8" style="margin-left:10px;">
                         <label class="control-label" for="listedepresence">Joindre une copie du RIB <span class="text-danger">*</span></label>
-                            <input class="form-control docsize col-md-6"  type="file" name="copie_rib" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
+                            <input class="form-control docsize col-md-6"  type="file" name="copie_rib" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
                         @if ($errors->has('copie_rib'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('copie_rib') }}</strong>
@@ -688,7 +727,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="row champ_paiement_cheque">
+                <div class="row champ_paiement_cheque" style="display: none">
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-5" style="margin-left:0px;">
                         <label class="control-label" for="name">Identité du bénéficiaire du chèque : <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -743,7 +782,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('facture_file') ? ' has-error' : '' }} col-md-10" style="margin-left:10px;">
                     <label class="control-label" for="listedepresence">Copie du dossier de paiement<span class="text-danger">*</span></label>
-                        <input class="form-control docsize col-md-6"  type="file" name="facture_file" id="facture_file" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Joindre une copie du dossier de demande de paiement" required style="100%">
+                        <input class="form-control docsize col-md-6"  type="file" name="facture_file" id="facture_file" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('facture_file');" placeholder="Joindre une copie du dossier de demande de paiement" required style="100%">
                     @if ($errors->has('facture_file'))
                         <span class="help-block">
                             <strong>{{ $errors->first('facture_file') }}</strong>
@@ -766,7 +805,7 @@
             <input type="hidden" id="champ_nombre_dimage" name="champ_nombre_dimage"> 
                 <div class="form-group form-actions">
                 <div class="col-md-8 col-md-offset-4">
-                    <a href="{{ route('profil.mesdevis') }}" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                    <a href="#" class="btn btn-sm btn-warning" data-dismiss="modal"><i class="fa fa-repeat"></i> Annuler</a>
                     <button type="submit" class="btn btn-sm btn-success soumettre_facture" ><i class="fa fa-arrow-right"></i> Soumettre</button>
                 </div>
             </div>

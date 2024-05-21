@@ -19,7 +19,6 @@
         <div class="block-title">
             <div class="block-options pull-right">
                 <a onclick="window.history.back();" class="btn btn-sm btn-success"><i class="fa fa-repeat"></i> Fermer</a>
-                {{-- <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default toggle-bordered enable-tooltip" data-toggle="button" title="Toggles .form-bordered class"></a> --}}
             </div>
             <h2><strong>Detail</strong> de la facture</h2>
         </div>
@@ -142,6 +141,7 @@
                             @can('changer_statut_facture_ou_devis', Auth::user())
                                 @if($facture->statut=='soumis' || $facture->statut=='transmis_au_chef_de_projet')
                                 <div class="form-group">
+                               
                                     <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
                                     <a href="#modal-confirm-devis" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-check"></i>Valider</a>
                                 </div>
@@ -150,12 +150,13 @@
                             @can('facture.payer', Auth::user())
                                 @if($facture->statut=='validé' && $facture->conforme!=1 )
                                     <div class="form-group">
+                                        <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
                                         <a href="#modal-conforme-facture" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise_conforme', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Conforme</a>
                                     </div>
+                                    
                                 @endif
                                 @if($facture->statut=='validé' && $facture->conforme==1 )
                                     <div class="form-group">
-                                        <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
                                         <a href="#modal-payer-facture" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Payer</a>
                                     </div>
                                 @endif
@@ -181,6 +182,7 @@
         <table  class="table table-vcenter table-condensed table-bordered listepdf">
             <thead>
                     <tr>
+                        <th>Numero</th>
                         <th>Date</th>
                         <th>Utilisateur</th>
                         <th>statut</th>
@@ -191,6 +193,7 @@
             <tbody>
                 @foreach($historiques as $historique)
                     <tr>
+                        <td>N</td>
                         <td>{{ format_date($historique->date_statut) }}</td>
                         <td>{{ getusername($historique->user_id) }}</td>
                         <td>{{ $historique->statut }}</td>

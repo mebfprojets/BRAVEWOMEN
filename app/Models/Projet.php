@@ -25,6 +25,7 @@ class Projet extends Model
     public function evaluations(){
         return $this->hasMany(EvaluationPca::class);
     }
+    
     protected static function boot(){
         parent::boot();
         static::creating(function($projet){

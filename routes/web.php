@@ -139,13 +139,15 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::post('gri/store_modif',[GrilleEvalController::class, 'modifierstore'] )->name('grille.storemodif');
     Route::post('pca_eval/store',[ProjetController::class, 'storeaval'] )->name('pca.evaluation');
     Route::get('lister_les_pca', [ProjetController::class, 'lister'])->name('projet.liste');
+    Route::get('lister_les_pca/rejetes', [ProjetController::class, 'lister_pca_rejetes'])->name('projet.liste_rejetes');
+    Route::get('lister_les_pca/repeches', [ProjetController::class, 'lister_pca_repeches'])->name('projet.pca_repeches');
     Route::get('analyser_pca/{projet}', [ProjetController::class, 'analyser'])->name('projet.analyse');
     Route::post('/save/fiche_danalyse', [ProjetController::class, 'save_fiche_danalyse'])->name('save.fiche_danalyse');
     Route::post('/valider/investissements', [ProjetController::class, 'valider_investissement'])->name('save.ivestissement_valide');
     Route::post('/rejetter/investissements', [ProjetController::class, 'rejetter_investissement'])->name('rejeter.investissement');
     Route::post('add/investissement', [ProjetController::class, 'add_investissement'])->name('add.investissement'); 
     Route::get('/pca/valider/analyse', [ProjetController::class, 'valider_analyse'])->name('pca.valider_analyse');
-    Route::get('/repecher/pca', [ProjetController::class, 'repecher_pca'])->name('pca.repecher');
+    Route::post('/repecher/pca', [ProjetController::class, 'repecher_pca'])->name('pca.repecher');
     Route::get('/save/pca_statut/comite', [ProjetController::class, 'savedecisioncomite'])->name('pca.savedecisioncomite');
     Route::get('/liste_dattente/pca/comite', [ProjetController::class, 'put_pca_to_liste_dattente'])->name('pca.liste_dattente');
     Route::get('/pca/liste_dattente', [ProjetController::class, 'lister_pca_liste_dattente'])->name('pca.lister_liste_dattente');
@@ -179,6 +181,8 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/projet/asuivre', [ProjetController::class, 'liste_des_projets_asuivre'])->name("projet.asuivre"); 
 
     Route::get('/projet/executer/{entreprise}', [ProjetController::class, 'execution_de_pca'])->name("executer.pca"); 
+    Route::get('/pca/synthese/execution/', [ProjetController::class, 'synthese_execution_de_pca'])->name("pca.synthese"); 
+
    
     Route::get('/devis/asuivre/projet/{projet}', [ProjetController::class, 'liste_des_devis_asuivre_par_projet'])->name("devis_asuivre_par_projet");
     Route::post('/acquisition/store/', [AcquisitionController::class, 'store'])->name("acquisition.store");
@@ -308,7 +312,7 @@ route::post("/create/compte/beneficiaire/",[UserController::class,'storecomptePr
 route::get("/verifier_promoteur/compte/",[UserController::class,'verifier_conformite_cpt'])->name('verifier_validite_cpt_promo');
 Route::get("/espace/beneficiaire/",[BeneficiaireController::class,'gotoEspaceBeneficiaire'])->name('espace.beneficiaires');
 Route::post('logout', [UserController::class, 'logout'])->name('logout');
-Route::get("/beneficiciare/myprofil",[BeneficiaireController::class, 'showprofil'])->name("profil.beneficiaire");
+Route::get("/beneficiciare/myprofil/{entreprise}",[BeneficiaireController::class, 'showprofil'])->name("profil.beneficiaire");
 Route::get('/beneficiciare/entreprise', [BeneficiaireController::class, 'showentreprisedata'])->name("profil.entreprise");
 Route::get('/beneficiciare/devis', [DeviController::class, 'liste_devis_par_promoteur'])->name("profil.mesdevis");
 Route::get('/devis/get_montant/', [DeviController::class, 'get_montant'])->name("devi.get_montant");
@@ -323,6 +327,8 @@ Route::get('dee/modif',[DeviController::class, 'modifier'] )->name('devi.modif')
 Route::post('dee/modifier',[DeviController::class, 'enr_modification'] )->name('devi.enrg_modification');
 Route::get("/charger/devis/{url}", [DeviController::class, 'telechargerdevis'])->name('telechargerdevis');
 Route::get("/charger/doc/{url}", [FactureController::class, 'telechargerfacture'])->name('telechargerfacture');
+
+
 Route::get("changerStatus/devis", [DeviController::class, 'changerStatus'])->name('devi.changerstatus');
 Route::get("/factures/{devi}", [FactureController::class, 'facture_dun_devis'])->name('facture.liste');
 Route::post("/facture/store", [FactureController::class, 'store'])->name('facture.store');
@@ -347,11 +353,15 @@ Route::get('visualiserimagesuivi/{suiviExecutionDevi}', [DeviController::class,'
 Route::get('visualiserdetailSuivi/{suiviExecutionDevi}', [DeviController::class,'visualiser_details_de_suivi'])->name('visualiser_detail_suivi');
 
 Route::get('/facture/delais_de_paiment', [FactureController::class, 'group_by_delais_de_paiement'])->name('facture.groupbydelaidetraitement');
+Route::get('/demande/rejete_par_banque', [FactureController::class, 'demande_de_paiement_rejete_par_banque'])->name('demandes.rejete_par_les_banques');
+
 Route::get('/facture/edit/{facture}', [FactureController::class, 'edit'])->name('facture.edit');
 
 Route::get('/activity_all/liste', [ActiviteController::class, 'liste_activity'])->name('activity.liste');
 Route::get('/all_activity/json', [ActiviteController::class, 'activity_all'])->name('all.activity');
 
+Route::get('rejet/devis/par_administrateur/{devi}', [DeviController::class, 'rejeter_le_devis_apres_validation'])->name('devis.rejete');
+Route::get('rejeter/facture/par_administrateur/{facture}', [FactureController::class, 'rejeter_la_facture_apres_validation'])->name('facture.rejete');
 
 
 

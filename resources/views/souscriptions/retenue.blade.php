@@ -1,7 +1,7 @@
 @extends('layouts.admin')
+@section('souscription', 'active')
 @section($active_principal, 'active')
 @section($active, 'active')
-
 
 @section('content')
 <div class="block full">

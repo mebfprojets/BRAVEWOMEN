@@ -32,9 +32,9 @@
                     <th class="text-center">nbre entreprise partenaire en 2019</th>
 		            <th class="text-center">nbre entreprise partenaire en 2020</th>
 		            <th class="text-center">nbre entreprise partenaire en 2021</th>
-                    <th class="text-center">pourcentage de femme membre en 2019</th>
+                    {{-- <th class="text-center">pourcentage de femme membre en 2019</th>
 		            <th class="text-center">pourcentage de femme membre en 2020</th>
-		            <th class="text-center">pourcentage de femme membre en 2021</th>
+		            <th class="text-center">pourcentage de femme membre en 2021</th> --}}
 		            <th class="text-center">nbre de produits/services vendus.2019</th>
                     <th class="text-center">nbre de produits/services vendus.2020</th>
                     <th class="text-center">nbre de produits/services vendus.2021</th>
@@ -53,7 +53,6 @@
                     <th class="text-center">nbre Nouveaux marchés.2019</th>
                     <th class="text-center">nbre Nouveaux marchés.2020</th>
                     <th class="text-center">nbre Nouveaux marchés.2021</th>
-
                     <th class="text-center">nbre innovation.2019</th>
                     <th class="text-center">nbre innovation.2020</th>
                     <th class="text-center">nbre innovation.2021</th>
@@ -82,8 +81,6 @@
                     <th class="text-center">Effectif temporaire femme en 2019</th>
                     <th class="text-center">Effectif temporaire femme en 2020</th>
                     <th class="text-center">Effectif temporaire femme en 2021</th>
-
-                    {{-- <th class="text-center">Score qualitatif</th>--}}
                     <th class="text-center">Niveau de resilience</th> 
                     <th class="text-center">Score</th>
                     <th class="text-center">Affecté par Covid</th>
@@ -151,7 +148,9 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ getlibelle($entreprise->secteur_activite) }}
                                         </td>
+                                        {{-- Nombre de membre --}}
                                         <td class="text-center" style="width: 5%;">
+
                                             {{ return_quantite_indicateur($entreprise->id,7098,46) }}
                                         </td>
                                         <td class="text-center" style="width: 5%;">
@@ -159,6 +158,7 @@
                                         </td> <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,7098,48) }}
                                         </td>
+                                        {{-- partenariat daffaire --}}
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,7100,46) }}
                                         </td>
@@ -167,8 +167,17 @@
                                         </td> <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,7100,48) }}
                                         </td>
+                                         {{-- pourcentage de femme membre --}}
+                                         {{-- <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7100,46) }}
+                                        </td>
+                                        <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7100,47) }}
+                                        </td> <td class="text-center" style="width: 5%;">
+                                            {{ return_quantite_indicateur($entreprise->id,7100,48) }}
+                                        </td> --}}
                                         
-                                        
+                                        {{-- quantite de produits vendu --}}
 					                    <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,41,46) }}
                                         </td>
@@ -178,6 +187,7 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,41,48) }}
                                         </td>
+                                           {{-- quantite de produits lance --}}
 					<td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,6715,46) }}
                                         </td>
@@ -187,6 +197,7 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,6715,48) }}
                                         </td>
+                                        {{-- chiffre daffaire --}}
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,42,46) }}
                                         </td>
@@ -196,6 +207,7 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,42,48) }}
                                         </td>
+                                        {{-- benefice --}}
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,43,46) }}
                                         </td>
@@ -205,6 +217,7 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,43,48) }}
                                         </td>
+                                        {{-- nombre de client --}}
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,7078,46) }}
                                         </td>
@@ -214,6 +227,7 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,7078,48) }}
                                         </td>
+
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,env('VALEUR_NOMBRE_NOUVEAU_MARCHE'),46) }}
                                         </td>
@@ -223,6 +237,7 @@
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,env('VALEUR_NOMBRE_NOUVEAU_MARCHE'),48) }}
                                         </td>
+                                        {{-- innovation apportee --}}
                                         <td class="text-center" style="width: 5%;">
                                             {{ return_quantite_indicateur($entreprise->id,6713,46) }}
                                         </td>

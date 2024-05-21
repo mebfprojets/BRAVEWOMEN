@@ -83,10 +83,10 @@ public function facture_de_ma_zone(){
  public function analyse_de_facture(Request $request){
     $statut= $request->statut;
     if($statut){
-        $factures = Facture::orderBy('updated_at', 'desc')->where('statut',$statut)->get();
+        $factures = Facture::orderBy('updated_at', 'asc')->where('statut',$statut)->get();
     }
     else{
-        $factures = Facture::orderBy('updated_at', 'desc')->get();
+        $factures = Facture::orderBy('updated_at', 'asc')->get();
     }
     return view("facture.aanalyser", compact('factures'));
 
@@ -100,7 +100,9 @@ if(Auth::user()->banque_id){
             })
             ->where('entreprises.banque_id', Auth::user()->banque_id)
             ->select('factures.id as facture_id')
+            ->orderBy('factures.updated_at', 'asc')
             ->get();
+           // dd($facture_ids);
 
 }else{
     $facture_ids= DB::table('factures')
@@ -108,7 +110,8 @@ if(Auth::user()->banque_id){
                     $join->on('factures.entreprise_id','=','entreprises.id')
                     ->where('factures.statut', 'validé');
                 })
-                ->select('factures.id as facture_id')
+                ->select('factures.id as facture_id','factures.updated_at')
+                ->orderBy('factures.updated_at', 'asc')
                 ->get();
 }
     $factures=[];
@@ -132,10 +135,10 @@ public function generer_lettre_de_paiement(Facture $facture){
     $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('/Applications/MAMP/htdocs/BRAVEWOMEN/templatesWord/demande_de_paiement.docx');
     $templateProcessor->setValue('NomDeLaBanque', $entreprise->banque->nom);
     $templateProcessor->setValue('NomDeLaPromotrice', $entreprise->promotrice->nom);
-    $templateProcessor->setValue('PrenomDeLaPromotrice', $entreprise->promotrice->prenom);
-    $templateProcessor->setValue('NomDelentreprise', $devi->entreprise->denomination);
-    $templateProcessor->setValue('PrenomDeLaPromotrice', $entreprise->banque->nom);
-    $templateProcessor->setValue('designationDuDevi', $devi->designation);
+    $templateProcessor->setValue('PrenomDeLaPromotrice', htmlspecialchars($entreprise->promotrice->prenom));
+    $templateProcessor->setValue('NomDelentreprise', htmlspecialchars($devi->entreprise->denomination));
+    $templateProcessor->setValue('PrenomDeLaPromotrice', htmlspecialchars($entreprise->banque->nom));
+    $templateProcessor->setValue('designationDuDevi', htmlspecialchars($devi->designation));
     $templateProcessor->setValue('MontantDelaFactureEnLettre',int2str($facture->montant));
     $templateProcessor->setValue('MontantDelaFacture',  format_prix($facture->montant));
     $templateProcessor->setValue('PourcentageDepaiement',  $facture->montant/$devi->montant_devis*100);
@@ -145,6 +148,7 @@ public function generer_lettre_de_paiement(Facture $facture){
     $templateProcessor->saveAs('php://output');
 }
  public function store_paiement(Request $request){
+
     if(Auth::user()->can('enregistrer_paiement')){
         $facture = Facture::find($request->facture_id);
         $date_paiement= date('Y-m-d', strtotime($request->date_paiement));
@@ -215,6 +219,24 @@ public function generer_lettre_de_paiement(Facture $facture){
                                         ->get();
                                     return json_encode($facture_par_delais);
  }
+
+
+ public function demande_de_paiement_rejete_par_banque(){
+    $nombre_de_dossier_rejete_par_les_banques = DB::table('historiquefactures')
+                                                ->leftjoin('users',function($join){
+                                                    $join->on('historiquefactures.user_id','=','users.id')
+                                                    ->where('historiquefactures.statut', 'transmis_au_chef_de_projet');
+                                                })
+                                                ->rightJoin('banques',function($join){
+                                                    $join->on('users.banque_id','=','banques.id')
+                                                    ->where('users.banque_id', '!=', null);
+                                                })
+                                                ->join('factures','historiquefactures.facture_id','=','factures.id')
+                                                ->groupBy('banques.id','banques.nom')
+                                                ->select('banques.nom as nom_banque' , DB::raw("Count(factures.id) as nombre_de_facture"))
+                                                ->get();
+                                    return json_encode($nombre_de_dossier_rejete_par_les_banques);
+ }
     /**
      * Show the form for creating a new resource.
      *
@@ -234,8 +256,7 @@ public function generer_lettre_de_paiement(Facture $facture){
      */
     public function store(Request $request)
     {
-       // dd($request->file('image1'));
-        
+      
         $images = $request->images;
         $champ_nombre_dimage = $request->champ_nombre_dimage;
         $devi=Devi::find($request->devi_id);
@@ -332,9 +353,10 @@ public function generer_lettre_de_paiement(Facture $facture){
 
  public function enr_modification(Request $request){
    $facture= facture::find($request->facture_id);
+   //dd($request->all());
    $copie_rib=null;
     if($request->facture_file_u){
-        $facture_file=$this->get_file_emplacement('facture_file',$request->file('facture_file_u'),$facture->devi_id,$facture->num_facture);
+        $facture_file=$this->get_file_emplacement('facture_file00',$request->file('facture_file_u'),$facture->devi_id,$facture->num_facture);
         $facture->update([
             'url_fac'=>$facture_file,
         ]);
@@ -349,6 +371,7 @@ public function generer_lettre_de_paiement(Facture $facture){
         $statut= 'soumis';
     }
     $devi=$facture->devi;
+   
     $facture->update([
         'montant'=>reformater_montant2($request->montant_facture),
         'mode_de_paiement'=>$request->mode_de_paiement,
@@ -398,7 +421,7 @@ public function verifier_montant(Request $request){
         $total_facture_soumis= $devi->factures()->sum('montant');
     }
     
- return (($total_facture_soumis + $montant > $devi->montant_devis) || (($devi->factures->count()+1== $devi->nombre_de_paiement)&&($devi->montant_devis > $devi->factures()->sum('montant') + $montant))   ) ? 1 : 0; 
+ return (($total_facture_soumis + $montant > $devi->montant_devis) || (($devi->factures->count()+1== $devi->nombre_de_paiement)&&($devi->montant_devis > $devi->factures()->sum('montant') + $montant)) || (($devi->factures->count()== $devi->nombre_de_paiement)&&($devi->montant_devis > $devi->factures()->sum('montant') + $montant))  ) ? 1 : 0; 
 }
 
 public function changerStatus(Request $request){
@@ -412,17 +435,17 @@ public function changerStatus(Request $request){
     $titre='Chef de Zone';
     $typeelt='facture';
     $mail=$chef_de_zone->email;
-   // Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail'));
+    $new_statut=$facture->statut;
     $date= $date->format('Y-m-d');
     ($facture->statut =='soumis')?($action='chef_de_zone'):($action='autre');
     if($request->raison || $request->observation){
-        if($facture->statut=='transmis_au_chef_de_projet'){
+        if($facture->statut=='transmis_au_chef_de_projet' && return_role_adequat(env('ID_ROLE_CHEF_DE_PROJET'))){
             $new_statut='soumis';
         }
-        elseif($facture->statut=='validé'){
+        elseif($facture->statut=='validé' && return_role_adequat(env('ID_ROLE_BANQUE_PARTENAIRE'))){
             $new_statut='transmis_au_chef_de_projet';  
         }
-        else{
+        elseif($facture->statut=='soumis' && return_role_adequat(env('ID_ROLE_CHEF_DE_ZONE'))){
             $new_statut='rejeté';
             $mail= $mail_promotrice;
             $e_msg="Une de vos demandes de paiement à été rejetée. Merci de prendre en compte les observations.";
@@ -440,20 +463,27 @@ public function changerStatus(Request $request){
             return 1;
        }
        else{
-        if($facture->statut=='soumis'){
+        if($facture->statut=='soumis' && return_role_adequat(env('ID_ROLE_CHEF_DE_ZONE'))){
             $new_statut='transmis_au_chef_de_projet';
             $mail= env('emailChefdeProjet');
          Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
-
         }
-        else{
+        elseif($facture->statut=='transmis_au_chef_de_projet' && return_role_adequat(env('ID_ROLE_CHEF_DE_PROJET'))){
             $entreprise= $facture->devi->entreprise;
             $new_statut='validé';
             $banque_users = User::where('banque_id',$entreprise->banque_id)->get();
             foreach($banque_users as $banque_user){
-                Mail::to($banque_user->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
+                $liste_roles= $banque_user->roles;
+                foreach($liste_roles as $role)
+                {
+                    if($role->id==env('ID_ROLE_BANQUE_PARTENAIRE')){
+                        $res= true;
+                    }
+                }
+                if($res==true){
+                     Mail::to($banque_user->email)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$facture->id,$typeelt));
+                }
             }
-
         }
         $facture->update([
             'statut'=>$new_statut, 
@@ -462,8 +492,7 @@ public function changerStatus(Request $request){
         $this->create_historique($facture->id, $new_statut, null, null);
         Insertion_Journal('factures','modification');
        }
-                
-            
+                      
     }
  
         return 0;
@@ -477,7 +506,8 @@ public function changerStatus(Request $request){
     public function show(Facture $facture, Request $request)
     {       
        // dd($facture->images_des_biens);
-        $historiques = Historiquefacture::where('facture_id', $facture->id)->orderBy('updated_at', 'desc')->get();
+        $historiques = Historiquefacture::where('facture_id', $facture->id)->orderBy('created_at', 'asc')->get();
+       
         $devi= $facture->devi;
         $suiviExecution = SuiviExecutionDevi::where('devi_id', $devi->id)->orderBy('date_visite','asc')->first();
         $motifs_de_rejects=Valeur::where('parametre_id', 37 )->get();
@@ -486,6 +516,7 @@ public function changerStatus(Request $request){
             return view('facture.analyse', compact('facture','historiques', 'motifs_de_rejects','suiviExecution' ));
         }
         else{
+            //dd($suiviExecution);
             return view('facture.show', compact('facture', 'historiques','suiviExecution'));
         }
         Insertion_Journal('factures','visualisation');
@@ -496,10 +527,13 @@ public function changerStatus(Request $request){
     public function showById($id)
     {
         $facture= Facture::find($id);
+        $devi= $facture->devi;
+        $suiviExecution = SuiviExecutionDevi::where('devi_id', $devi->id)->orderBy('date_visite','desc')->first();
         $historiques = Historiquefacture::where('facture_id', $facture->id)->orderBy('created_at', 'desc')->get();
-            return view('facture.show', compact('facture', 'historiques'));
+            return view('facture.show', compact('facture', 'historiques','suiviExecution'));
     }
     public function telechargerfacture(Request $request, $id){ 
+        
         if($request->file=='recu_paiement'){
             $facture= Facture::find($id);
             return $path = Storage::download($facture->url_recu_paiement);
@@ -516,7 +550,7 @@ public function changerStatus(Request $request){
         if($request->file=='rib'){
             $facture= Facture::find($id);
             return $path = Storage::download($facture->url_copie_rib);
- 
+            
          }
         Insertion_Journal('factures','visualisation');
     }
@@ -592,4 +626,21 @@ public function changerStatus(Request $request){
     {
         //
     }
+    public function rejeter_la_facture_apres_validation(Facture $facture)
+    {
+        if (Auth::user()->can('parametre.create')) {
+            $facture->update([
+                'statut'=>'rejeté'
+            ]);
+            $this->create_historique($facture->id,'rejeté', null,'suite pour correction');
+            
+            flash("La facture a éte rejetée  . !!!")->success();
+            return redirect()->back();
+        }
+            else{
+                flash("Desolé vous n'avez pas les droits requis pour faire cette action. !!!")->error();
+                return redirect()->back();
+            }
+        }
+    
 }

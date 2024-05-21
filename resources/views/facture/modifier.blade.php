@@ -84,15 +84,17 @@
                         @endif
                     </div>
                 </div>
-                <div class="form-group{{ $errors->has('copie_rib') ? ' has-error' : '' }} col-md-10 " >
-                    <label class="control-label" for="listedepresence">Joindre une copie du RIB <span class="text-success">*</span></label>
-                        <input class="form-control docsize col-md-6"  type="file" name="copie_rib_u" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
-                    @if ($errors->has('copie_rib_u'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('copie_rib_u') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                @if($facture->url_copie_rib!=null)
+                    <div class="form-group{{ $errors->has('copie_rib') ? ' has-error' : '' }} col-md-10 " >
+                        <label class="control-label" for="listedepresence">Joindre une copie du RIB <span class="text-success">*</span> <a href="{{ route("telechargerfacture", $facture->id) }}?file=rib">Telecharger</a> </label>
+                            <input class="form-control docsize col-md-6"  type="file" name="copie_rib_u" id="copie_rib" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Charger une copie de fiche d'analyse des offres"  style="100%">
+                        @if ($errors->has('copie_rib_u'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('copie_rib_u') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                @endif
                 
             </div>
             <div class="row champ_paiement_mobile_u" style="display: none">
@@ -154,7 +156,7 @@
                 </div>
             </div>
             <div class="form-group{{ $errors->has('facture_file') ? ' has-error' : '' }} col-md-10" style="margin-left:15px;">
-                <label class="control-label" for="listedepresence">Copie du dossier de demande de paiement <span class="text-success">*</span></label>
+                <label class="control-label" for="listedepresence">Copie du dossier de demande de paiement <span class="text-success">*</span> <a href="{{ route("telechargerfacture", $facture->id) }}?file=facture">Telecharger</a> </label>
                     <input class="form-control docsize"  type="file" name="facture_file_u" id="facture_file_u" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('facture_file');" placeholder="Joindre une copie du dossier de demande de paiement">
                 @if ($errors->has('facture_file_u'))
                     <span class="help-block">
@@ -192,10 +194,7 @@
                         @endforeach
                     </div>
                 </fieldset> 
-                {{-- <fieldset class="image_acquisitions">
-                    <a href="#modal-images-biens" data-toggle="modal">Visualiser les images des acquisitions/réalisations</a>
-                    <legend> </legend>
-                </fieldset> --}}
+               
 
             
         </form>
@@ -438,4 +437,43 @@
                     }
                 });
         }
+        function verifier_montant(montant_champ, devi_id,  facture_id ){
+           
+        var montant= $("#"+montant_champ).val();
+        var devi_id= $("#"+devi_id).val();
+        var facture_id= $("#"+facture_id).val();
+       var mode_paiement= $('#mode_de_paiement').val();
+       // alert(mode_paiement);
+//Verifier si le montant de la demande de paiment est supérieur à 2 million le paiement mobile n'est pas possible
+    if(mode_paiement=='paiement_mobile' && (montant > 2000000)){
+            alert('Cette demande de paiement sera rejetée le car les paiements mobiles ne doivent pas exceder 2 million ')
+        }
+       if(montant > 2000000){
+          $('#mode_de_paiement option[value="paiement_mobile"]').attr('disabled', true);;
+        }
+        else{
+          $('#mode_de_paiement option[value="paiement_mobile"]').attr('disabled', false);;
+        }
+        var url = "{{ route('verifier_montant') }}";
+        $.ajax({
+                 url: url,
+                  type: 'GET',
+                  data: {montant: montant, devi_id:devi_id, facture_id:facture_id},
+                  dataType: 'json',
+                  error:function(data){alert("Erreur");},
+                  success: function (data) {
+                   if(data==1){
+                          $(".depassement_du_montant_du_devis").show();
+                            $(".soumettre_facture").prop('disabled', true);
+                          format_montant(montant_champ);
+                   }
+                   else{
+                        $(".depassement_du_montant_du_devis").hide();
+                          $(".soumettre_facture").prop('disabled', false);
+                          format_montant(montant_champ);
+                   }
+                  }
+                  });
+
+  }
 </script>

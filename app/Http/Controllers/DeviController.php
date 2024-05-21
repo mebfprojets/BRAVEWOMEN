@@ -12,6 +12,7 @@ use App\Models\Projet;
 use App\Models\ImageSuivi; 
 use App\Models\Prestataire;
 use App\Models\Historiquedevi;
+use App\Models\Promotrice;
 use App\Models\SuiviExecutionDevi;
 use Illuminate\Http\Request;
 use App\Models\InvestissementProjet;
@@ -69,8 +70,19 @@ class DeviController extends Controller
     }
  public function liste_devis_par_promoteur(){
     $prestataires= Prestataire::all();
-    $entreprise= Entreprise::where('code_promoteur', Auth::user()->code_promoteur)->where('decision_du_comite_phase1','selectionnee')->first();   
-    $devis= Devi::where('user_id', Auth::user()->id)->orderBy('updated_at', 'desc')->get();
+    $promoteur= Promotrice::where('code_promoteur', Auth::user()->code_promoteur)->first();
+    $entreprise= Entreprise::where('code_promoteur', Auth::user()->code_promoteur)->where('decision_du_comite_phase1','selectionnee')->first();
+    $devis_ids= DB::table('entreprises')
+                        ->join('devis','devis.entreprise_id','=','entreprises.id')
+                        ->where("entreprises.code_promoteur", $promoteur->code_promoteur)
+                        ->orderBy('devis.updated_at', 'desc')
+                        ->select('devis.id')
+                        ->get(); 
+                        $devis=[];
+                        foreach($devis_ids as $dev){
+                            $devi= Devi::find($dev->id);
+                            $devis[]= $devi;
+                        }  
     $ligne_projets= InvestissementProjet::where('statut','validé')->where('projet_id', $entreprise->projet->id)->get();
      return view('public.devis_beneficiaire',compact('ligne_projets',"devis",'entreprise','prestataires','ligne_projets'));
  }
@@ -94,10 +106,10 @@ else{
  public function analyse_de_devis(Request $request){
     $statut= $request->statut;
     if($statut){
-        $devis = Devi::orderBy('updated_at', 'desc')->where('statut',$statut)->get();
+        $devis = Devi::orderBy('updated_at', 'asc')->where('statut',$statut)->get();
     }
     else{
-        $devis = Devi::orderBy('updated_at', 'desc')->get();
+        $devis = Devi::orderBy('updated_at', 'asc')->get();
     }
     return view("devi.aanalyser", compact('devis'));
  }
@@ -124,6 +136,7 @@ else{
         }else{
             $statut= 'soumis';
         }
+        
         if ($request->hasFile('copie_devis') && $request->hasFile('fiche_analyse') && $request->hasFile('copie_devis2') && $request->hasFile('copie_devis1'))  {
             $designation=$request->designation;
 
@@ -157,7 +170,8 @@ else{
              'nombre_de_paiement'=>$request->nombre_depaiement,
              'copie_devis_1'=>$copie_devis1,
              'copie_devis_2'=>$copie_devis2,
-             "numero_devis"=>$code_devis
+             "numero_devis"=>$code_devis,
+             "type_marche"=>$request->type_de_marche
          ]);
          Insertion_Journal('Devis','Création');
         if($devi->entreprise->region_affectation!=null){
@@ -267,7 +281,8 @@ else{
             'montant_devis'=>reformater_montant2($request->montant_devis),
             'nombre_de_paiement'=>$request->nbre_paiement,
             //'montant_avance'=>reformater_montant2($request->avance_exige),
-            'statut'=> $statut
+            'statut'=> $statut, 
+            "type_marche"=>$request->type_de_marche
         ]);
         Insertion_Journal('Devis','Modification');
         if($devi->entreprise->region_affectation!=null){
@@ -356,15 +371,14 @@ else{
         $titre='Chef de Zone';
         $mail=$chef_de_zone->email;
         $typeelt='devi';
-       // $e_msg="Vous avez des devis qui sont en attentes de validation.";
+        $new_statut=$devi->statut;
         ($devi->statut == 'soumis')?($action='chef_de_zone'):($action='autre');
         if($request->raison || $request->observation){
-            if($devi->statut=='transmis_au_chef_de_projet'){
+            if($devi->statut=='transmis_au_chef_de_projet' && return_role_adequat(env('ID_ROLE_CHEF_DE_PROJET'))){
                 $new_statut='soumis';
                 $titre='Chef de Zone';
-                //$mail= $mail_chef_de_zone;
             }
-            else{
+            elseif($devi->statut=='soumis' && return_role_adequat(env('ID_ROLE_CHEF_DE_ZONE'))){
                 $new_statut='rejeté';
                 $titre='Promotrice';
                 $e_msg="Votre devis à été rejeté. Bien vouloir prendre en compte les amendements et les resoumettre";
@@ -375,21 +389,17 @@ else{
                    'motif_du_rejet'=>$request->raison, 
                    'observation'=> $request->observation,  
                ]);
-               Insertion_Journal('Devis','Modification');
+            Insertion_Journal('Devis','Modification');
             $this->create_historique($devi->id, $new_statut, $request->raison, $request->observation );
             Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$devi->id,$typeelt));
-           
-
         }
         else{
-            
-            if($devi->statut=='soumis'){
-                //dd($devi->statut);
+            if($devi->statut=='soumis' && return_role_adequat(env('ID_ROLE_CHEF_DE_ZONE'))){
                 $new_statut='transmis_au_chef_de_projet';
                 $titre='Chef de projet';
                 $mail= env('emailChefdeProjet');
             }
-            elseif($devi->statut =='transmis_au_chef_de_projet'){
+            elseif($devi->statut =='transmis_au_chef_de_projet' && return_role_adequat(env('ID_ROLE_CHEF_DE_PROJET'))){
                 if($montant_total_accorde_du_projet_de_lentreprise > $montant_total_des_accomptes_verses_par_entreprise *2){
                     flash("Ce devis ne peut etre validé car la mobilisation de la contrepartie n'est pas terminée !!!")->error();
                     return 0;
@@ -401,11 +411,9 @@ else{
                     $mail=$mail_promotrice;
                 }
             }
-            
             $devi->update([
                 'statut'=>$new_statut
             ]);
-           // dd($mail);
             Insertion_Journal('Devis','Modification');
             $this->create_historique($devi->id, $new_statut, null, null);
             Mail::to($mail)->queue(new AnalyseMail($titre, $e_msg, 'mails.analyseMail',$devi->id,$typeelt));
@@ -586,5 +594,25 @@ public function verifier_montant_devis(Request $request){
         return ($montant_total_devissoumis_par_entreprise + $montant > $total_montant_accompte_verse * 2) ? 1 : 0; 
     }
    
-    
+public function rejeter_le_devis_apres_validation(Devi $devi){
+    if (Auth::user()->can('parametre.create')) {
+        $devi->update([
+            'statut'=>'rejeté'
+        ]);
+        $this->create_historique($devi->id,'rejeté', null,'suite pour correction');
+        $factures= $devi->factures;
+        foreach($factures as $facture){
+            $facture->update([
+                'statut'=>'rejeté'
+            ]);
+            $this->create_historique($facture->id,'rejeté',null ,'suite pour correction');
+        }
+        flash("Le Devis a éte rejeteé  ainsi que toutes ses factures . !!!")->error();
+        return redirect()->back();
+    }
+        else{
+            flash("Desolé vous n'avez pas les droits requis pour faire cette action. !!!")->error();
+            return redirect()->back();
+        }
+    }
 }

@@ -934,6 +934,7 @@ $('.input_banque').datepicker({
 
 });
 function verifier_montant(montant_champ, devi_id,  facture_id ){
+   
         var montant= $("#"+montant_champ).val();
         var devi_id= $("#"+devi_id).val();
         var facture_id= $("#"+facture_id).val();
@@ -962,6 +963,7 @@ function verifier_montant(montant_champ, devi_id,  facture_id ){
                    if(data==1){
                           $(".depassement_du_montant_du_devis").show();
                             $(".soumettre_facture").prop('disabled', true);
+                            $("#"+montant_champ).val("");
                           format_montant(montant_champ);
                    }
                    else{

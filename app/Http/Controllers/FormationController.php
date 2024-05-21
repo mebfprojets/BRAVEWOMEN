@@ -172,12 +172,27 @@ class FormationController extends Controller
     }
     if($request->typeentreprise=='mpme'){
     // Recuperer la liste des entreprises rétenues pour la formation 
-        $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->where('region', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+        $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
+                                    ->where('participer_a_la_formation',null)
+                                    ->where('entrepriseaop',null)
+                                    ->Where(function ($query) {
+                                        $query->orwhere('region',Auth::user()->zone)
+                                        ->orwhere('region_affectation', Auth::user()->zone);
+                                    })
+                                    ->orderBy('updated_at', 'desc')->get();
+       
     //dans liste des entreprises retenues exclure la liste des entreprises qui sont deja programmées pour une session
     } else{
-        $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',"!=",null)->where('region', Auth::user()->zone)->orWhere('region_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+        $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
+                                    ->where('entrepriseaop',"!=",null)
+                                    ->where('participer_a_la_formation',null)
+                                    ->Where(function ($query) {
+                                        $query->orwhere('region',Auth::user()->zone)
+                                        ->orwhere('region_affectation', Auth::user()->zone);
+                                    })->orderBy('updated_at', 'desc')->get();
        
     }
+   // dd($entreprises);
         $entreprises_retenues= $entreprises->except($id_entreprises);
         //dd( count($entreprises_retenues));
 

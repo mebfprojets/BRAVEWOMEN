@@ -66,14 +66,14 @@
                 <ul>
                  <li class="dropdown"><a href="#modal-Fin-souscription"><span>MPME</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                       <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li>  
-                    {{-- <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li>  --}}
+                       {{-- <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li>   --}}
+                        <li><a href="{{ route("souscription") }}">S'ENREGISTRER</a></li>  
                     </ul>
                   </li> 
                   <li class="dropdown"><a href="#"><span>AOP/LEADER</span> <i class="bi bi-chevron-right"></i></a>
                     <ul>
-                        <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li> 
-                        {{-- <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li>  --}}
+                         <li><a href="#modal-Fin-souscription" data-toggle="modal"  data-toggle="tooltip">S'ENREGISTRER</a></li>  
+                         {{-- <li><a href="{{ route("responsableaop.create") }}">S'ENREGISTRER</a></li>  --}}
                     </ul>
                   </li>
                 </ul>
@@ -81,8 +81,8 @@
               <li class="dropdown"><a href="#"><span>POUSUIVRE</span> <i class="bi bi-chevron-down"></i></a>
                 <ul>
                    
-                    {{-- <li><a href="{{ route("afficherform_mpme") }}">EN MPME</a></li> 
-                    <li><a href="{{ route("afficherform") }}">EN AOP/LEADER</a></li>  --}}
+                   <li><a href="{{ route("afficherform_mpme") }}">EN MPME</a></li> 
+                    <li><a href="{{ route("afficherform") }}">EN AOP/LEADER</a></li>  
                 </ul>  
               </li>
               <li><a class="nav-link scrollto @yield('active_result')" href="#modal-consulter-resultat" data-toggle="modal">RESULTAT</a></li>

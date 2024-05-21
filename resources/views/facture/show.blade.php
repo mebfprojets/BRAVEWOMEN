@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-4">
-                                  <label>Taux de réalisation:</label>
+                                  <label>Taux de réalisation :</label>
                                 </div>
                                 <div class="col-sm-8 mb-3 mb-sm-0">
                                   <label class="fb"> {{ $facture->devi->taux_de_realisation }}</label>
@@ -114,7 +114,7 @@
         <table  class="table table-vcenter table-condensed table-bordered listepdf">
             <thead>
                     <tr>
-                        
+                        <th>Num</th>
                         <th>Utilisateur</th>
                         <th>statut</th>
                         <th>Observations</th>
@@ -122,8 +122,15 @@
                     </tr>
             </thead>
             <tbody>
+                    @php
+                        $i=0;
+                    @endphp
                 @foreach($historiques as $historique)
+                    @php
+                        $i++;
+                    @endphp
                     <tr>
+                        <td>{{ $i }}</td>
                         <td>{{ getusername($historique->user_id) }}</td>
                         <td>{{ $historique->statut }}</td>
                         <td>{{ $historique->observation }}</td>
