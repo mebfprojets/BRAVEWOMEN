@@ -13,6 +13,13 @@
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left text-warning">
+                            <strong>{{ $facture_soumis_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_soumis_par_banques->sum('montant')) }})<br><small> Factures Soumises</small>
+                        </h4>
+                    </div>
+                </a>
+                <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
+                    <div class="widget-simple">
+                        <h4 class="text-left text-warning">
                             <strong>{{ $facture_payes_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_payes_par_banques->sum('montant')) }})<br><small> Factures Payées</small>
                         </h4>
                     </div>
@@ -25,11 +32,12 @@
                         </h4>
                     </div>
                 </a>
+                
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left">
                             <strong> @if(($subvention_mobilise_par_banques->sum('montant') + $contrepartie_mobilise_par_banques->sum('montant')!=0))
-                                {{  formater_deux_chiffres(($subvention_mobilise_par_banques->sum('montant') + $contrepartie_mobilise_par_banques->sum('montant'))/$montant_a_mobilise_par_banque->sum('montant')*100)}} %
+                                {{  formater_deux_chiffres(($subvention_mobilise_par_banques->sum('montant') + $contrepartie_mobilise_par_banques->sum('montant'))/(env('total_enveloppe_global')*2)*100)}} %
                                 @else
                                     0 %
                                 @endif
@@ -39,15 +47,14 @@
                 </a>
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
-                        
                         <h4 class="text-left text-success">
                             <strong>
                                 @if(($taux_de_consommation_par_banque->sum('montant_a_mobilise')!=0))
-                                    {{  formater_deux_chiffres($taux_de_consommation_par_banque->sum('montant_decaisse')/$taux_de_consommation_par_banque->sum('montant_a_mobilise')*100)}} %
+                                    {{ formater_deux_chiffres($taux_de_consommation_par_banque->sum('montant_decaisse')/(env('total_enveloppe_global')*2)*100)}} %
                                 @else
                                     0 %
                                 @endif
-                            </strong><br><small>Taux de consommation</small>
+                            </strong><br><small>Taux de consommation de la subvention</small>
 
                         </h4>
                     </div>
@@ -69,34 +76,22 @@
                 <tr style="background-color: #52836338">
                     <th>Banque</th>
                     @foreach ($financement_par_banks as $financement_par_bank)
-                        <th style="width:25%"> {{ $financement_par_bank->nom_banque}}</th>
+                        <th style="width:25%"> {{ return_sigle_bank($financement_par_bank->nom_banque)}}</th>
                     @endforeach
                     <th style="width:25%"> Total</th>
 
                 </tr>
                 <tr>
-                    <th>Projets validés au comité <span data-toggle="tooltip" title="La situation des finacements à mobiliser sur la base des projets validés par le comité de selection."><i class="fa fa-info-circle"></i></span></th>
+                    <th>Contrepartie á mobiliser <span data-toggle="tooltip" title="La situation des finacements à mobiliser sur la base des projets validés par le comité de selection."><i class="fa fa-info-circle"></i></span></th>
                     @foreach ($montant_projet_valide_par_comites as $montant_projet_valide_par_comite)
-                        <td>{{ format_prix($montant_projet_valide_par_comite->montant)}}</td>
+                        <td>{{ format_prix($montant_projet_valide_par_comite->montant/2)}}</td>
                         @php
                           
                         @endphp
                     @endforeach
-                    <td>{{ format_prix($montant_projet_valide_par_comites->sum('montant')) }}</td>
+                    <td>{{ format_prix($montant_projet_valide_par_comites->sum('montant')/2) }}</td>
                 </tr>
-                <tr>
-                    <th>Financement à mobiliser <span data-toggle="tooltip" title="La situation des finacements à mobiliser sur la base des accords bénéficiaires signés."><i class="fa fa-info-circle"></i></span></th>
-                    @php
-                        $somme=0;
-                    @endphp 
-                    @foreach ($montant_a_mobilise_par_banque as $montant_a_mobilise_par_bank)
-                        <td>{{ format_prix($montant_a_mobilise_par_bank->montant)}}</td>
-                        @php
-                           $somme += $montant_a_mobilise_par_bank->montant
-                        @endphp
-                    @endforeach 
-                        <td>{{ format_prix($somme)}}</td>
-                </tr>
+    
                
                 <tr>
                     <th>Contrepartie mobilisée</th>
@@ -115,11 +110,11 @@
                     @php
                         $somme=0;
                     @endphp
-                    <th>Subvention debloquée</th>
-                    @foreach ($financement_par_banks as $financement_par_bank)
-                        <td>{{ format_prix($financement_par_bank->montant_subvention)}}</td>
+                    <th>Subvention consommée</th>
+                    @foreach ($facture_payes_par_banques as $facture_payes_par_banque)
+                        <td>{{ format_prix($facture_payes_par_banque->montant/2)}}</td>
                         @php
-                            $somme += $financement_par_bank->montant_subvention
+                            $somme += $facture_payes_par_banque->montant/2
                          @endphp
                     @endforeach 
                         <td>{{ format_prix($somme)}}</td>
@@ -128,16 +123,28 @@
                     @php
                         $somme=0;
                     @endphp
-                    <th>Financement mobilisé</th>
-                    @foreach ($financement_par_banks as $financement_par_bank)
-                        <td>{{ format_prix($financement_par_bank->montant_subvention +  $financement_par_bank->montant_contrepartie)}}</td>
-                        @php
-                            $somme += $financement_par_bank->montant_subvention +  $financement_par_bank->montant_contrepartie
-                        @endphp
-                    @endforeach 
-                        <td>{{ format_prix($somme)}}</td>
-                </tr>
+                    <tr style="background-color: #52836338">
+                        <th >Taux d'exécution des projets</th>
+                        @foreach ($taux_de_consommation_par_banque as $taux_de_consommation_par_bank)
+                            <td>
+                                    @if($taux_de_consommation_par_bank->montant_decaisse ==null)
+                                        0 %
+                                    @else
+                                        {{ formater_deux_chiffres($taux_de_consommation_par_bank->montant_decaisse/$taux_de_consommation_par_bank->montant_a_mobilise *100 )}} %
+                                    @endif
+                             </td>
+                        @endforeach 
+                        <td>
+                            {{ formater_deux_chiffres($taux_de_consommation_par_banque->sum('montant_decaisse')/$taux_de_consommation_par_banque->sum('montant_a_mobilise') *100 )}} %
+                        </td>
+                    </tr>
             </table>
+        </div>
+</div>
+<div class="row">
+    {{-- <p class="col-md-offset-4 col-md-10 titre_tableau">Statut des factures par banque</p> --}}
+        <div class="col-md-10" id='statut_des_factures_par_bank'>
+
         </div>
 </div>
         <div class="col-md-12">
@@ -146,14 +153,14 @@
                 <div class="block-options pull-right">
                         <span class="label label-success"><strong>{{ format_prix($taux_de_consommation_par_banque->sum('montant_decaisse')) }}</strong></span>
                     </div>
-                    <h2><i class="fa fa-money"></i> <strong>Situation de consommation des fonds par banque</strong></h2>
+                    <h2><i class="fa fa-money"></i> <strong>Details des factures par Banque</strong></h2>
                 </div>
            
             <table  class="table table-bordered table-striped table-vcenter " >
                 <tr style="background-color: #52836338">
                     <th>Banque</th>
                     @foreach ($facture_valides_par_banques as $facture_valides_par_bank)
-                        <th style="width:25%"> {{ $facture_valides_par_bank->nom_banque}}</th>
+                        <th style="width:25%"> {{ return_sigle_bank($facture_valides_par_bank->nom_banque)}}</th>
                     @endforeach
                 </tr>
                 <tr>
@@ -190,7 +197,6 @@
                 <tr style="background-color: #52836338">
                     <th >Taux de consommation des fonds</th>
                     @foreach ($taux_de_consommation_par_banque as $taux_de_consommation_par_bank)
-                        
                         <td>
                                 @if($taux_de_consommation_par_bank->montant_decaisse ==null)
                                     0 %
@@ -201,6 +207,7 @@
                        
                     @endforeach 
                 </tr>
+                
                 
             </table>
         </div>
@@ -239,6 +246,91 @@
 @endsection
 @section('script_additionnel')
 <script language = "JavaScript">
+    var url = "{{ route('situation_des_factures') }}"
+      $.ajax({
+                 url: url,
+                 type: 'GET',
+                 dataType: 'json',
+                 error:function(data){
+                    if (xhr.status == 401) {
+                        window.location.href = 'https://www.bravewomen.bf/login';
+                    }
+                },
+                 success: function (donnee) {
+                        var soumises= [];
+                        var payees= [];
+                        var  en_attente_de_paiement= [];
+                        var donnch= new Array();
+                        var status = new Array();
+                    for(var i=0; i<donnee.length; i++)
+                    {
+                        soumises.push(parseInt(donnee[i].nbre_facture_soumis_aux_bank));
+                        payees.push(parseInt(donnee[i].nbre_facture_payee));
+                        en_attente_de_paiement.push(parseInt(donnee[i].nbre_facture_en_attente));
+                    }
+                    donnch.push({
+                                name: 'soumises',
+                                data:soumises,
+                                color:'blue',
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            })
+                    donnch.push({
+                                name: 'payees',
+                                data:payees,
+                                color:'green',
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            })
+                    donnch.push({
+                                name: 'En attente de paiement',
+                                data:en_attente_de_paiement,
+                                color:'red',
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            })
+                   
+                    console.log(donnch);
+                    for(var i=0; i<donnee.length; i++)
+                            {
+                                    status[i] = donnee[i].nom_banque
+                            }
+                    
+                    Highcharts.chart('statut_des_factures_par_bank', {
+                        chart: {
+                                    type: 'column'
+                                },
+                        xAxis: {
+                                 categories: status
+                            },
+                        title: {
+                            text: 'Statut des factures par banque'
+                        },
+                        credits : {
+                            enabled: false
+                        },
+                       
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                    showInLegend: true
+                            }
+                        },
+                        series:donnch
+                    });
+
+}
+
+});      
+</script>
+<script language = "JavaScript">
     var url = "{{ route('demandes.rejete_par_les_banques') }}"
       $.ajax({
                  url: url,
@@ -257,7 +349,12 @@
                     {
                       donnch.push({
                                 name: donnee[i].nom_banque,
-                                y:  parseInt(donnee[i].nombre_de_facture)}  )
+                                y:  parseInt(donnee[i].nombre_de_facture),
+                                color:'#602239',
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            }  )
                     }
                    // console.log(donnch)
                     for(var i=0; i<donnee.length; i++)
@@ -316,9 +413,30 @@
                         
                     for(var i=0; i<donnee.length; i++)
                     {
+                        if(donnee[i].statut_paiement== 'Dans les delais'){
+                                var cl='green'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard [0,3] jrs'){
+                                var cl='#d3d326'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard ]3,7] jrs'){
+                                var cl='#d8b71f'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard ]7,10] jrs'){
+                                var cl='orange'
+                        }
+                        else{
+                            var cl='red'
+                        }
                       donnch.push({
                                 name: donnee[i].statut_paiement,
-                                y:  parseInt(donnee[i].nombre)}  )
+                                y:  parseInt(donnee[i].nombre), 
+                                color:cl,
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            } 
+                           )
                     }
                    // console.log(donnch)
                     for(var i=0; i<donnee.length; i++)
@@ -344,7 +462,7 @@
                                 allowPointSelect: true,
                                 cursor: 'pointer',
                                 dataLabels: {
-                                    enabled: false
+                                    enabled: true
                                 },
                                     showInLegend: true
                             }
@@ -376,9 +494,29 @@
                         var status = new Array();
                     for(var i=0; i<donnee.length; i++)
                     {
+                        if(donnee[i].statut_paiement== 'Dans les delais'){
+                                var cl='green'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard [0,3] jrs'){
+                                var cl='#d3d326'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard ]3,7] jrs'){
+                                var cl='#d8b71f'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard ]7,10] jrs'){
+                                var cl='orange'
+                        }
+                        else{
+                            var cl='red'
+                        }
                       donnch.push({
                                 name: donnee[i].statut_paiement,
-                                y:  parseInt(donnee[i].nombre)} )
+                                y:  parseInt(donnee[i].nombre),
+                                color:cl,
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            } )
                     }
                     for(var i=0; i<donnee.length; i++)
                             {
@@ -398,6 +536,7 @@
                         credits : {
                             enabled: false
                         },
+                        
                         // tooltip: {
                         //     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                         // },
@@ -415,7 +554,8 @@
                             name: 'Factures',
                             colorByPoint: true,
                             data: donnch
-                        }]
+                        }],
+                        
                     });
 
 }
@@ -438,9 +578,29 @@
                         var status = new Array();
                     for(var i=0; i<donnee.length; i++)
                     {
+                        if(donnee[i].statut_paiement== 'Dans les delais'){
+                                var cl='green'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard [0,3] jrs'){
+                                var cl='#d3d326'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard ]3,7] jrs'){
+                                var cl='#d8b71f'
+                        }
+                        else if(donnee[i].statut_paiement== 'Retard ]7,10] jrs'){
+                                var cl='orange'
+                        }
+                        else{
+                            var cl='red'
+                        }
                       donnch.push({
                                 name: donnee[i].statut_paiement,
-                                y:  parseInt(donnee[i].nombre)} )
+                                y:  parseInt(donnee[i].nombre),
+                                color:cl,
+                                dataLabels: {
+                                enabled: true,
+                                }
+                            } )
                     }
                     for(var i=0; i<donnee.length; i++)
                             {

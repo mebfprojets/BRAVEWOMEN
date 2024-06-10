@@ -11,8 +11,8 @@
             <div class="col-xs-12 block-content" >
                 @if($entreprise->conforme== null)
                 @can('avisqualitative_ugp', Auth::user())
-                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 2)" title="non conforme" class="btn btn-md btn-warning">Non conforme<i class="gi gi-remove_2"></i></a>
-                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Conforme<i class="fa fa-check"></i></a>
+                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 2)" title="non conforme" class="btn btn-md btn-warning">Inéligible<i class="gi gi-remove_2"></i></a>
+                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Eligible<i class="fa fa-check"></i></a>
                 @endcan
                 @endif
         @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif === null)) 
@@ -1287,17 +1287,17 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div  id="condanation" class="form-group">
-                                        <p class="col-md-7 control-label labdetail"><span class="">Conformité au règlements du bailleur : </span> </p>
-                                            <p class="col-md-5" >
+                                        <p class="col-md-6 control-label labdetail"><span class="">Eligibilité : </span> </p>
+                                            <p class="col-md-6" >
                                             <span class="valdetail">
                                             @empty($entreprise->conforme)
                                                 Information non disponible
                                             @else
                                             @if($entreprise->conforme==1)
-                                                 Conforme
+                                                 Eligible
                                             @endif
                                             @if($entreprise->conforme==2)
-                                                Non conforme
+                                                Inéligible
                                             @endif
                                             @endempty
                                         </span></p>
@@ -1309,7 +1309,11 @@
                                             @empty($entreprise->decision_ugp)
                                                 Informations non disponible
                                              @else
-                                                 {{$entreprise->decision_ugp}}
+                                             @if ($entreprise->decision_ugp='éligible')
+                                                        Favorable
+                                            @else
+                                                    Défavorable
+                                            @endif
                                              @endempty
                                         </span></p>
                                     </div>

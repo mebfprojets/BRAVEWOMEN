@@ -156,8 +156,7 @@
 @endsection
 <script>
   function cacher_lien_video_ou_file_input() {
-  
-         if($("#type_document").val() == 7147){
+         if($("#type_document").val() == 7151){
             $('#lien_video').show();
             $("#doc_div").hide();
          }

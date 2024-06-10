@@ -191,9 +191,15 @@
                     </tr>
             </thead>
             <tbody>
+                        @php
+                        $i=0;
+                        @endphp
                 @foreach($historiques as $historique)
+                         @php
+                         $i++;
+                         @endphp
                     <tr>
-                        <td>N</td>
+                        <td>{{ $i }}</td>
                         <td>{{ format_date($historique->date_statut) }}</td>
                         <td>{{ getusername($historique->user_id) }}</td>
                         <td>{{ $historique->statut }}</td>

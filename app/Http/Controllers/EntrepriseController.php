@@ -187,7 +187,7 @@ else{
      */
     public function store(Request $request)
     {
-        //return redirect()->back();
+        return redirect()->back();
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
@@ -308,8 +308,6 @@ else{
                 ]);
             }
         }
-        
-
         foreach($effectifs as $effectif){
             foreach($annees as $annee){
                 $homme=$effectif->id.$annee->id."homme";
@@ -439,15 +437,9 @@ $this->createEntreprise($entreprise->id,"Chiffre d'affaire", $note_chiffre_daffa
 $this->createEntreprise($entreprise->id,"Création d'emploi", $note_effectif);
 $note_totale= $note_formation_en_rapport_avec_activite + $note_nombre_annee_experience+
 $note_secteur_activite+ $note_entreprise_formalise + $note_outil_de_suivi+$note_affecte_par_covid+$note_affecte_par_securite+$note_mobililise_contrepartie+$note_chiffre_daffaire+$note_effectif;
-// if($note_totale >= env("SCORE_MIN_VALIDATION_UGP")){
-//     $decision_ugp="éligible";
-// }
-// else{
-//     $decision_ugp="inéligible";
-// }
  $entreprise->update([
      "noteTotale"=>$note_totale,
-   // "decision_ugp"=> $decision_ugp
+
  ]);
 $entreprise=$entreprise->id;
 $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where("aopOuleader","mpme")->where("conforme",null)->get();
@@ -455,16 +447,16 @@ $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_prom
         $nbre_ent_nn_traite = count($entreprise_nn_traite);
 
 return view("validateStep1", compact("promoteur","entreprise","nbre_ent_nn_traite"));
-       }
+    }
 else{
-    return view("validateStep2", compact("promoteur","entreprise") );
+    return view("validateStep2", compact("promoteur") );
        }
 }
 
 
     public function genereRecpisse(Request $request)
     {
-        //return route()->back(); 
+        return route()->back(); 
         $promoteur= Promotrice::where("slug", $request->promoteur)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
         $chef_de_zone= User::where("zone",$entreprise->region)->first();
@@ -587,7 +579,7 @@ else{
      */
     public function update(Request $request, Entreprise $entreprise)
     {
-        //return redirect()->back();
+        return redirect()->back();
         $promoteur= Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->where("description_du_projet",null)->orderBy('created_at','desc')->first();
      if($entreprise->aopOuleader == "mpme"){

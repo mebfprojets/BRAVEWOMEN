@@ -104,7 +104,7 @@
                                 <div class="icon">
                                   <i class="ion ion-stats-bars"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=mpme" class="small-box-footer">Plus details <i class="fa fa-long-arrow-right"></i></a>
+                                <a href="{{ route('detail_dashboard') }}?type_detail=mpme" class="small-box-footer block1">Plus details <i class="fa fa-long-arrow-right"></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -118,7 +118,7 @@
                                 <div class="icon">
                                   <i class="ion ion-stats-bars"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=pca" class="small-box-footer">Plus de details <i class="fa fa-long-arrow-right"></i></i></a>
+                                <a href="{{ route('detail_dashboard') }}?type_detail=pca" class="small-box-footer block2">Plus de details <i class="fa fa-long-arrow-right"></i></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -126,13 +126,13 @@
 
                               <div class="small-box bg-default">
                                 <div class="inner">
-                                  <h3>{{ format_prix($fond_mobilise)  }} FCFA</h3>
-                                  <p> Mobilisés</p>
+                                  <h3>{{ format_prix($fond_mobilise)}} FCFA</h3>
+                                  <p>Ressources Mobilisées</p>
                                 </div>
                                 <div class="icon">
                                   <i class="ion ion ion-stats-bars"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=finance" class="small-box-footer">Plus de details <i class="fa fa-long-arrow-right"></i></a>
+                                <a href="{{ route('detail_dashboard') }}?type_detail=finance" class="small-box-footer block3">Plus de details <i class="fa fa-long-arrow-right"></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -141,13 +141,12 @@
                               <div class="small-box bg-default">
                                 <div class="inner">
                                   <h3>Impacts</h3>
-                  
                                   <p>Socials/Economique</p>
                                 </div>
                                 <div class="icon">
                                   <i class="ion ion-pie-graph"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=impact" class="small-box-footer">Plus de details <i class="fa fa-long-arrow-right"></i></a>
+                                <a href="{{ route('detail_dashboard') }}?type_detail=impact" class="small-box-footer block4">Plus de details <i class="fa fa-long-arrow-right"></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -836,7 +835,7 @@ responsive: {
 <script language = "JavaScript">
     function entreprise_aformer(type_entreprise, valeur_de_forme){
         (type_entreprise=="mpme")?(categorie_entreprise="Les MPME"):(categorie_entreprise="Les Entreprises leaders et les AOP");
-        (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="Selectionnées pour la formation ");
+        (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="sélectionnées pour la formation ");
         var url = "{{ route('souscriptionretenueparsecteuractivite') }}";
           $.ajax({
                             url: url,
@@ -1062,7 +1061,8 @@ $.ajax({
     <script language = "JavaScript">
         function dashboardaopenregistre(type_entreprise, statut){
             var url = "{{ route('aopleader.enregistreparsecteuractivite') }}";
-            (type_entreprise=='mpme')?(type="des MPME"):(type="des AOP");
+            (type_entreprise=='mpme')?(type="MPME"):(type="AOP");
+            (statut=='nostatut')?(result="enregistrés"):(result="ajournés");
 
               $.ajax({
                                 url: url,
@@ -1091,7 +1091,7 @@ $.ajax({
                                      categories: secteur
                                 },
                                 title: {
-                                    text:  "La repartition des"+ " " + type + " " + "enregistrés par secteur d'activité"
+                                    text:  "La répartition des"+ " " + type + " " + result +" "+"par secteur d'activité"
                                 },
                                 plotOptions: {
                                     pie: {
@@ -1140,7 +1140,7 @@ $.ajax({
                                      categories: zone
                                 },
                                 title: {
-                                    text: "La repartition des"+ " " + type + " " + "enregistrés par localités"
+                                    text: "La répartition des"+ " " + type + " " + result +" "+ "par localités"
                                 },
                               
                                 plotOptions: {

@@ -25,7 +25,7 @@ class FormationController extends Controller
     {
         if (Auth::user()->can('formation.listerFormation'))
         {
-            $formations= Formation::where("zone_concernee", Auth::user()->zone)->get();
+            $formations= Formation::where("zone_concernee", Auth::user()->zone)->orderBy('created_at','desc')->get();
             return view("formations.index", compact("formations"));
         }
         return redirect()->back();
@@ -173,7 +173,7 @@ class FormationController extends Controller
     if($request->typeentreprise=='mpme'){
     // Recuperer la liste des entreprises rétenues pour la formation 
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
-                                    ->where('participer_a_la_formation',null)
+                                    //->where('participer_a_la_formation',null)
                                     ->where('entrepriseaop',null)
                                     ->Where(function ($query) {
                                         $query->orwhere('region',Auth::user()->zone)
@@ -185,7 +185,7 @@ class FormationController extends Controller
     } else{
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
                                     ->where('entrepriseaop',"!=",null)
-                                    ->where('participer_a_la_formation',null)
+                                    //->where('participer_a_la_formation',null)
                                     ->Where(function ($query) {
                                         $query->orwhere('region',Auth::user()->zone)
                                         ->orwhere('region_affectation', Auth::user()->zone);
@@ -199,11 +199,7 @@ class FormationController extends Controller
 // if(count($entreprises_retenues)>0){
     $participants = ParticipantFormation::where("formation_id", $formation->id)->get();
     return view("formations.ajouterParticipant", compact("formation","entreprises_retenues", "participants") );
-//  }
-//  else{
-//      flash("Il n'ya pas des entreprise disponible")->error();
-//      return redirect()->back();
-//  }
+
   }
 else{
     flash("Vous n'a pas l'autorisation d'effectuer cette action bien vouloir consulter l'administrateur")->error();

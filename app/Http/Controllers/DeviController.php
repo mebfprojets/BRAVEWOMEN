@@ -29,9 +29,9 @@ class DeviController extends Controller
     {
         $this->middleware('auth');
     }
-    public function get_file_emplacement($input_name,$file, $designation,)
+    public function get_file_emplacement($code_promoteur,$input_name,$file, $designation,)
     {
-        $code_promoteur=Auth::user()->code_promoteur;
+       // $code_promoteur=Auth::user()->code_promoteur;
         $extension=$file->getClientOriginalExtension();
         $fileName = $designation.'.'.$extension;
         $emplacement='public/'.$input_name.'/'.$code_promoteur; 
@@ -137,14 +137,6 @@ else{
             $statut= 'soumis';
         }
         
-        if ($request->hasFile('copie_devis') && $request->hasFile('fiche_analyse') && $request->hasFile('copie_devis2') && $request->hasFile('copie_devis1'))  {
-            $designation=$request->designation;
-
-           $copie_devis=$this->get_file_emplacement('copie_devis',$request->file('copie_devis'),$designation);
-           $fiche_analyse= $this->get_file_emplacement('fiche_analyse',$request->file('fiche_analyse'),$designation);
-           $copie_devis1= $this->get_file_emplacement('copie_devis1',$request->file('copie_devis1'),$designation);
-           $copie_devis2= $this->get_file_emplacement('copie_devis2',$request->file('copie_devis2'),$designation);
-        }
         $lastOne = DB::table('devis')->latest('id')->first();
         if($lastOne){
         $code_devis="BWBF-DEV-000". $lastOne->id+1;}
@@ -152,6 +144,13 @@ else{
             $code_devis="BWBF-DEV-000".'0';
         }
        $entreprise= Entreprise::find($request->entreprise_id);
+       if ($request->hasFile('copie_devis') && $request->hasFile('fiche_analyse') && $request->hasFile('copie_devis2') && $request->hasFile('copie_devis1'))  {
+        $designation=$request->designation;
+       $copie_devis=$this->get_file_emplacement($entreprise->code_promoteur,'copie_devis',$request->file('copie_devis'),$designation);
+       $fiche_analyse= $this->get_file_emplacement($entreprise->code_promoteur,'fiche_analyse',$request->file('fiche_analyse'),$designation);
+       $copie_devis1= $this->get_file_emplacement($entreprise->code_promoteur,'copie_devis1',$request->file('copie_devis1'),$designation);
+       $copie_devis2= $this->get_file_emplacement($entreprise->code_promoteur,'copie_devis2',$request->file('copie_devis2'),$designation);
+    }
        $devis_exist= Devi::where('entreprise_id',$request->entreprise_id)->where('designation',$request->designation)->first();
        if(!$devis_exist){
         $devi=Devi::create([
@@ -179,7 +178,6 @@ else{
         }
         else{
             $chef_de_zone= User::where('zone', $devi->entreprise->region)->first();
-
         }
         $e_msg="Vous avez des devis qui sont en attente de validation.";
         $titre='Chef de Zone';
@@ -247,25 +245,25 @@ else{
             $statut= 'soumis';
         }
         if($request->fiche_analyse){
-           $fiche_analyse= $this->get_file_emplacement('fiche_analyse',$request->file('fiche_analyse'),$designation);
+           $fiche_analyse= $this->get_file_emplacement($devi->entreprise->code_promoteur,'fiche_analyse',$request->file('fiche_analyse'),$designation);
             $devi->update([
                 'copie_fiche_analyse'=>$fiche_analyse,
             ]);
         }
         if($request->hasFile('copie_devis2')){
-            $copie_devis2= $this->get_file_emplacement('copie_devis2',$request->file('copie_devis2'),$designation);
+            $copie_devis2= $this->get_file_emplacement($devi->entreprise->code_promoteur,'copie_devis2',$request->file('copie_devis2'),$designation);
             $devi->update([
                 'copie_devis_2'=>$copie_devis2,
             ]);
         }
         if($request->hasFile('copie_devis1')){
-           $copie_devis1= $this->get_file_emplacement('copie_devis1',$request->file('copie_devis1'),$designation);
+           $copie_devis1= $this->get_file_emplacement($devi->entreprise->code_promoteur,'copie_devis1',$request->file('copie_devis1'),$designation);
             $devi->update([
                 'copie_devis_1'=>$copie_devis1,
             ]);
         }
         if($request->hasFile('copie_devis')){
-            $copie_devis=$this->get_file_emplacement('copie_devis',$request->file('copie_devis'),$designation);
+            $copie_devis=$this->get_file_emplacement($devi->entreprise->code_promoteur,'copie_devis',$request->file('copie_devis'),$designation);
             $devi->update([
                 'copie_devis_prefere'=>$copie_devis,
             ]);

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('pca', 'active')
+@section('finacement', 'active')
 @section('synthese_pca', 'active')
 @section('all', 'active')
 @section('content')
@@ -22,13 +22,16 @@
                     <th class="text-center">Province</th>
                     <th class="text-center">Code P</th>
                     <th class="text-center">Denomination de l'entreprise</th>
+                    <th class="text-center">Banque partenaire</th>
                     <th class="text-center">Nom & Prenom</th>
                     <th class="text-center">Telephone</th>
                     <th class="text-center">Secteur d'activite</th>
                     <th class="text-center">Titre du projet</th>
                     <th class="text-center">Montant valide du PCA/PD</th>
+                    <th class="text-center">Total contrepartie mobilisée</th>
+                    <th class="text-center">Totalement mobilisée</th>
                     <th class="text-center">Statut</th>
-                    <th class="text-center">Montant Enagagé</th>
+                    <th class="text-center">Montant Engagé</th>
                     <th class="text-center">Montant Exécuté</th>
                     <th class="text-center">Taux d'exécution </th>
                    
@@ -57,13 +60,25 @@
                         <td class="text-center">{{ getlibelle($projet->entreprise->region)}}</td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->province)}}</td>
                         <td class="text-center">{{ $projet->entreprise->promotrice->code_promoteur}}</td>
+
                         <td class="text-center">
                             <a href="{{ route('entreprise.show', $projet->entreprise) }}" target="_blank">{{ $projet->entreprise->denomination }} </a></td>
+                        <td class="text-center">{{ $projet->entreprise->banque->nom}}</td>
+                        
                         <td class="text-center">{{ $projet->entreprise->promotrice->nom}} {{ $projet->entreprise->promotrice->prenom}}</td>
                         <td class="text-center">{{ $projet->entreprise->promotrice->telephone_promoteur}} </td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->secteur_activite)}} </td>
                         <td class="text-center">{{ $projet->titre_du_projet }}</td>
                         <td class="text-center">{{ format_prix($projet->montant_accorde) }}</td>
+                        <td class="text-center">{{ format_prix($projet->entreprise->accomptes->sum('montant')) }}</td>
+                        <td class="text-center">
+                            @if (($projet->entreprise->accomptes->sum('montant') > $projet->montant_accorde/2) || ($projet->entreprise->accomptes->sum('montant') == $projet->montant_accorde/2))
+                              Oui
+                            @else
+                                Non
+                            @endif
+                            
+                        </td>
                         <td class="text-center">
                             @if(count($projet->entreprise->devis)!=0)
                                     PCA en cours d'exécution

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('finacement', 'active')
-@section('facture_analyse', 'active')
+@section('facture_apayer', 'active')
 @section('content')
 <div class="col-md-12">
         <!-- Basic Form Elements Title -->
@@ -9,7 +9,7 @@
                 <div class="block">
                     <!-- Form Validation Example Title -->
                     <div class="block-title">
-                        <h2> Liste <strong>des factures soumises</strong></h2>        
+                        <h2> Liste <strong>des factures a payer</strong></h2>        
                     </div>
                    
     
@@ -36,7 +36,9 @@
                 @php
                 $i++;
                 @endphp
-                <tr>
+                <tr @if($facture->paiement_print==1)
+                    style="color:green;"
+                    @endif>
                     <td>{{ $i }}</td>
                     <td>{{$facture->num_facture}}</td>
                     <td>{{$facture->entreprise->banque->nom}}</td>
@@ -59,9 +61,9 @@
                              {{-- @can('formation.update', Auth::user()) --}}
                                 <a href="{{ route('facture.show',$facture) }}?action=analyser" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-success"><i class="fa fa-eye"></i></a>
                             @can('lister_facture.a_payer', Auth::user())
-                                @if ($facture->statut=='validé' && $facture->paiement_print != 1 )
+                                {{-- @if ($facture->statut=='validé' && $facture->paiement_print != 1 ) --}}
                                     <a href="{{ route('facture.generer_dem_paiement',$facture) }}" data-toggle="tooltip" title="Genere la lettre de demande de paiement" class="btn btn-lg btn-danger"><i class="fa fa-file"></i></a>
-                                @endif
+                                {{-- @endif --}}
                             @endcan
                             </div>
                     </td>

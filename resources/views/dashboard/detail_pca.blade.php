@@ -6,8 +6,8 @@
 <div class="row">
     <div class="col-sm-6 col-lg-4">
         <a href="javascript:void(0)" class="widget widget-hover-effect1">
-            <div class="widget-simple themed-background">
-                <h4 class="widget-content widget-content-light" style="text-align: center">
+            <div class="widget-simple themed-background pca_block_titre1">
+                <h4 class="widget-content widget-content-light" style="text-align:center">
                     <strong>{{ $nombre_de_pca   }}</strong>
                    Projets Soumis
                 </h4>
@@ -30,7 +30,7 @@
     </div>
     <div class="col-sm-6 col-lg-4">
         <a href="javascript:void(0)" class="widget widget-hover-effect1">
-            <div class="widget-simple themed-background">
+            <div class="widget-simple themed-background pca_block_titre2">
                 <h4 class="widget-content widget-content-light" style="text-align: center">
                     <strong>{{ $nombre_pca_selelctionnes }}</strong>
                     Projet Selectionnés
@@ -54,7 +54,7 @@
     </div>
     <div class="col-sm-6 col-lg-4">
         <a href="javascript:void(0)" class="widget widget-hover-effect1">
-            <div class="widget-simple themed-background">
+            <div class="widget-simple themed-background pca_block_titre3">
                 <h4 class="widget-content widget-content-light" style="text-align: center">
                     <strong>{{ $nombre_pca_rejete }}</strong>
                     Projets Rejetés
@@ -72,7 +72,6 @@
                     @endif
                     @foreach ($pca_ajourne_par_categories as $pca_ajourne_par_categorie )
                     <div class="col-xs-4">
-
                         <h3>
                             <strong>{{ $pca_ajourne_par_categorie->nombre }}</strong><br>
                             <p style="text-transform:uppercase">{{ $pca_ajourne_par_categorie->categorie }}</p >
@@ -95,25 +94,22 @@
                 <!-- Widget -->
                 <a href="page_ready_article.html" class="widget widget-hover-effect1">
                     <div class="widget-simple">
-                       
                         <h3 class="widget-content text-right animation-pullDown">
-                           Montant de la subvention MPME<br>
+                           Budget de la subvention MPME<br>
                            <hr>
                            <center><strong>{{ format_prix(env('total_enveloppe_MPME'))}} FCFA</strong></center>
                         </h3>
                     </div>
                 </a>
-                <!-- END Widget -->
             </div>
             <div class="col-sm-6 col-lg-4">
                 <!-- Widget -->
                 <a href="page_comp_charts.html" class="widget widget-hover-effect1">
                     <div class="widget-simple">
-                       
                         <h3 class="widget-content text-right animation-pullDown">
-                            Montant de la Subvention accordee<br>
+                            Montant de la subvention accordé<br>
                             <hr>
-                            <center><strong>{{ format_prix(return_info_enveloppe()[4])}} FCFA</strong></center>
+                             <center><strong>{{ format_prix(return_info_enveloppe()[4])}} FCFA</strong></center>
                          </h3>
                     </div>
                 </a>
@@ -124,9 +120,9 @@
                 <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
                     <div class="widget-simple">
                         <h3 class="widget-content text-right animation-pullDown">
-                            Montant de la Subvention Restante<br>
+                            Montant de la subvention accordé<br>
                             <hr>
-                            <center><strong>{{ format_prix( env('total_enveloppe_MPME') - return_info_enveloppe()[4])}} FCFA</strong></center>
+                                <center><strong>{{ format_prix( env('total_enveloppe_MPME') - return_info_enveloppe()[4])}} FCFA</strong></center>
                         </h3>
                     </div>
                 </a>
@@ -137,47 +133,54 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Projets soumis catégorie MPME</strong></h3>
+                    <h3><strong>Etat des projets soumis par les MPME </strong></h3>
+                </div>
+                <div class="col-md-5">
+                    <h3><strong> Nombre :</strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{ format_prix($pca_enregistes_par_banque->sum('nombre')) }} </strong></h3>
                 </div>
                 <div class="col-md-5">
                     <h3><strong> Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
-                  <h3> <strong>{{ format_prix($pca_enregistes_par_banque->sum('montant')) }} </strong></h3>
+                  <h3> <strong>{{ format_prix($pca_enregistes_par_banque->sum('montant')/2) }} </strong></h3>
                 </div>
-                <p>Montant Total des Projets Soumis.</p>
+                <p>Répartition par banque</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($pca_enregistes_par_banque as $pca_enregistes_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $pca_enregistes_par_banq->nom_banque}}</td><td style='width:50px'>{{ $pca_enregistes_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($pca_enregistes_par_banq->montant) }}</td>
+                            <td style='width:100px'>{{ $pca_enregistes_par_banq->nom_banque}}</td><td style='width:50px'> <center>{{ $pca_enregistes_par_banq->nombre }}</center> </td><td style='width:100px; text-align: right !important;'>{{ format_prix($pca_enregistes_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
-
-
-
             </div>
             <!-- END Billing Address Content -->
         </div>
         <div class="block">
-            <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Projets validés par le comité catégorie MPME</strong></h3>
+                    <h3><strong>Etat des projets des MPME sélectionnés</strong></h3>
+                </div>
+                <div class="col-md-5">
+                    <h3><strong>Nombre :</strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{ format_prix($pca_selectionne_par_banque->sum('nombre')) }} </strong></h3>
                 </div>
                 <div class="col-md-5">
                     <h3><strong>Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
-                  <h3> <strong>{{ format_prix($pca_selectionne_par_banque->sum('montant')) }} </strong></h3>
+                  <h3> <strong>{{ format_prix($pca_selectionne_par_banque->sum('montant')/2) }} </strong></h3>
                 </div>
-
-            <p>Total des projets validés par le comité par banque.</p>
+            <p>Répartition par banque.</p>
             <table class="styled-table center">
                 <tr>
                     <th>Banque</th>
@@ -186,7 +189,7 @@
                 </tr>
                 @foreach ($pca_selectionne_par_banque as $pca_selectionne_par_banq)
                     <tr>
-                            <td style='width:100px'>{{ $pca_selectionne_par_banq->nom_banque}}</td><td style='width:50px'>{{ $pca_selectionne_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($pca_selectionne_par_banq->montant) }}</td>
+                            <td style='width:100px'>{{ $pca_selectionne_par_banq->nom_banque}}</td><td style='width:50px;'> <center>{{ $pca_selectionne_par_banq->nombre }}</center></td><td style='width:100px; text-align: right !important;'>{{ format_prix($pca_selectionne_par_banq->montant/2) }}</td>
                     </tr>
                 @endforeach
             </table>
@@ -197,24 +200,30 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Projets avec KYC Concluants</strong></h3>
+                    <h3><strong>Etat de KYC des MPME concluant</strong></h3>
+                </div>
+                <div class="col-md-5">
+                    <h3><strong>Nombre :</strong></h3>
                 </div>
                 <div class="col-md-4">
+                  <h3> <strong>{{ format_prix($demandes_de_KYC_concluants_par_banque->sum('nombre')) }} </strong></h3>
+                </div>
+                <div class="col-md-5">
                     <h3><strong>Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
-                  <h3> <strong>{{ format_prix($demandes_de_KYC_concluants_par_banque->sum('montant')) }} </strong></h3>
+                  <h3> <strong>{{ format_prix($demandes_de_KYC_concluants_par_banque->sum('montant')/2) }} </strong></h3>
                 </div>
-                <p>Montant des projets dont le KYC est concluant par banque.</p>
+                <p>Répartition par banque</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($demandes_de_KYC_concluants_par_banque as $demandes_de_KYC_concluants_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $demandes_de_KYC_concluants_par_banq->nom_banque}}</td><td style='width:50px'>{{ $demandes_de_KYC_concluants_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($demandes_de_KYC_concluants_par_banq->montant) }}</td>
+                                <td style='width:100px'>{{ $demandes_de_KYC_concluants_par_banq->nom_banque}}</td><td style='width:50px; '> <center>{{ $demandes_de_KYC_concluants_par_banq->nombre }}</center></td><td style='width:100px ;text-align: right !important;'>{{ format_prix($demandes_de_KYC_concluants_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -225,7 +234,7 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Accords bénéficiaires signés</strong></h3>
+                    <h3><strong>Etat des accords bénéficiaires de MPME signés</strong></h3>
                 </div>
                 <div class="col-md-5">
                     <h3><strong>Nombre: </strong></h3>
@@ -233,16 +242,22 @@
                 <div class="col-md-4">
                   <h3> <strong>{{ $accord_beneficiaire_signe_par_banque->sum('nombre') }} </strong></h3>
                 </div>
-                <p>Total des projets dont l'accord bénéficaire a été signé.</p>
+                <div class="col-md-5">
+                    <h3><strong>Montant: </strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{ format_prix($accord_beneficiaire_signe_par_banque->sum('montant')/2) }} </strong></h3>
+                </div>
+                <p>Répartition par banque.</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($accord_beneficiaire_signe_par_banque as $accord_beneficiaire_signe_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $accord_beneficiaire_signe_par_banq->nom_banque}}</td><td style='width:50px'>{{ $accord_beneficiaire_signe_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($accord_beneficiaire_signe_par_banq->montant) }}</td>
+                            <td style='width:100px'>{{ $accord_beneficiaire_signe_par_banq->nom_banque}}</td><td style='width:50px'> <center> {{ $accord_beneficiaire_signe_par_banq->nombre }} </center></td><td style='width:100px; text-align: right !important;'>{{ format_prix($accord_beneficiaire_signe_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -252,14 +267,14 @@
 
     </div>
     <div class="col-sm-6">
-        <p style="background-color:white; text-align: center">Situation AOP/Leader</p>
+        <p style="background-color:white; text-align: center">Situation AOP/EL</p>
         <div class="row">
             <div class="col-sm-6 col-lg-4">
                 <!-- Widget -->
                 <a href="page_ready_article.html" class="widget widget-hover-effect1">
-                    <div class="widget-simple">
+                    <div class="widget-simple ">
                         <h3 class="widget-content text-right animation-pullDown">
-                           Montant de la subvention AOP<br>
+                           Budget de la subvention AOP<br>
                            <hr>
                            <center><strong>{{  format_prix(env('total_enveloppe_AOP'))}} FCFA</strong></center>
                         </h3>
@@ -270,10 +285,10 @@
             <div class="col-sm-6 col-lg-4">
                 <!-- Widget -->
                 <a href="page_comp_charts.html" class="widget widget-hover-effect1">
-                    <div class="widget-simple">
+                    <div class="widget-simple ">
                        
                         <h3 class="widget-content text-right animation-pullDown">
-                            Montant de la Subvention accordee<br>
+                            Montant de la subvention accordé<br>
                             <hr>
                             <center><strong>{{ format_prix(return_info_enveloppe()[3])}} FCFA</strong></center>
                          </h3>
@@ -286,7 +301,7 @@
                 <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
                     <div class="widget-simple">
                         <h3 class="widget-content text-right animation-pullDown">
-                            Montant de la Subvention Restante<br>
+                            Montant de la subvention restant<br>
                             <hr>
                             <center><strong>{{ format_prix( env('total_enveloppe_AOP') - return_info_enveloppe()[3])}} FCFA</strong></center>
                         </h3>
@@ -299,24 +314,30 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Projets soumis catégorie AOP/Leader</strong></h3>
+                    <h3><strong>Etat des projets soumis AOP/EL</strong></h3>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-5">
+                    <h3><strong> Nombre :</strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{ format_prix($pca_aop_enregistes_par_banque->sum('nombre')) }} </strong></h3>
+                </div>
+                <div class="col-md-5">
                     <h3><strong> Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
-                  <h3> <strong>{{ format_prix($pca_aop_enregistes_par_banque->sum('montant')) }} </strong></h3>
+                  <h3> <strong>{{ format_prix($pca_aop_enregistes_par_banque->sum('montant')/2) }} </strong></h3>
                 </div>
-                <p>Cout des projets soumis  par banque</p>
+                <p>Répartition par banque</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($pca_aop_enregistes_par_banque as $pca_enregistes_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $pca_enregistes_par_banq->nom_banque}}</td><td style='width:50px'>{{ $pca_enregistes_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($pca_enregistes_par_banq->montant) }}</td>
+                                <td style='width:100px'>{{ $pca_enregistes_par_banq->nom_banque}}</td><td style='width:50px'><center> {{ $pca_enregistes_par_banq->nombre }}</center></td><td style='width:100px; text-align: right !important;'>{{ format_prix($pca_enregistes_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -329,24 +350,30 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Projets validés par le comité catégorie AOP/Leader :</strong></h3>
+                    <h3><strong>Etat des projets des AOP/EL sélectionnés</strong></h3>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-5">
+                    <h3><strong>Nombre :</strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{format_prix($pca_aop_selectionne_par_banque->sum('nombre')) }} </strong></h3>
+                </div>
+                <div class="col-md-5">
                     <h3><strong>Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
-                  <h3> <strong>{{ format_prix($pca_aop_selectionne_par_banque->sum('montant')) }} </strong></h3>
+                  <h3> <strong>{{ format_prix($pca_aop_selectionne_par_banque->sum('montant')/2) }} </strong></h3>
                 </div>
-                <p>La Situation des projets validés par banque</p>
+                <p>Répartition par banque</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($pca_aop_selectionne_par_banque as $pca_enregistes_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $pca_enregistes_par_banq->nom_banque}}</td><td style='width:50px'>{{ $pca_enregistes_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($pca_enregistes_par_banq->montant) }}</td>
+                                <td style='width:100px;'>{{ $pca_enregistes_par_banq->nom_banque}}</td><td style='width:50px;text-align: right !important;'><center>{{ $pca_enregistes_par_banq->nombre }}</center></td><td style='width:100px ;text-align: right !important;'>{{ format_prix($pca_enregistes_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -358,24 +385,30 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Projets dont le KYC Concluants categorie AOP/Leader</strong></h3>
+                    <h3><strong>Etat des KYC des AOP/EL concluants</strong></h3>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-5">
+                    <h3><strong>Nombre :</strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{format_prix($demandes_aop_de_KYC_concluants_par_banque->sum('nombre')) }} </strong></h3>
+                </div>
+                <div class="col-md-5">
                     <h3><strong>Montant :</strong></h3>
                 </div>
                 <div class="col-md-4">
                   <h3> <strong>{{format_prix($demandes_aop_de_KYC_concluants_par_banque->sum('montant')) }} </strong></h3>
                 </div>
-                <p>Cout des projets dont le KYC a été concluant par banque.</p>
+                <p>Répartition par banque</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($demandes_aop_de_KYC_concluants_par_banque as $demandes_de_KYC_concluants_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $demandes_de_KYC_concluants_par_banq->nom_banque}}</td><td style='width:50px'>{{ $demandes_de_KYC_concluants_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($demandes_de_KYC_concluants_par_banq->montant) }}</td>
+                                <td style='width:100px'>{{ $demandes_de_KYC_concluants_par_banq->nom_banque}}</td><td style='width:50px; text-align: right !important;'> <center>{{ $demandes_de_KYC_concluants_par_banq->nombre }}</center></td><td style='width:100px; text-align: right !important;'>{{ format_prix($demandes_de_KYC_concluants_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -386,24 +419,30 @@
             <!-- Billing Address Title -->
             <div class="row box" style="font-weight: 600!important;">
                 <div class="col-md-12">
-                    <h3><strong>Accords bénéficiaires signés  categorie AOP/Leader</strong></h3>
+                    <h3><strong>Etat des accords bénéficiaires de AOP/EL signés </strong></h3>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-5">
                     <h3><strong>Nombre: </strong></h3>
                 </div>
                 <div class="col-md-4">
                   <h3> <strong>{{ $accord_beneficiaire_aop_signe_par_banque->sum('nombre') }} </strong></h3>
                 </div>
-                <p>Accord bénéficiaire signé par banque.</p>
+                <div class="col-md-5">
+                    <h3><strong>Montant: </strong></h3>
+                </div>
+                <div class="col-md-4">
+                  <h3> <strong>{{ format_prix($accord_beneficiaire_aop_signe_par_banque->sum('montant')/2) }} </strong></h3>
+                </div>
+                <p>Répartition par banque</p>
                 <table class="styled-table center">
                     <tr>
                         <th>Banque</th>
-                        <th>Nombre</th>
+                        <th> <center>Nombre</center></th>
                         <th>Montant</th>
                     </tr>
                     @foreach ($accord_beneficiaire_aop_signe_par_banque as $accord_beneficiaire_signe_par_banq)
                         <tr>
-                                <td style='width:100px'>{{ $accord_beneficiaire_signe_par_banq->nom_banque}}</td><td style='width:50px'>{{ $accord_beneficiaire_signe_par_banq->nombre }}</td><td style='width:100px'>{{ format_prix($accord_beneficiaire_signe_par_banq->montant) }}</td>
+                                <td style='width:100px'>{{ $accord_beneficiaire_signe_par_banq->nom_banque}}</td><td style='width:50px; text-align: right !important;'> <center>{{ $accord_beneficiaire_signe_par_banq->nombre }}</center></td><td style='width:100px ;text-align: right !important;'>{{ format_prix($accord_beneficiaire_signe_par_banq->montant/2) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -426,7 +465,7 @@
                 <div class="accordion-body">
                     <div class="row" style="text-align:center">
                         <div class="col-md-5 divscrolable">
-                            <p style="border-bottom: 1px solid black">Situation des PCA soumis par zone categorie MPME</p>
+                            <p style="border-bottom: 1px solid black">Etat des projets des MPME enregistrés par région</p>
                          <div class='divscrolable'>
                             <table class="styled-table center">
                                 <tr>
@@ -451,7 +490,7 @@
                         </div>
                     </div>
                         <div class="col-md-6 divscrolable" style="margin-left:20px;">
-                            <p style="border-bottom: 1px solid black">situation des PCA soumis par zone catégorie AOP/Leader </p>
+                            <p style="border-bottom: 1px solid black">Etat des projets des AOP/EL enregistrés par région </p>
                         <div class='divscrolable'>
                             <table class="styled-table">
                                     <tr>
@@ -478,13 +517,13 @@
                 </div>
                 <div class="row" style="text-align:center">
                         <div class="col-md-5 divscrolable">
-                            <p style="border-bottom: 1px solid black">Situation des PCA soumis par secteur d'activité catégorie MPME  </p>
+                            <p style="border-bottom: 1px solid black">Etat des projets des MPME enregistrés par secteur d'activité  </p>
                             <div class='divscrolable'>
                                 <table class="styled-table">
                                     <tr>
                                         <th>Activité</th>
                                         @foreach ($pca_par_secteurs as $pca_par_secteur)
-                                            <th  style='width:15%'>{{ getlibelle($pca_par_secteur->secteur_dactivite)}}</th>
+                                            <th  style='width:15% text-align:center' >{{ getlibelle($pca_par_secteur->secteur_dactivite)}}</th>
                                         @endforeach
                                     </tr>
                                     <tr>
@@ -504,7 +543,7 @@
                             </div>
                         </div>
                         <div  class="col-md-6 divscrolable" style="margin-left:20px;">
-                            <p style="border-bottom: 1px solid black">Situation des PCA soumis par secteur d'activité catégorie AOP/Leader</p>
+                            <p style="border-bottom: 1px solid black">Etat des projets des AOP/EL enregistrés  par secteur d'activité</p>
                             <div class='divscrolable'>
                                 <table class="styled-table">
                                     <tr>
@@ -542,7 +581,7 @@
                 <div class="accordion-body">
                 <div class="row">
                     <div class="col-md-6 divscrolable">
-                        <p style="border-bottom: 1px solid black">Situation des PCA selectionnés par zone </p>
+                        <p style="border-bottom: 1px solid black">Etat des projets des MPME selectionnés par region </p>
                     <div class='divscrolable'>
                         <table class="styled-table">
                             <tr>
@@ -567,7 +606,7 @@
                     </div>
                 </div>
                     <div class="col-md-5 divscrolable" style="margin-left:20px;">
-                        <p style="border-bottom: 1px solid black">Situation des PCA selectionnés par zone </p>
+                        <p style="border-bottom: 1px solid black">Etat des projets des AOP/EL selectionnés par region </p>
                     <div class='divscrolable'>
                         <table class="styled-table">
                             <tr>
@@ -594,7 +633,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 divscrolable">
-                        <p style="border-bottom: 1px solid black">Situation des PCA selectionnés par secteur d'activité </p>
+                        <p style="border-bottom: 1px solid black">Etat des projets des MPME selectionnés par secteur d'activité </p>
                     <div class='divscrolable'>
                         <table class="styled-table">
                             <tr>
@@ -619,7 +658,7 @@
                     </div>
                 </div>
                     <div class="col-md-5 divscrolable" style="margin-left:15px">
-                        <p style="border-bottom: 1px solid black">Situation des PCA selectionnés par secteur d'activité  categorie AOP</p>
+                        <p style="border-bottom: 1px solid black">Etat des projets des AOP/EL selectionnés par secteur d'activité</p>
                     <div class='divscrolable'>
                         <table class="styled-table">
                             <tr>

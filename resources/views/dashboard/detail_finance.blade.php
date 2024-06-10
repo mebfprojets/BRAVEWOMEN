@@ -7,34 +7,34 @@
     <div class="row text-center">
         <div class="col-sm-6 col-lg-3">
             <a onclick="change_view('global','contrepartie','facture','autre','subvention')" href="javascript:void(0)" class="widget widget-hover-effect2">
-                <div class="widget-extra themed-background">
+                <div class="widget-extra themed-background mobilisation-b1">
                     <h4 class="widget-content-light"><strong>Subvention </strong> Mobilisée</h4>
                 </div>
-                <div class="widget-extra-full"><span class="h2 animation-expandOpen">{{ format_prix($total_subvention_verse) }} F cfa</span></div>
+                <div class="widget-extra-full"><span class="h2 animation-expandOpen">{{ format_prix($total_subvention_verse) }}F CFA</span></div>
             </a>
         </div>
         <div class="col-sm-6 col-lg-3">
             <a onclick="change_view('global','subvention','facture','autre','contrepartie')" href="javascript:void(0)" class="widget widget-hover-effect2">
-                <div class="widget-extra themed-background">
+                <div class="widget-extra themed-background mobilisation-b2">
                     <h4 class="widget-content-light"><strong>Contre partie</strong> Mobilisée </h4>
                 </div>
-                <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen"> {{ format_prix($total_contrepartie_verse) }}F cfa</span></div>
+                <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen"> {{ format_prix($total_contrepartie_verse) }}F CFA</span></div>
             </a>
         </div>
         <div class="col-sm-6 col-lg-3">
             <a onclick="change_view('global','subvention','contrepartie','facture', 'autre')" href="javascript:void(0)" class="widget widget-hover-effect2">
-                <div class="widget-extra themed-background">
+                <div class="widget-extra themed-background mobilisation-b3">
                     <h4 class="widget-content-light"><strong>Devis validés</strong></h4>
                 </div>
-                <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ format_prix($montant_devi_valide) }}</span></div>
+                <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ format_prix($montant_devi_valide) }} FCFA</span></div>
             </a>
         </div>
-        <div class="col-sm-6 col-lg-3">
+        <div class="col-sm-6 col-lg-3 ">
             <a onclick="change_view('global','subvention','contrepartie','autre','facture')"  href="javascript:void(0)" class="widget widget-hover-effect2">
-                <div class="widget-extra themed-background">
+                <div class="widget-extra themed-background mobilisation-b4">
                     <h4 class="widget-content-light"><strong>Factures</strong> enregistrées</h4>
                 </div>
-                <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ format_prix($montant_facture_enregistrees) }} F cfa</span></div>
+                <div class="widget-extra-full"><span class="h2 themed-color-dark animation-expandOpen">{{ format_prix($montant_facture_enregistrees) }} FCFA</span></div>
             </a>
         </div>
         
@@ -43,7 +43,7 @@
 <div class="block global">
     <!-- Referred Members Title -->
     <div class="block-title">
-        <h2><i class="fa fa-line-chart"></i> <strong>Mobilisation des fonds</strong> Par banque </h2>
+        <h2><i class="fa fa-line-chart"></i> <strong>Mobilisation des fonds</strong> par banque </h2>
     </div>
     <!-- END Referred Members Title -->
 
@@ -55,8 +55,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $mobilisation->nom}}</strong>
-                            <small>Montant mobilisé: <strong>{{ format_prix($mobilisation->montant) }}</strong></small>
+                            <strong>{{ return_sigle_bank($mobilisation->nom)}}</strong>
+                            <small>Montant mobilisé: <strong>{{ format_prix($mobilisation->montant) }} F CFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -70,7 +70,7 @@
 <div class="block global">
     <!-- Referred Members Title -->
     <div class="block-title">
-        <h2><i class="fa fa-line-chart"></i> <strong>Mobilisation des fonds</strong> Categorie d'entreprise </h2>
+        <h2><i class="fa fa-line-chart"></i> <strong>Mobilisation des fonds</strong> par cible </h2>
     </div>
     <!-- END Referred Members Title -->
 
@@ -82,8 +82,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $mobilisation_par_cat->categorie }}</strong>
-                            <small>Montant mobilisé: <strong>{{ format_prix($mobilisation_par_cat->montant) }}</strong></small>
+                            <strong>{{ return_categorie_entreprise($mobilisation_par_cat->categorie) }}</strong>
+                            <small>Montant mobilisé: <strong>{{ format_prix($mobilisation_par_cat->montant) }} FCFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -108,8 +108,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $subvention->nom}}</strong>
-                            <small>Montant: <strong>{{ format_prix($subvention->montant) }}</strong></small>
+                            <strong>{{ return_sigle_bank($subvention->nom)}}</strong>
+                            <small>Montant: <strong>{{ format_prix($subvention->montant) }} F CFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -135,8 +135,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $subvention_par_cat->categorie }}</strong>
-                            <small>Montant mobilisé: <strong>{{ format_prix($subvention_par_cat->montant) }}</strong></small>
+                            <strong>{{ return_categorie_entreprise($subvention_par_cat->categorie) }}</strong>
+                            <small>Montant mobilisé: <strong>{{ format_prix($subvention_par_cat->montant) }} F CFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -159,8 +159,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $contrepartie_par_bank->nom }}</strong>
-                            <small>Montant mobilisé: <strong>{{ format_prix($contrepartie_par_bank->montant) }}</strong></small>
+                            <strong>{{ return_sigle_bank($contrepartie_par_bank->nom) }}</strong>
+                            <small>Montant mobilisé: <strong>{{ format_prix($contrepartie_par_bank->montant) }} F CFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -185,8 +185,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $contrepartie_par_cat->categorie }}</strong>
-                            <small>Montant mobilisé: <strong>{{ format_prix($contrepartie_par_cat->montant) }}</strong></small>
+                            <strong>{{ return_categorie_entreprise($contrepartie_par_cat->categorie) }}</strong>
+                            <small>Montant mobilisé: <strong>{{ format_prix($contrepartie_par_cat->montant) }} F CFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -212,9 +212,9 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $devis_valides_par_banque->nom }}</strong>
+                            <strong>{{ return_sigle_bank($devis_valides_par_banque->nom) }}</strong>
                             <small>Nombre: <strong>{{ $devis_valides_par_banque->nombre}}</strong></small>
-                            <small>Montant: <strong>{{ format_prix($devis_valides_par_banque->montant) }}</strong></small>
+                            <small>Montant: <strong>{{ format_prix($devis_valides_par_banque->montant) }} F CFA</strong></small>
                         </h4>
                     </div>
                 </a>
@@ -227,7 +227,7 @@
 <div class="block autre" style="display: none">
     <!-- Referred Members Title -->
     <div class="block-title">
-        <h2><i class="fa fa-line-chart"></i> <strong>Devis validés</strong> Categorie d'entreprise </h2>
+        <h2><i class="fa fa-line-chart"></i> <strong>Devis validés</strong> par cible </h2>
     </div>
     <!-- END Referred Members Title -->
 
@@ -239,9 +239,8 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong style="text-transform: uppercase">{{ $devis_valides_par_categorie->categorie }}</strong>
+                            <strong style="text-transform: uppercase">{{ return_categorie_entreprise($devis_valides_par_categorie->categorie) }}</strong>
                             <small>Nombre: <strong>{{ $devis_valides_par_categorie->nombre}}</strong></small>
-
                             <small>Montant: <strong>{{ format_prix($devis_valides_par_categorie->montant) }}</strong></small>
                         </h4>
                     </div>
@@ -267,7 +266,7 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $factures_val->nom }}</strong>
+                            <strong>{{ return_sigle_bank($factures_val->nom) }}</strong>
                             <small>Nombre: <strong>{{ $factures_val->nombre}}</strong></small><small>Montant: <strong>{{ format_prix($factures_val->montant) }}</strong></small>
                         </h4>
                     </div>
@@ -293,7 +292,7 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $paiement_par_k->nom }}</strong>
+                            <strong>{{ return_sigle_bank($paiement_par_k->nom) }}</strong>
                             <small>Nombre: <strong>{{ $paiement_par_k->nombre}}</strong></small><small>Montant payé: <strong>{{ format_prix($paiement_par_k->montant) }}</strong></small>
                         </h4>
                     </div>
@@ -320,7 +319,7 @@
                     <div class="widget-simple">
                         <img src="img/placeholders/avatars/avatar12.jpg" alt="avatar" class="widget-image img-circle pull-left">
                         <h4 class="widget-content text-right">
-                            <strong>{{ $facture_par_stat->statut }}</strong>
+                            <strong>{{ return_status_facture($facture_par_stat->statut) }}</strong>
                             <small>Nombre: <strong>{{ $facture_par_stat->nombre}}</strong></small>
                             <small>Montant mobilisé: <strong>{{ format_prix($facture_par_stat->montant) }}</strong></small>
                         </h4>
@@ -359,48 +358,91 @@
         <hr>
     <div class="row">
         <div class="col-md-6 divscrolable">
-                <p style="border-bottom: 1px solid black">Situation des subventions debloquees </p>
+                <p style="border-bottom: 1px solid black">Situation des subventions débloquées par région </p>
                 <div class='divscrolable'>
                     <table class="styled-table">
                         <tr>
-                        <th >Zone</th>
-                        @foreach($subvention_par_secteur_dactivites as $subvention_par_secteur_dactivite)
-                           <td>{{ $subvention_par_secteur_dactivite->secteur }}</td> 
+                        <th >Région</th>
+                        @foreach($subvention_par_regions as $subvention_par_region)
+                           <td>{{ $subvention_par_region->region }}</td> 
                        @endforeach
                         
                         </tr>
                         <tr>
                         <tr>
-                            <th>Total des subventions debloquees</th>
-                            @foreach($subvention_par_secteur_dactivites as $subvention_par_secteur_dactivite)
-                              <td>{{ format_prix($subvention_par_secteur_dactivite->montant) }}</td> 
+                            <th>Montant des subventions debloquées</th>
+                            @foreach($subvention_par_regions as $subvention_par_region)
+                              <td style="text-align:right">{{ format_prix($subvention_par_region->montant) }}</td> 
                             @endforeach
                         </tr>
                     </table>
                 </div>
         </div>
         <div class="col-md-6 divscrolable">
-            <p style="border-bottom: 1px solid black">Situation de la contrepartie mobilisee par secteur d'activite </p>
+            <p style="border-bottom: 1px solid black">Situation de la contrepartie mobilisée par region </p>
             <div class='divscrolable'>
                 <table class="styled-table">
                     <tr>
-                    <th >Zone</th>
-                       @foreach($contrepartie_par_secteur_dactivites as $contrepartie_par_secteur_dactivite)
-                           <td>{{ $contrepartie_par_secteur_dactivite->secteur }}</td> 
+                    <th>Région</th>
+                       @foreach($contrepartie_par_region as $contrepartie_par_secteur_dactivite)
+                           <td>{{ $contrepartie_par_secteur_dactivite->region }}</td> 
                        @endforeach
                     </tr>
                     <tr>
                     <tr>
-                        <th>Total contrepartie</th>
-                        @foreach($contrepartie_par_secteur_dactivites as $contrepartie_par_secteur_dactivite)
-                           <td>{{ format_prix($contrepartie_par_secteur_dactivite->montant) }}</td> 
+                        <th>Montant contrepartie mobilisée</th>
+                        @foreach($contrepartie_par_region as $contrepartie_par_secteur_dactivite)
+                           <td style="text-align:right">{{ format_prix($contrepartie_par_secteur_dactivite->montant) }}</td> 
                        @endforeach
                     </tr>
                 </table>
             </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-6 divscrolable">
+            <p style="border-bottom: 1px solid black">Situation des subventions debloquees </p>
+            <div class='divscrolable'>
+                <table class="styled-table">
+                    <tr>
+                    <th >Secteur d'activité</th>
+                    @foreach($subvention_par_secteur_dactivites as $subvention_par_secteur_dactivite)
+                       <td >{{ $subvention_par_secteur_dactivite->secteur }}</td> 
+                   @endforeach
+                    
+                    </tr>
+                    <tr>
+                    <tr>
+                        <th>Total des subventions debloquees</th>
+                        @foreach($subvention_par_secteur_dactivites as $subvention_par_secteur_dactivite)
+                          <td style="text-align:right">{{ format_prix($subvention_par_secteur_dactivite->montant) }}</td> 
+                        @endforeach
+                    </tr>
+                </table>
+            </div>
     </div>
-    <hr>
+    <div class="col-md-6 divscrolable">
+        <p style="border-bottom: 1px solid black">Situation de la contrepartie mobilisee par secteur d'activite </p>
+        <div class='divscrolable'>
+            <table class="styled-table">
+                <tr>
+                <th >Secteur d'activité</th>
+                   @foreach($contrepartie_par_secteur_dactivites as $contrepartie_par_secteur_dactivite)
+                       <td>{{ $contrepartie_par_secteur_dactivite->secteur }}</td> 
+                   @endforeach
+                </tr>
+                <tr>
+                <tr>
+                    <th>Total contrepartie</th>
+                    @foreach($contrepartie_par_secteur_dactivites as $contrepartie_par_secteur_dactivite)
+                       <td style="text-align:right">{{ format_prix($contrepartie_par_secteur_dactivite->montant) }}</td> 
+                   @endforeach
+                </tr>
+            </table>
+        </div>
+</div>
+</div>
+<hr>
     
     
 </div>

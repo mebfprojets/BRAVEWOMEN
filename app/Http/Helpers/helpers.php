@@ -144,7 +144,44 @@ if (!function_exists('getlibelle')) {
                     { 
                         return $path = Storage::download($url);
                     }
-                    
+
+                     if(!function_exists('return_sigle_bank')){
+                        function return_sigle_bank($bank){
+                        if($bank=='BANQUE ATLANTIQUE'){
+                            return 'BABF';
+                        }elseif($bank=='Coris bank'){
+                           return 'CBI';
+                        }
+                        elseif($bank=='BOA'){
+                            return 'BOA';
+                        }
+                        }
+                    }
+
+                    if(!function_exists('return_categorie_entreprise')){
+                        function return_categorie_entreprise($categorie){
+                        if($categorie=='aop'){
+                            return 'AOP';
+                        }elseif($categorie=='leader'){
+                           return 'EL';
+                        }
+                        elseif($categorie=='mpme'){
+                            return 'MPME';
+                        }
+                        }
+                    }
+                    if(!function_exists('return_status_facture')){
+                        function return_status_facture($statut){
+                        if($statut=='payée'){
+                            return 'Payés';
+                        }elseif($statut=='rejeté'){
+                           return 'Rejetés';
+                        }
+                        elseif($statut=='validé'){
+                            return 'Validés';
+                        }
+                        }
+                    }
 
                     if(!function_exists('kyc_entreprise_is_valide')){
                         function kyc_entreprise_is_valide($code_promoteur){
@@ -201,9 +238,11 @@ function Insertion_Journal($table,$operation)
                     if(!function_exists('return_liste_entreprise_par_user')){
                         function return_liste_entreprise_par_user($user_id){
                             $user= User::find($user_id);
-                            $entreprises= Entreprise::where('code_promoteur',$user->code_promoteur)->where('participer_a_la_formation','!=',null)->get();
+                            $entreprises= Entreprise::where('code_promoteur',$user->code_promoteur)->where('participer_a_la_formation',1)->get();
                             return $entreprises;
+                            //dd($entreprises);
                         }
+                       
                     }
                     if(!function_exists('return_info_enveloppe')){
                         function return_info_enveloppe(){

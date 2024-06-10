@@ -68,8 +68,6 @@
                     <div id="page-content">
                         <div class="row">
                             @include('flash::message')
-                            
-
                             @yield('content')
                             <div id='loader'>
                                 <div style="margin-top:200px; margin-left:50%;">
@@ -178,7 +176,7 @@
                     <div class="modal-body">
                         <input type="hidden" name="id_entreprise" id="id_entreprise1">
                         <input type="hidden" name="conformite" id="conformite">
-                        <p class="modal-text">Cette action donnera un avis de l'UGP sur la conformité qualitative de la promoteur. Voulez-vous continuer?</p>
+                        <p class="modal-text">Cette action donnera un avis de l'UGP sur l'éligibilité de l'entreprise. Voulez-vous continuer?</p>
                     <div class="form-group form-actions">
                         <div class="text-right">
                             <button type="submit" class="btn btn-sm btn-danger" onclick="saveconformite_souscription();">Valider</button>

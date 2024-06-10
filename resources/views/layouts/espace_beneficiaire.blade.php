@@ -46,9 +46,10 @@
         <li class="mt">
           <a class="@yield('profil')" href="{{ route("profil.beneficiaire",$entreprise) }}">
             <i class="fa fa-dashboard"></i>
-            <span>{{ $entreprise->denomination }}</span>
+            <span>Ma {{ $entreprise->denomination }}</span>
             </a>
         </li>
+        <hr>
         @endforeach
           
           <li class="sub">

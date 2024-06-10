@@ -10,7 +10,7 @@
                 <div class="widget-simple">
                    
                     <h3 class="widget-content text-right animation-pullDown">
-                       Montant total de la subvention<br>
+                      Budget de la subvention<br>
                        <hr>
                        <center><strong>{{ format_prix(return_info_enveloppe()[0])}} FCFA</strong></center>
                     </h3>
@@ -24,7 +24,7 @@
                 <div class="widget-simple">
                    
                     <h3 class="widget-content text-right animation-pullDown">
-                        Montant de la Subvention accordee<br>
+                        Montant de la subvention accordé<br>
                         <hr>
                         <center><strong>{{ format_prix(return_info_enveloppe()[1])}} FCFA</strong></center>
                      </h3>
@@ -37,7 +37,7 @@
             <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
                 <div class="widget-simple">
                     <h3 class="widget-content text-right animation-pullDown">
-                        Montant de la Subvention Restante<br>
+                        Montant de la subvention restant<br>
                         <hr>
                         <center><strong>{{ format_prix(return_info_enveloppe()[2])}} FCFA</strong></center>
                     </h3>

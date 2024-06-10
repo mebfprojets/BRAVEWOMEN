@@ -80,8 +80,8 @@
             <td>
                 <input type="checkbox" name="" id="{{ $participant->entreprise->id }}" value="{{ $participant->entreprise->id }}">
             </td>
-            <td>{{getlibelle($entreprise->region)}}</td>
-            <td>{{getlibelle($entreprise->province)}}</td>
+            <td>{{getlibelle($participant->entreprise->region)}}</td>
+            <td>{{getlibelle($participant->entreprise->province)}}</td>
             <td>{{$participant->entreprise->denomination}}</td>
             <td>{{$participant->entreprise->promotrice->code_promoteur}}</td>
             <td>{{$participant->entreprise->promotrice->telephone_promoteur}}</td>

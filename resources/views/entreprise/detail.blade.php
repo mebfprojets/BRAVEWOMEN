@@ -13,8 +13,8 @@
             <div class="col-md-12 block-content ">
                 @if($entreprise->conforme== null)
                 @can('avisqualitative_ugp', Auth::user())
-                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 2)" title="non conforme" class="btn btn-md btn-warning">Non conforme<i class="gi gi-remove_2"></i></a>
-                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Conforme<i class="fa fa-check"></i></a>
+                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 1)"  title="conforme" class="btn btn-md btn-success">Eligible<i class="fa fa-check"></i></a>
+                    <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 2)" title="non conforme" class="btn btn-md btn-warning">Non éligible<i class="gi gi-remove_2"></i></a>
                 @endcan
                 @endif
                 @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif == null)) 
@@ -1057,17 +1057,17 @@
                                 </div>
                             <div class="col-md-6">
                                 <div  id="condanation" class="form-group row">
-                                    <p class="col-md-7 control-label labdetail"><span class="">Conformité au règlements du bailleur : </span> </p>
-                                        <p class="col-md-5" >
+                                    <p class="col-md-6 control-label labdetail"><span class="">Eligibilité : </span> </p>
+                                        <p class="col-md-6" >
                                         <span class="valdetail">
                                         @empty($entreprise->conforme)
                                             Information non disponible
                                         @else
                                         @if($entreprise->conforme==1)
-                                             Conforme
+                                             Eligible
                                         @endif
                                         @if($entreprise->conforme==2)
-                                            Non conforme
+                                            Inéligible
                                         @endif
                                         @endempty
                                     </span></p>
@@ -1079,7 +1079,11 @@
                                         @empty($entreprise->decision_ugp)
                                             Informations non disponible
                                          @else
-                                             {{$entreprise->decision_ugp}}
+                                            @if ($entreprise->decision_ugp='éligible')
+                                                        Favorable
+                                            @else
+                                                    Défavorable
+                                            @endif
                                          @endempty
                                     </span></p>
                                 </div>
@@ -1197,8 +1201,8 @@
                 </div>
             <div class="form-group form-actions">
                 <div class="text-right">
-                    <button  class="btn btn-md btn-danger btn_desactive" onclick="save_avis_ugp('inéligible');" disabled>Inéligible</button>
-                    <button class="btn btn-md btn-success btn_desactive" onclick="save_avis_ugp('éligible');" disabled>Eligible</button>
+                    <button class="btn btn-md btn-success btn_desactive" onclick="save_avis_ugp('éligible');" disabled>Favorable</button>
+                    <button  class="btn btn-md btn-danger btn_desactive" onclick="save_avis_ugp('inéligible');" disabled>Défavorable</button>
                     <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
                 </div>
             </div>
@@ -1217,13 +1221,13 @@
             <div class="modal-body">
                 <input type="hidden" name="entreprise" id="entreprise" value="{{ $entreprise->id }}">
                 <div class="form-group">
-                    <label class=" control-label" for="val_username">Note critère quantitatif</label>
+                    <label class=" control-label" for="val_username">Note critères quantitatifs</label>
                         <div class="input-group">
                             <input type="number" id="" name="date_de_formalisation" class="form-control"  disabled value="{{ $entreprise->noteTotale }}" >
                         </div>
                 </div>
                 <div class="form-group">
-                    <label class=" control-label" for="val_username">Note critère quantitatif</label>
+                    <label class=" control-label" for="val_username">Note critères qualitatifs</label>
                         <div class="input-group">
                             <input type="number" id="note_qualitatif" max="100" name="Entre la note qualitatif de l'UGP sur 100" class="form-control"   onchange="activerbtn('btn_valider_note','note_qualitatif')"  >
                         </div>

@@ -7,7 +7,6 @@
         <div class="row content-panel">
             <div class="col-md-3 profile-text mt mb centered">
                 <div class="right-divider hidden-sm hidden-xs">
-                  
                     <h4>@if($entreprise->projet)
                     {{ format_prix($entreprise->projet->montant_demande) }}</h4>
                     <h6>MONTANT DU PLAN SOUMIS</h6>

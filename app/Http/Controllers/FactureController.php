@@ -30,9 +30,9 @@ class FactureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function get_file_emplacement($input_name,$file,$devi,$num){
+    public function get_file_emplacement($code_promoteur, $input_name,$file,$devi,$num){
         $devi_designation=Devi::find($devi)->designation;
-        $code_promoteur=Auth::user()->code_promoteur;
+       // $code_promoteur=Auth::user()->code_promoteur;
         $extension=$file->getClientOriginalExtension();
         $fileName = $num.'_'.$devi_designation.'.'.$extension;
         $emplacement='public/'.$input_name.'/'.$code_promoteur; 
@@ -111,7 +111,7 @@ if(Auth::user()->banque_id){
                     ->where('factures.statut', 'validé');
                 })
                 ->select('factures.id as facture_id','factures.updated_at')
-                ->orderBy('factures.updated_at', 'asc')
+                ->orderBy('factures.date_de_validation', 'asc')
                 ->get();
 }
     $factures=[];
@@ -119,18 +119,21 @@ if(Auth::user()->banque_id){
         $facture= Facture::find($fact->facture_id);
         $factures[]= $facture;
     }
-        return view('facture.aanalyser', compact('factures'));
+        return view('facture.apayer', compact('factures'));
  }
 public function generer_lettre_de_paiement2(Facture $facture){
     $devi= Devi::find($facture->devi_id);
     $entreprise= Entreprise::find($devi->entreprise_id);
-    
+   
     $pdf = PDF::loadView('pdf.lettre_de_paiement', compact('facture', 'devi', 'entreprise'));
     return  $pdf->download('Lettre de demande de paiement .pdf');
 }
 public function generer_lettre_de_paiement(Facture $facture){
     $devi= Devi::find($facture->devi_id);
     $entreprise= Entreprise::find($devi->entreprise_id);
+    $facture->update([
+        'paiement_print'=>1,
+    ]);
     $denomination_prestataire= htmlspecialchars($devi->prestataire->denomination_entreprise);
     $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('/Applications/MAMP/htdocs/BRAVEWOMEN/templatesWord/demande_de_paiement.docx');
     $templateProcessor->setValue('NomDeLaBanque', $entreprise->banque->nom);
@@ -208,18 +211,33 @@ public function generer_lettre_de_paiement(Facture $facture){
  public function group_by_delais_de_paiement(Request $request){
     $banque_id= $request->banque_id;
                     $facture_par_delais= DB::table('entreprises')
-                                        ->leftjoin('factures',function($join){
+                                        ->rightJoin('factures',function($join){
                                             $join->on('factures.entreprise_id','=','entreprises.id');
                                         })
                                         ->where('factures.statut_paiement','!=',null)
                                         ->where('entreprises.banque_id','=', $banque_id)
                                         ->groupBy('factures.statut_paiement')
-                                        //->where('factures.statut_paiement','!=', null)
                                         ->select("factures.statut_paiement",DB::raw("COUNT(factures.id) as nombre"), DB::raw("SUM(factures.montant) as montant"))
+                                        ->orderBy('factures.statut_paiement','asc')
                                         ->get();
                                     return json_encode($facture_par_delais);
  }
-
+ public function situation_des_factures_par_statut(Request $request){
+    $facture_par_status = DB::table('entreprises')
+                                                ->leftjoin('factures',function($join){
+                                                    $join->on('factures.entreprise_id','=','entreprises.id');
+                                                })
+                                                ->rightJoin('banques',function($join){
+                                                    $join->on('entreprises.banque_id','=','banques.id');
+                                                })
+                                                ->groupBy('banques.id','banques.nom')
+                                                ->select('banques.nom as nom_banque' ,
+                                                        DB::raw("sum(CASE WHEN factures.statut='payée' OR factures.statut='validé' THEN 1 else 0 end) as nbre_facture_soumis_aux_bank"),
+                                                        DB::raw("sum(CASE WHEN factures.statut='validé' THEN 1 else 0 end) as nbre_facture_en_attente"),
+                                                        DB::raw("sum(CASE WHEN factures.statut='payée' THEN 1 else 0 end) as nbre_facture_payee"),)
+                                                ->get();
+                                    return json_encode($facture_par_status);
+ }
 
  public function demande_de_paiement_rejete_par_banque(){
     $nombre_de_dossier_rejete_par_les_banques = DB::table('historiquefactures')
@@ -280,10 +298,10 @@ public function generer_lettre_de_paiement(Facture $facture){
         }
         $copie_rib=null;
         if($request->hasFile('facture_file')){
-           $facture_file=$this->get_file_emplacement('facture_file',$request->file('facture_file'),$request->devi_id,$num_fact);
+           $facture_file=$this->get_file_emplacement($devi->entreprise->code_promoteur,'facture_file',$request->file('facture_file'),$request->devi_id,$num_fact);
         }
         if($request->hasFile('copie_rib')){
-           $copie_rib=$this->get_file_emplacement('copie_rib',$request->file('copie_rib'),$request->devi_id,$num_fact);
+           $copie_rib=$this->get_file_emplacement($devi->entreprise->code_promoteur,'copie_rib',$request->file('copie_rib'),$request->devi_id,$num_fact);
         }
       
        $facture= Facture::create([
@@ -356,14 +374,14 @@ public function generer_lettre_de_paiement(Facture $facture){
    //dd($request->all());
    $copie_rib=null;
     if($request->facture_file_u){
-        $facture_file=$this->get_file_emplacement('facture_file00',$request->file('facture_file_u'),$facture->devi_id,$facture->num_facture);
+        $facture_file=$this->get_file_emplacement($facture->entreprise->code_promoteur,'facture_file00',$request->file('facture_file_u'),$facture->devi_id,$facture->num_facture);
         $facture->update([
             'url_fac'=>$facture_file,
         ]);
       
     }
     if($request->hasFile('copie_rib_u')){
-        $copie_rib=$this->get_file_emplacement('copie_rib',$request->file('copie_rib_u'),$facture->devi_id,$facture->num_facture);
+        $copie_rib=$this->get_file_emplacement($facture->entreprise->code_promoteur,'copie_rib',$request->file('copie_rib_u'),$facture->devi_id,$facture->num_facture);
     }
     if(Auth::user()->code_promoteur==null){
         $statut= 'transmis_au_chef_de_projet';

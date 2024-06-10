@@ -356,6 +356,7 @@ Route::get('/facture/delais_de_paiment', [FactureController::class, 'group_by_de
 Route::get('/demande/rejete_par_banque', [FactureController::class, 'demande_de_paiement_rejete_par_banque'])->name('demandes.rejete_par_les_banques');
 
 Route::get('/facture/edit/{facture}', [FactureController::class, 'edit'])->name('facture.edit');
+Route::get('/facture/situation_par_statut', [FactureController::class, 'situation_des_factures_par_statut'])->name('situation_des_factures');
 
 Route::get('/activity_all/liste', [ActiviteController::class, 'liste_activity'])->name('activity.liste');
 Route::get('/all_activity/json', [ActiviteController::class, 'activity_all'])->name('all.activity');

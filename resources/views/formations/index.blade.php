@@ -17,6 +17,7 @@
     <table class="table table-vcenter table-condensed table-bordered listepdf">
         <thead>
                 <tr>
+                    <th>Numero</th>
                     <th>Libelle</th>
                     <th>Type</th>
                     <th>Date debut</th>
@@ -25,8 +26,16 @@
                 </tr>
         </thead>
         <tbody>
+                    @php
+                    $i=0;
+                    @endphp
+                    
             @foreach($formations as $formation)
+                        @php
+                        $i++;
+                        @endphp
                 <tr>
+                    <td>{{ $i }}</td>
                     <td>{{$formation->libelle}}</td>
                     <td>{{getlibelle($formation->type)}}</td>
                     <td>{{$formation->date_debut}}</td>

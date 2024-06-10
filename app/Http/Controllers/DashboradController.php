@@ -310,19 +310,15 @@ public function detail_dashboard(Request $request){
     $fond_mobilise= $contre_partie_mobilise + $subvention_debloque;
     $mpme_formes= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
     $leader_AOP_formes=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->orderBy('updated_at', 'desc')->get();
-
   if($type_detail=='mpme'){
-   
     $total_mpme_enregistre=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->count();
     $total_aop_leader_enregistres=Entreprise::where('entrepriseaop',1)->where("status",'!=',0)->orderBy('updated_at', 'desc')->count();
-
     $total_aop_enregistres=Entreprise::where('aopOuleader','aop')->where("status",'!=',0)->orderBy('updated_at', 'desc')->count();
     $total_leader_enregistres=Entreprise::where('aopOuleader','leader')->where("status",'!=',0)->orderBy('updated_at', 'desc')->count();
     $total_mpme_rejetes= Entreprise::where("decision_du_comite_phase1", "ajournee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->count();
     $total_aop_rejetes= Entreprise::where("decision_du_comite_phase1", "ajournee")->where('entrepriseaop',1)->orderBy('updated_at', 'desc')->count();
     $total_mpme_aformation= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->count();
     $entreprisesLeaderAOP_aformer=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->orderBy('updated_at', 'desc')->count();
-    
     //$total_souscription_enregistres= count($all_souscriptions);
     $total_mpme_formes=count($mpme_formes);
 
@@ -372,14 +368,29 @@ $contrepartie_par_secteur_dactivites= DB::table('entreprises')
                                     ->groupBy("entreprises.secteur_activite","valeurs.libelle")
                                     ->select("entreprises.secteur_activite","valeurs.libelle as secteur", DB::raw("SUM(accomptes.montant) as montant"))
                                     ->get();
+$contrepartie_par_region=   DB::table('entreprises')
+                                ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null)
+                                ->leftjoin('accomptes','accomptes.entreprise_id','=','entreprises.id')
+                                ->leftjoin('valeurs','entreprises.region','=','valeurs.id')
+                                ->groupBy("entreprises.region","valeurs.libelle")
+                                ->select("entreprises.region","valeurs.libelle as region", DB::raw("SUM(accomptes.montant) as montant"))
+                                ->get();
 $subvention_par_secteur_dactivites= DB::table('entreprises')
-                                    ->join('banques','entreprises.banque_id','=','banques.id')
                                     ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null)
                                     ->leftjoin('subventions','subventions.entreprise_id','=','entreprises.id')
                                     ->leftjoin('valeurs','entreprises.secteur_activite','=','valeurs.id')
                                     ->groupBy("entreprises.secteur_activite","valeurs.libelle")
                                     ->select("entreprises.secteur_activite","valeurs.libelle as secteur", DB::raw("SUM(subventions.montant_subvention) as montant"))
                                     ->get();
+
+$subvention_par_regions= DB::table('entreprises')
+                            ->join('banques','entreprises.banque_id','=','banques.id')
+                            ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null)
+                            ->leftjoin('subventions','subventions.entreprise_id','=','entreprises.id')
+                            ->leftjoin('valeurs','entreprises.region','=','valeurs.id')
+                            ->groupBy("entreprises.region","valeurs.libelle")
+                            ->select("entreprises.region","valeurs.libelle as region", DB::raw("SUM(subventions.montant_subvention) as montant"))
+                            ->get();
 
     $mobilisation_par_categorie= DB::table('entreprises')
                                     ->leftjoin('accomptes','accomptes.entreprise_id','=','entreprises.id')
@@ -454,7 +465,7 @@ $subvention_valide_par_banque= DB::table('entreprises')
                                     ->select('banques.nom as nom_banque', DB::raw("COUNT(projets.id) as nombre"), DB::raw("SUM(investissement_projets.subvention_demandee_valide) as montant"))
                                     ->get();
 
-    return view("dashboard.detail_finance", compact('devis_valides_par_categories','devis_valides_par_banques','subvention_valide_par_banque','paiement_en_attentes','paiement_par_banque','facture_par_statut','montant_facture_enregistrees','contrepartie_par_categorie','contrepartie_par_banque','subvention_par_banque','subvention_par_categorie',
+    return view("dashboard.detail_finance", compact('subvention_par_regions','contrepartie_par_region','devis_valides_par_categories','devis_valides_par_banques','subvention_valide_par_banque','paiement_en_attentes','paiement_par_banque','facture_par_statut','montant_facture_enregistrees','contrepartie_par_categorie','contrepartie_par_banque','subvention_par_banque','subvention_par_categorie',
                                                     'mobilisation_par_categorie','mobilisation_par_banque','nombre_de_pca','fond_mobilise',
                                                     'total_souscription_enregistres','total_contrepartie_verse', 'total_subvention_verse',
                                                     'nombre_devis_soumis', 'montant_devis_soumis', 'montant_devi_valide', 'montant_facture_valide',
@@ -474,7 +485,6 @@ $subvention_valide_par_banque= DB::table('entreprises')
                         ->join('projets','projets.entreprise_id','=','entreprises.id')
                         ->where('entreprises.entrepriseaop',1)
                         ->count();
-
      $nombre_pca_rejete= Projet::where('statut', 'rejete')->count();
      $montant_pca_rejete= DB::table('projets')
                         ->join('investissement_projets','investissement_projets.projet_id','=','projets.id')
@@ -1242,7 +1252,6 @@ public function entreprise_forme_geopresenation(Request $request )
         return json_encode($datageo);
 }
 public function entreprise_detail($id){
-
    $entreprise= Entreprise::find($id);
    $piecejointes=Piecejointe::where('entreprise_id', $entreprise->id)->get();
    return view('dashboard.detail_entreprise', compact('entreprise','piecejointes'));
@@ -1354,6 +1363,15 @@ $subvention_mobilise_par_banques= DB::table('banques')
                                     ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
                                     ->groupBy('banques.id',"banques.nom")
                                     ->get();
+    $facture_soumis_par_banques= DB::table('banques')
+                                    ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                    ->leftjoin('factures',function($join){
+                                        $join->on('factures.entreprise_id','=','entreprises.id')
+                                        ->whereIn('factures.statut',['validé','payée']);
+                                    })
+                                    ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
+                                    ->groupBy('banques.id',"banques.nom")
+                                    ->get();
     $facture_payes_par_banques= DB::table('banques')
                                     ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
                                     ->leftjoin('factures',function($join){
@@ -1387,7 +1405,7 @@ $montant_projet_valide_par_comites= DB::table('entreprises')
 $taux_de_consommation_par_banque= DB::table('entreprises')
                                 ->leftjoin('projets',function($join){
                                     $join->on('projets.entreprise_id','=','entreprises.id')
-                                    ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null);
+                                    ->where('projets.statut', 'selectionné');
                                 })
                                 ->leftjoin('factures',function($join){
                                     $join->on('factures.entreprise_id','=','entreprises.id')
@@ -1395,7 +1413,7 @@ $taux_de_consommation_par_banque= DB::table('entreprises')
                                 })
                                 ->rightjoin('banques','entreprises.banque_id','=','banques.id')
                                 ->groupBy('banques.id','banques.nom')
-                                ->select('banques.nom as nom_banque' , DB::raw("SUM(factures.montant) as montant_decaisse"), DB::raw("SUM(projets.montant_accorde) as montant_a_mobilise"))
+                                ->select('banques.nom as nom_banque' ,DB::raw("count(factures.id) as nbre_facture_payee"), DB::raw("SUM(factures.montant) as montant_decaisse"), DB::raw("SUM(projets.montant_accorde)/2 as montant_a_mobilise"))
                                 ->get();
                                
     $financement_par_banks= DB::select('select  b.nom as nom_banque, b.id, SUM(s.montant_subvention) as montant_subvention,
@@ -1407,7 +1425,7 @@ $taux_de_consommation_par_banque= DB::table('entreprises')
     
                                                 //dd($nombre_de_dossier_rejete_par_les_banques);
               
-    return view('dashboard.banque_perform', compact('montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+    return view('dashboard.banque_perform', compact('facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
 }
 else
 {

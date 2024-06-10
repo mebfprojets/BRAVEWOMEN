@@ -214,7 +214,7 @@ public function updateuser(Request $request, User $user)
 public function verifier_conformite_cpt(Request $request){ 
     $entreprises=Entreprise::where('code_promoteur',$request->code_promoteur)->where("participer_a_la_formation",1)->where("decision_du_comite_phase1","selectionnee")->get();
     $user=User::where("code_promoteur",$request->code_promoteur)->first();
-    
+   // dd($entreprises);
     if(!$entreprises || $user){
         return 2;
     }

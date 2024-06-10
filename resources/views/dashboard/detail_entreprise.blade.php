@@ -44,6 +44,10 @@
                             <td>{{getlibelle($entreprise->region)}}</td>
                         </tr>
                         <tr>
+                            <td class="text-left"><strong>Montant du projet</strong></td>
+                            <td>{{format_prix($entreprise->projet->montant_accorde)}}</td>
+                        </tr>
+                        <tr>
                             <td class="text-left"><strong>Contacts</strong></td>
                             <td>{{$entreprise->telephone_entreprise}}</td>
                         </tr>
@@ -63,11 +67,11 @@
                     </div>
                     <div class="col-md-6 montant_detail_entreprise" >
                         <p><span><img src="{{ asset('/img/money-icon.png') }}" width="30"></span><span></span> <span>Paiements Engagés</span> </p>
-                        <p > {{ format_prix($entreprise->subventions->sum('montant_subvention')) }}</p>
+                        <p > {{ format_prix($entreprise->factures->sum('montant')) }}</p>
                     </div>
                     <div class="col-md-5 montant_detail_entreprise">
                         <p><span><img src="{{ asset('/img/money-icon.png') }}" width="30"></span><span></span> <span>Paiement Effectué</span> </p>
-                        <p > {{ format_prix($entreprise->subventions->sum('montant_subvention'))}}</p>
+                        <p > {{ format_prix($entreprise->factures_payes->sum('montant'))}}</p>
                     </div>
                 </div>
                
@@ -476,7 +480,7 @@
                                                     </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($entreprise->acquisitions as $aquisition)
+                                                @foreach($entreprise->acquisitions_valides as $aquisition)
                                                     <tr>
                                                         <td>{{$aquisition->designation}}</td>
                                                         <td>{{$aquisition->description}}</td>
