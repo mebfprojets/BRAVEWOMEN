@@ -4309,14 +4309,14 @@ only screen and (min-device-pixel-ratio: 1.5) {
     display: inline-block;
     min-width: 10px;
     padding: 3px 7px;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    background-color: #777;
+    background-color: #f68080;
     border-radius: 10px;
   }
 

@@ -965,9 +965,22 @@ $nombre_demploi_par_zones = DB::table('entreprises')
     }
     public function dashboard( Request $request){
         $type_tableau_de_bord= $request->type_tableau_de_bord;
-        //Verifier si l'utilisateur est un membre de commission
         $entreprises=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->get();
         $entreprisesAOP=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->orderBy('updated_at', 'desc')->get();
+        $aop_ayant_soumis_pca= DB::table('projets')  
+                                        ->leftjoin('entreprises',function($join){
+                                            $join->on('projets.entreprise_id','=','entreprises.id');
+                                        })
+                                        ->where('entrepriseaop',1)
+                                        ->get();
+         $mpme_ayant_soumis_pca= DB::table('projets')  
+                                        ->leftjoin('entreprises',function($join){
+                                            $join->on('projets.entreprise_id','=','entreprises.id');
+                                        })
+                                        ->where('entrepriseaop',null)
+                                        ->get();
+        $pme_ayant_pca_a_subventionner= $mpme_ayant_soumis_pca->where('statut','selectionné');
+        $aop_ayant_pca_a_subventionner= $aop_ayant_soumis_pca->where('statut','selectionné');
         $entreprisesAOP_aformer=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->orderBy('updated_at', 'desc')->get();
         $decisions_retenu= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
         $mpme_formes= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
@@ -978,17 +991,14 @@ $nombre_demploi_par_zones = DB::table('entreprises')
         $total_mpme_enregistre= count($entreprises);
         $entreprisesLeaderAOP=count($entreprisesAOP);
         $nb_entreprisesAOP_aformer=count($entreprisesAOP_aformer);
-
-        //if(Auth::user()->structure_represente == null && Auth::user()->banque_id==null && Auth::user()->code_promoteur == null ){
            if($type_tableau_de_bord=='dashboard'){
-                 return view("dashboard",compact("total_mpme_formes","total_aop_leader_formes","total_mpme_enregistre","total_mpme_aformer","entreprisesLeaderAOP","nb_entreprisesAOP_aformer"));
+                 return view("dashboard",compact('aop_ayant_pca_a_subventionner','pme_ayant_pca_a_subventionner','aop_ayant_soumis_pca','mpme_ayant_soumis_pca',"total_mpme_formes","total_aop_leader_formes","total_mpme_enregistre","total_mpme_aformer","entreprisesLeaderAOP","nb_entreprisesAOP_aformer"));
            }
            elseif($type_tableau_de_bord=='geodashboard'){
-                return view("dashboardgeo",compact("total_mpme_formes","total_aop_leader_formes","total_mpme_enregistre","total_mpme_aformer","entreprisesLeaderAOP","nb_entreprisesAOP_aformer"));
+                return view("dashboardgeo",compact('aop_ayant_soumis_pca','mpme_ayant_soumis_pca',"total_mpme_formes","total_aop_leader_formes","total_mpme_enregistre","total_mpme_aformer","entreprisesLeaderAOP","nb_entreprisesAOP_aformer"));
            }
            else {
-            return view("dashboardliste",compact("entreprises", "total_mpme_formes","total_aop_leader_formes","total_mpme_enregistre","total_mpme_aformer","entreprisesLeaderAOP","nb_entreprisesAOP_aformer"));
-
+            return view("dashboardliste",compact('aop_ayant_pca_a_subventionner','pme_ayant_pca_a_subventionner','aop_ayant_soumis_pca','mpme_ayant_soumis_pca',"entreprises", "total_mpme_formes","total_aop_leader_formes","total_mpme_enregistre","total_mpme_aformer","entreprisesLeaderAOP","nb_entreprisesAOP_aformer"));
            }
 
     }
@@ -1044,12 +1054,73 @@ $nombre_demploi_par_zones = DB::table('entreprises')
           // dd(json_encode($entreprises_retenus));
         return json_encode($entreprises_retenu);
     }
+    public function entreprise_pca( Request $request)
+    {
+        //dd('oko');
+        $categorieentreprise= $request->typeentreprise;
+        $pca_selectionne= $request->pca_selectionne;
+        ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
 
+        if($pca_selectionne){
+            $entreprises_retenus= DB::table('projets')  
+                                        ->leftjoin('entreprises',function($join){
+                                            $join->on('projets.entreprise_id','=','entreprises.id');
+                                        })
+                                        ->where('projets.statut','selectionné')
+                                        ->where('entrepriseaop',$categorieentreprise)
+                                        ->orderBy('entreprises.updated_at', 'desc')
+                                        ->get();
+            //dd($entreprises_retenus);
+           // $entreprises_retenus = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',$categorieentreprise)->orderBy('updated_at', 'desc')->get();
+        }
+        else{
+            $entreprises_retenus= DB::table('projets')  
+                                        ->leftjoin('entreprises',function($join){
+                                            $join->on('projets.entreprise_id','=','entreprises.id');
+                                        })
+                                        ->where('entrepriseaop',$categorieentreprise)
+                                        ->orderBy('entreprises.updated_at', 'desc')
+                                        ->get();
+            // dd($entreprises_retenus);
+            //$entreprises_retenus = Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',$categorieentreprise)->orderBy('updated_at', 'desc')->get();
+        }
+        //$entreprises_retenus=DB::select("select e.denomination, e.region, p.nombre_annee_experience, e.secteur_activite, e.maillon_activite FROM entreprises e , valeurs v, promotrices p where e.decision_du_comite_phase1= 'retenu' and e.region = v.id and e.entrepriseaop IS NULL ");
+        $decisions_retenu= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
+       
+        $entreprises_retenu=[];
+        foreach( $entreprises_retenus as $value)
+            {
+               // dd($entreprises_retenu->denomination);
+               $entreprises_retenu[] = array('id'=>$value->id,'denomination'=>$value->denomination,'region'=>getlibelle($value->region),'province'=>getlibelle($value->province),'commune'=>getlibelle($value->commune),'arrondissement'=>getlibelle($value->arrondissement),'code_promoteur'=>$value->code_promoteur,'nombre_annee_experience'=>$value->nombre_annee_existence, 'secteur_activite'=>getlibelle($value->secteur_activite),'maillon_activite'=>getlibelle($value->maillon_activite));
+            }
+        return json_encode($entreprises_retenu);
+    }
     // Cette fonction gere la partie graphique
     public function souscriptionretenueparsecteuractivite(Request $request)
     {
         $type_entreprise= $request->type_entreprise;
         $valeur_de_forme= $request->valeur_de_forme;
+        $pca= $request->pca;
+        /// $pca = 1 retourne la liste des PCA selectionnés
+    if($pca==1){
+        if($type_entreprise=='mpme'){
+            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v, projets p where p.entreprise_id=e.id and e.secteur_activite = v.id and p.statut='selectionné' and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
+        }
+       elseif($type_entreprise=='aop'){
+            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v, projets p where p.entreprise_id=e.id and e.secteur_activite = v.id and p.statut='selectionné' and e.entrepriseaop=1 GROUP by e.secteur_activite, v.libelle");
+       }
+    }
+    elseif($pca==2){
+        if($type_entreprise=='mpme'){
+            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v, projets p where p.entreprise_id=e.id and e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
+        }
+       elseif($type_entreprise=='aop'){
+            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v, projets p where p.entreprise_id=e.id and e.secteur_activite = v.id and e.entrepriseaop=1 GROUP by e.secteur_activite, v.libelle");
+            //dd($entreprises_retenus);
+
+       }
+    }
+    else{
     if($valeur_de_forme==0){
         if($type_entreprise=='mpme'){
             $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
@@ -1068,6 +1139,7 @@ $nombre_demploi_par_zones = DB::table('entreprises')
         }
 
     }
+}
          //Entreprise:: $valeur_de_forme=$request->valeur_de_forme;where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
         if($entreprises_retenus){
             foreach( $entreprises_retenus as $value)

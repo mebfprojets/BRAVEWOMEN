@@ -261,6 +261,8 @@ Route::get("/dashboard/enregistre_par_zone_par_secteur_d_activite", [DashboradCo
 Route::get("/dashboard/entreprises/listepresentation", [DashboradController::class, 'dashboardliste'])->name("dashboardliste");
 Route::get('/dashboard/entreprise_dashboard_detail/{id}',[DashboradController::class, 'entreprise_detail'])->name("dashboard.entreprise_detail");
 Route::get("/dashboard/entreprises/retenue", [DashboradController::class, 'entreprise_retenues'])->name("entreprise_retenues");
+Route::get("/entreprises/pca_statut", [DashboradController::class, 'entreprise_pca'])->name("entreprise_pca_status");
+
 Route::get('/dashboard/bank',[DashboradController::class, 'dashboard_bank'])->name("dashboad_banque");
 Route::get("/financements/enregistres", [FinancementController::class, 'enregistre'])->name("financement.enregistres");
 Route::get("updatelocalisation/", [EntrepriseController::class, 'updatelocalisationentreprise'])->name("localisation.entreprise");

@@ -43,6 +43,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="javascript:void(0)" onclick="entreprise_aformer('mpme',1);">
+                        <span class="badge pull-right">{{ count($mpme_ayant_soumis_pca) }}</span>
+                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de MPME ayant soumis un PCA</strong>
+                    </a>
+                </li>
+                <li>
                   <a href="javascript:void(0)" onclick="allsouscription('aop');">
                       <span class="badge pull-right">{{ $entreprisesLeaderAOP }}</span>
                       <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de souscriptions Leader/AOP </strong>
@@ -58,6 +64,12 @@
                     <a href="javascript:void(0)" onclick="entreprise_aformer_geo('aop',1);">
                         <span class="badge pull-right">{{ $total_aop_leader_formes }}</span>
                         <i class="fa fa-tag fa-fw text-danger"></i> <strong>Nombre de AOP/Entreprises Leader formées</strong>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="entreprise_aformer('aop',1);">
+                        <span class="badge pull-right">{{ count($aop_ayant_soumis_pca) }}</span>
+                        <i class="fa fa-tag fa-fw text-danger"></i> <strong>Nombre de AOP/Entreprises Leader ayant bénéficié de PD</strong>
                     </a>
                 </li>
             </ul>

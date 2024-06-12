@@ -371,7 +371,7 @@
                         </li>
                       @endcan
                       @can('lister_facture.a_payer', Auth::user())
-                        <li class="@yield('facture_analyse')">
+                        <li class="@yield('facture_apayer')">
                                 <a href="{{ route("facture.a_payer_de_par_banque") }}"> Factures à payer</a>
                         </li>
                       @endcan

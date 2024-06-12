@@ -102,7 +102,7 @@ if(Auth::user()->banque_id){
             ->select('factures.id as facture_id')
             ->orderBy('factures.updated_at', 'asc')
             ->get();
-           // dd($facture_ids);
+           
 
 }else{
     $facture_ids= DB::table('factures')
@@ -111,7 +111,7 @@ if(Auth::user()->banque_id){
                     ->where('factures.statut', 'validé');
                 })
                 ->select('factures.id as facture_id','factures.updated_at')
-                ->orderBy('factures.date_de_validation', 'asc')
+                ->orderBy('factures.date_de_validation', 'desc')
                 ->get();
 }
     $factures=[];
@@ -174,7 +174,7 @@ public function generer_lettre_de_paiement(Facture $facture){
             $delais= 'Retard ]7,10] jrs';
         }
         elseif($nombre_de_jour_de_retard > 10){
-            $delais= 'Plus de 10 jrs';
+            $delais= 'Retard 10 jours et plus';
         }
         $facture->update([
             'url_recu_paiement'=>$recu_de_paiement,
@@ -371,7 +371,6 @@ public function generer_lettre_de_paiement(Facture $facture){
 
  public function enr_modification(Request $request){
    $facture= facture::find($request->facture_id);
-   //dd($request->all());
    $copie_rib=null;
     if($request->facture_file_u){
         $facture_file=$this->get_file_emplacement($facture->entreprise->code_promoteur,'facture_file00',$request->file('facture_file_u'),$facture->devi_id,$facture->num_facture);
@@ -534,7 +533,6 @@ public function changerStatus(Request $request){
             return view('facture.analyse', compact('facture','historiques', 'motifs_de_rejects','suiviExecution' ));
         }
         else{
-            //dd($suiviExecution);
             return view('facture.show', compact('facture', 'historiques','suiviExecution'));
         }
         Insertion_Journal('factures','visualisation');
@@ -551,7 +549,6 @@ public function changerStatus(Request $request){
             return view('facture.show', compact('facture', 'historiques','suiviExecution'));
     }
     public function telechargerfacture(Request $request, $id){ 
-        
         if($request->file=='recu_paiement'){
             $facture= Facture::find($id);
             return $path = Storage::download($facture->url_recu_paiement);
@@ -591,7 +588,6 @@ public function changerStatus(Request $request){
    public function ajouter_image_bien_acquis(Request $request){
     $facture= Facture::find($request->facture_id);
     if($request->hasFile('image_bien')){
-       
         $file = $request->file('image_bien');
         $fileName = $file->getClientOriginalName();
         //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise

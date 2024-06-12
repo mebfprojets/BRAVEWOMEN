@@ -12,7 +12,7 @@
               <div class="block-options pull-right">
                   <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default" data-toggle="tooltip" title="Add Tag"><i class="fa fa-plus"></i></a>
               </div>
-              <h2> <i class="fa fa-tags"></i> Indicateur de  <strong>preformance</strong></h2>
+              <h2> <i class="fa fa-tags"></i> <strong> Situation détaillée</strong></h2>
           </div>
           <!-- END Tags Title -->
 
@@ -30,15 +30,28 @@
                 <li>
                     <a href="javascript:void(0)"  onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=mpme&forme=0');">
                         <span class="badge pull-right">{{ $total_mpme_aformer }}</span>
-                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de MPME selectionnées pour la  formation</strong>
+                        <i class="fa fa-tag fa-fw text-success"></i> <strong>Nombre de MPME selectionnées pour la  formation</strong>
                     </a>
                 </li>
                 <li>
                     <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=mpme&forme=1');">
                         <span class="badge pull-right">{{ $total_mpme_formes }}</span>
-                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de MPME formées</strong>
+                        <i class="fa fa-tag fa-fw text-success"></i> <strong>Nombre de MPME formées</strong>
                     </a>
                 </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_pca_status')}}?typeentreprise=mpme');">
+                        <span class="badge pull-right">{{ count($mpme_ayant_soumis_pca) }}</span>
+                        <i class="fa fa-tag fa-fw text-success"></i> <strong>Nombre de MPME ayant soumis un PCA</strong>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_pca_status')}}?typeentreprise=mpme&pca_selectionne=1');">
+                        <span class="badge pull-right">{{ count($pme_ayant_pca_a_subventionner) }}</span>
+                        <i class="fa fa-tag fa-fw text-success"></i> <strong>Nombre de MPME a subentionner</strong>
+                    </a>
+                </li>
+                
                 <li>
                   <a href="javascript:void(0)"  onclick="listedashbordlistdata('{{ route('listeallensouscription') }}?typeentreprise=aop')">
                       <span class="badge pull-right">{{ $entreprisesLeaderAOP }}</span>
@@ -48,13 +61,25 @@
                 <li>
                     <a href="javascript:void(0)"  onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=aop&forme=0')" >
                         <span class="badge pull-right">{{ $nb_entreprisesAOP_aformer }}</span>
-                        <i class="fa fa-tag fa-fw text-danger"></i> <strong>Nombre de Leader/AOP selectionnées pour la  formation</strong>
+                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de Leader/AOP selectionnées pour la  formation</strong>
                     </a>
                 </li>
                 <li>
                     <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_retenues') }}?typeentreprise=aop&forme=1')">
                         <span class="badge pull-right">{{ $total_aop_leader_formes }}</span>
-                        <i class="fa fa-tag fa-fw text-danger"></i> <strong>Nombre de AOP/Entreprises Leader formées</strong>
+                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de AOP/Entreprises Leader formées</strong>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_pca_status') }}?typeentreprise=aop');">
+                        <span class="badge pull-right">{{ count($aop_ayant_soumis_pca) }}</span>
+                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de AOP/Entreprises Leader ayant bénéficié de PD</strong>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" onclick="listedashbordlistdata('{{ route('entreprise_pca_status') }}?typeentreprise=aop&pca_selectionne=1');">
+                        <span class="badge pull-right">{{ count($aop_ayant_pca_a_subventionner) }}</span>
+                        <i class="fa fa-tag fa-fw text-warning"></i> <strong>Nombre de AOP/Entreprises Leader a subventionner</strong>
                     </a>
                 </li>
             </ul>

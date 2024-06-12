@@ -475,7 +475,10 @@ function makedatatable(){
                         {
                           donnch.push({
                                     name: donnee[i].secteur,
-                                    y:  parseInt(donnee[i].nombre)} )
+                                    y:  parseInt(donnee[i].nombre),
+                                    dataLabels: {
+                                    enabled: true,
+                                    }} )
                         }
                         for(var i=0; i<donnee.length; i++)
                         {
@@ -517,7 +520,7 @@ function makedatatable(){
 });   
 </script>
 <script language ="JavaScript">
-    function entreprise_aformer(type_entreprise, valeur_de_forme){
+    function entreprise_aformer(type_entreprise, valeur_de_forme, pca){
         (type_entreprise=="mpme")?(categorie_entreprise="Les MPME"):(categorie_entreprise="Les Entreprises leaders et les AOP");
         (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="Selectionnées pour la formation ");
         var url = "{{ route('souscriptionretenueparsecteuractivite') }}";
@@ -525,7 +528,7 @@ function makedatatable(){
                             url: url,
                             type: 'GET',
                             dataType: 'json',
-                            data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme },
+                            data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme, pca:pca},
                             error:function(data){alert("Erreur");},
                             success: function (donnee) {
                         var donnch= new Array();
@@ -534,7 +537,11 @@ function makedatatable(){
                         {
                           donnch.push({
                                     name: donnee[i].secteur,
-                                    y:  parseInt(donnee[i].nombre)} )
+                                    y:  parseInt(donnee[i].nombre),
+                                    dataLabels: {
+                                    enabled: true,
+                                    }
+                                })
                         }
                         for(var i=0; i<donnee.length; i++)
                         {
@@ -577,7 +584,7 @@ var url = "{{ route('entreprise.preselectionneparzone') }}";
 $.ajax({
                      url: url,
                      type: 'GET',
-                    data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme},
+                    data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme,pca:pca},
                      dataType: 'json',
                      error:function(data){alert("Erreur");},
                      success: function (donnee) {
@@ -586,7 +593,9 @@ $.ajax({
                         {
                           donnch.push({
                                     name: donnee[i].region,
-                                    y:  parseInt(donnee[i].nombre)} )
+                                    y:  parseInt(donnee[i].nombre),
+                                   
+                                } )
                         }
                         Highcharts.chart('indicateur2', {
                             chart: {
@@ -644,7 +653,11 @@ $.ajax({
                         {
                           donnch.push({
                                     name: donnee[i].secteur,
-                                    y:  parseInt(donnee[i].nombre)} )
+                                    y:  parseInt(donnee[i].nombre),
+                                    dataLabels: {
+                                    enabled: true,
+                                    }
+                                } )
                         }
                         for(var i=0; i<donnee.length; i++)
                         {
