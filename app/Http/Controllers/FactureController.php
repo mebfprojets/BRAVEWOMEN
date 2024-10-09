@@ -32,7 +32,6 @@ class FactureController extends Controller
      */
     public function get_file_emplacement($code_promoteur, $input_name,$file,$devi,$num){
         $devi_designation=Devi::find($devi)->designation;
-       // $code_promoteur=Auth::user()->code_promoteur;
         $extension=$file->getClientOriginalExtension();
         $fileName = $num.'_'.$devi_designation.'.'.$extension;
         $emplacement='public/'.$input_name.'/'.$code_promoteur; 

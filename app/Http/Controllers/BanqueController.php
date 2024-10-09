@@ -136,7 +136,10 @@ class BanqueController extends Controller
             }
             else{
                $entreprises= Entreprise::where('resultat_kyc', 'concluant')
-                                        ->Where('region', Auth::user()->zone)
+                                            ->where(function ($query) {
+                                                $query->where('region_affectation', '=', Auth::user()->zone)
+                                                    ->orWhere('region', '=', Auth::user()->zone);
+                                            })
                                         ->where("date_de_signature_accord_beneficiaire",'!=',null)
                                         ->get();
             }

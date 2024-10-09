@@ -161,7 +161,6 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::post('/resultat/kyc/', [ProjetController::class, 'save_result_kyc'])->name('save_result_kyc');
     Route::post('/import/resultat/kyc', [ProjetController::class,'importer_result_kyc'])->name('importer_resultat_kyc');
     Route::post('/import/dates/creation_compte', [ProjetController::class,'importer_date_creation_ss_compte'])->name('importer_date_creation_ss_compte');
-
     Route::get('demande/kyc', [ProjetController::class, 'lister_les_demandes_de_kyc'] )->name('liste_demande_kyc');
     Route::post('/enregistrer/accord/beneficaire', [ProjetController::class, 'save_accord_beneficiaire'])->name('save_accord_beneficiaire');
     Route::resource('coach', CoachController::class);
@@ -319,6 +318,8 @@ Route::get('/beneficiciare/entreprise', [BeneficiaireController::class, 'showent
 Route::get('/beneficiciare/devis', [DeviController::class, 'liste_devis_par_promoteur'])->name("profil.mesdevis");
 Route::get('/devis/get_montant/', [DeviController::class, 'get_montant'])->name("devi.get_montant");
 Route::post("/projet/add/piecejointe/",[ProjetController::class,'add_piecej_to_projet'])->name('add.piecetoprojet');
+Route::get("/projet/add/plan/appui2/" ,[ProjetController::class,'add_plan_appui2'])->name('projet.add_plan_appui2');
+Route::post("/store/projet/plan/appui2/" ,[ProjetController::class,'store_plan_appui2'])->name('projet.store_plan_appui2');
 
 Route::get("/beneficiciare/myentreprise",[BeneficiaireController::class, 'showentreprise'])->name("entreprise.beneficiaire");
 Route::get('/beneficiciare/updatedate/{promotrice}',[BeneficiaireController::class, 'updatebeneficiare'])->name('updateprofilbeneficiaire');

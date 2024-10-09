@@ -10,7 +10,6 @@
         <meta name="author" content="pixelcave">
         <meta name="robots" content="noindex, nofollow">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
-
         <!-- Icons -->
         <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
         <link rel="shortcut icon" href="{{ asset("img/favicon.ico") }}">
@@ -23,7 +22,6 @@
         <link rel="apple-touch-icon" href="img/icon152.png" sizes="152x152">
         <link rel="apple-touch-icon" href="img/icon180.png" sizes="180x180">
         <!-- END Icons -->
-
         <!-- Stylesheets -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="

@@ -805,7 +805,7 @@
                             </tr>
                     </thead>
                     <tbody id="tbadys">
-                @foreach($entreprise->projet->investissements as $investissment)
+                @foreach($entreprise->projet->appui1_investissements as $investissment)
                     <tr >
                         @if ($entreprise->projet->statut!='selectionné')
                             <td>
@@ -830,6 +830,7 @@
                     @endforeach
                 </tbody>
                 </table>
+
         @if ($entreprise->projet->statut=='selectionné')
         <h4>Plan d'investissement validé</h4>
         <table class="table table-condensed table-bordered" style="text-align: center">
@@ -843,7 +844,7 @@
                 </tr>
         </thead>
         <tbody id="tbadys">
-        @foreach($entreprise->projet->investissementvalides as $investissment)
+        @foreach($entreprise->projet->appui1_investissementvalides as $investissment)
         <tr >
             @if ($entreprise->projet->statut!='selectionné')
                 <td>
@@ -864,19 +865,13 @@
             <td>
                 {{format_prix($investissment->subvention_demandee_valide)}}
             </td>
-
         </tr>
         @endforeach
         </tbody>
         </table>
-    
     @endif
-                
-
-
         @if($projet_piecejointes)
                 <div class="row">
-    
                     <div class="col-md-11">
                         <div class="block">
                         <div class="block-title">
@@ -922,6 +917,130 @@
                 </div>
                 </div>
         @endif
+        <h4>Plan d'investissement 2eme appui @if ($entreprise->projet->statut== 'selectionné')<span><a href="#modal-add-invest-appui2" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span> @endif</h4> 
+                    <table class="table table-condensed table-bordered" style="text-align: center">
+                    <thead style="text-align: center !important">
+                            <tr>
+                                <th style="text-align: center; width:5%">Designation</th>
+                                <th style="text-align: center; width:5%">Montant Soumis</th>
+                                <th style="text-align: center; width:5%">Apport Personnel Soumis</th>
+                                <th style="text-align: center; width:5%">Subvention Soumis</th>
+                                
+                            </tr>
+                    </thead>
+                    <tbody id="tbadys">
+                @foreach($entreprise->projet->appui2_investissements as $investissment)
+                    <tr >
+                        @if ($investissment->statut==null)
+                            <td>
+                                <a href="#modal-modif-invest" data-toggle="modal"  onclick="edit_investissement({{ $investissment->id }});" >{{getlibelle($investissment->designation)}}</a>
+                            </td>
+                        @else
+                        <td>
+                            {{getlibelle($investissment->designation)}}
+                        </td>
+                        @endif
+                        <td>
+                            {{format_prix($investissment->montant)}}
+                        </td>
+                        <td>
+                            {{format_prix($investissment->apport_perso)}}
+                        </td>
+                        <td>
+                            {{format_prix($investissment->subvention_demandee)}}
+                        </td>
+
+                    </tr>
+                    @endforeach
+                </tbody>
+                </table>
+                @if($entreprise->projet->appui2_investissementvalides->count()>0)
+                <h4>Plan d'investissement validé Appui 2</h4>
+                <table class="table table-condensed table-bordered" style="text-align: center">
+                <thead style="text-align: center !important">
+                        <tr>
+                            <th style="text-align: center; width:5%">Designation</th>
+                            <th style="text-align: center; width:5%">Montant</th>
+                            <th style="text-align: center; width:5%">Apport Personnel validé</th>
+                            <th style="text-align: center; width:5%">Subvention validée</th>
+                            
+                        </tr>
+                </thead>
+                <tbody id="tbadys">
+                @foreach($entreprise->projet->appui2_investissementvalides as $investissment)
+                <tr >
+                    @if ($entreprise->projet->statut!='selectionné')
+                        <td>
+                            <a href="#modal-modif-invest" data-toggle="modal"  onclick="edit_investissement({{ $investissment->id }});" >{{getlibelle($investissment->designation)}}</a>
+                        </td>
+                    @else
+
+                    <td>
+                        {{getlibelle($investissment->designation)}}
+                    </td>
+                    @endif
+                    <td>
+                        {{format_prix($investissment->montant_valide)}}
+                    </td>
+                    <td>
+                        {{format_prix($investissment->apport_perso_valide)}}
+                    </td>
+                    <td>
+                        {{format_prix($investissment->subvention_demandee_valide)}}
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+                </table>
+            @endif
+                @if($projet_piecejointes_appuis2)
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="block">
+                        <div class="block-title">
+                         <h4> Documents de l'appui 2 du PCA revisé  @if ($entreprise->projet->statut_appuis2 != 'soumis')<span><a href="#modal-add-piece" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span>@endif</h4> 
+                      </div>
+                        <div class="table-responsive">
+                            <table class="table table-vcenter table-condensed table-bordered listepdf valdetail"   > 
+                                <thead>
+                                        <tr>
+                                            <th>N°</th>
+                                            <th>Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                  </thead>
+                                  <tbody id="tbadys">
+                            @foreach($projet_piecejointes_appuis2 as $key => $piecejointe)
+                            <tr>
+                                    <td>
+                                    {{ $key + 1 }}
+                                    </td>
+                                    @if ($entreprise->projet->statut_appui2 !='selectionné')
+                                    <td>
+                                        <a href="#modal-modif-pj" data-toggle="modal"  onclick="edit_piecejointe({{ $piecejointe->id }});" > {{getlibelle($piecejointe->type_piece)}} </a>
+                                    </td>
+                                    @else
+                                    <td>
+                                         {{getlibelle($piecejointe->type_piece)}} 
+                                    </td>
+                                    @endif
+                                    
+                                        
+                            <td>
+                                <a href="{{ route('telechargerpiecejointe',$piecejointe->id)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+                                {{-- <a href="{{ route('detaildocument',$piecejointe->id)}}"title="Visualiser le document" class="btn btn-xs btn-default" ><i class="fa fa-eye"></i> </a> --}}
+                            </td>
+                    
+                        </tr>
+                    @endforeach
+                    </tbody>
+                    </table>
+                          </div>
+                    </div>
+                </div>
+                </div>
+        @endif
+            
           
 </div>
               <!-- /col-md-6 -->
@@ -1902,15 +2021,17 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-pencil"></i> Ajouter une nouvelle ligne d'investissement</h2>
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Ajouter une nouvelle ligne d'investissement sur le premier appui</h2>
             </div>
             <div class="modal-body">
                 <form id="form-validation" method="POST"  action="{{route('add.investissement')}}" class="form-horizontal form-bordered" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" id='projet_id_new_invest' name="projet_id" >
+                    <input type="hidden" id='' name="appui" value=1 >
+
             <div class="row">
                 <div class="form-group col-md-3" style="margin-left: 15px;">
-                    <label class="control-label" for="example-chosen">Categorie d'investissement<span class="text-danger">*</span></label>
+                    <label class="control-label" for="example-chosen">Catégorie d'investissement<span class="text-danger">*</span></label>
                         <select id="categorie_invest_add" name="designation" class="form-control" onchange="afficher();" data-placeholder="formalisée?" style="width: 100%;" required>
                             <option></option>
                            @foreach ($categorie_investissments as $categorie_investissment)
@@ -1948,6 +2069,78 @@
                     <label class="control-label" for="name">Apport personnel : <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input id="apport_perso_add" type="text" class="form-control" name="apport_perso" placeholder="Cout de l'investissement" value="{{ old('apport_perso') }}" required autofocus onChange="verifier_montant('montant','devi_id','facture_id_fictif')">
+                            <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                        @if ($errors->has('designation'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('apport_perso') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                </div>
+            </div>   
+                <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <button type="button" onclick="reload()" class="btn btn-sm btn-default" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-sm btn-success" ><i class="fa fa-arrow-right"></i> Valider</button>
+
+                </div>
+            </div>
+            </form>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<div id="modal-add-invest-appui2" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Ajouter une nouvelle ligne d'investissement sur le deuxieme appui</h2>
+            </div>
+            <div class="modal-body">
+                <form id="form-validation" method="POST"  action="{{route('add.investissement')}}" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <input type="hidden" id='' name="appui" value=2 >
+                    <input type="hidden" id='projet_id_new_invest2' name="projet_id" >
+            <div class="row">
+                <div class="form-group col-md-3" style="margin-left: 15px;">
+                    <label class="control-label" for="example-chosen">Categorie d'investissement<span class="text-danger">*</span></label>
+                        <select id="categorie_invest_add" name="designation" class="form-control" onchange="afficher();" data-placeholder="formalisée?" style="width: 100%;" required>
+                            <option></option>
+                           @foreach ($categorie_investissments as $categorie_investissment)
+                            <option value="{{ $categorie_investissment->id}}">{{ getlibelle($categorie_investissment->id)}}</option>
+                           @endforeach
+                        </select>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-3" style="margin-left:0px;">
+                    <label class="control-label" for="name">Cout : <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input id="cout_add_2" type="text" class="form-control" name="cout" placeholder="Cout de l'investissement" value="{{ old('cout') }}" required autofocus >
+                            <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                        @if ($errors->has('designation'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('cout') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-3" style="margin-left:0px;">
+                    <label class="control-label" for="name">Subvention demandée  : <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input id="subvention_add_2" type="text" class="form-control" name="subvention" placeholder="Cout de l'investissement" value="{{ old('subvention') }}" required autofocus onChange="deux_somme_complementaire('subvention_add_2','apport_perso_add_2','cout_add_2')">
+                            <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                        @if ($errors->has('designation'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('subvention') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-md-3" style="margin-left:0px;">
+                    <label class="control-label" for="name">Apport personnel : <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input id="apport_perso_add_2" type="text" class="form-control" name="apport_perso" placeholder="Cout de l'investissement" value="{{ old('apport_perso') }}" required autofocus onChange="verifier_montant('montant','devi_id','facture_id_fictif')">
                             <span class="input-group-addon"><i class="gi gi-user"></i></span>
                         @if ($errors->has('designation'))
                         <span class="help-block">
@@ -2064,6 +2257,7 @@
 <script>
          function recupererprojet_id(id_projet){
             document.getElementById("projet_id_new_invest").setAttribute("value", id_projet);
+            document.getElementById("projet_id_new_invest2").setAttribute("value", id_projet);
             document.getElementById("projet_id_add_piece").setAttribute("value", id_projet);
             
     }

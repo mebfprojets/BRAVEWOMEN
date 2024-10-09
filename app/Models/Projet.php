@@ -12,6 +12,18 @@ class Projet extends Model
     public function investissements(){
         return $this->hasMany(InvestissementProjet::class);
     }
+    public function appui1_investissements(){
+        return $this->hasMany(InvestissementProjet::class)->where('appui', 1);
+    }
+    public function appui2_investissements(){
+        return $this->hasMany(InvestissementProjet::class)->where('appui', 2);
+    }
+    public function appui1_investissementvalides(){
+        return $this->hasMany(InvestissementProjet::class)->where('appui', 1)->where('statut', 'valide');
+    }
+    public function appui2_investissementvalides(){
+        return $this->hasMany(InvestissementProjet::class)->where('appui', 2)->where('statut', 'valide');
+    }
     public function investissementvalides(){
         return $this->hasMany(InvestissementProjet::class)->where('statut', 'valide');
     }

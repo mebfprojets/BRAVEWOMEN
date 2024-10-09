@@ -23,6 +23,7 @@
                     <th class="text-center">Coach</th>
                     <th class="text-center">Code P</th>
                     <th class="text-center">Denomination de l'entreprise</th>
+                    <th class="text-center">Banque partenaires</th>
                     <th class="text-center">Nom & Prenom</th>
                     <th class="text-center">Telephone</th>
                     <th class="text-center">Secteur d'activite</th>
@@ -59,6 +60,7 @@
                         <td class="text-center">{{ $projet->entreprise->promotrice->code_promoteur}}</td>
                         <td class="text-center">
                             <a href="{{ route('entreprise.show', $projet->entreprise) }}" target="_blank">{{ $projet->entreprise->denomination }} </a></td>
+                        <td class="text-center">{{ $projet->entreprise->banque->nom}}</td>
                         <td class="text-center">{{ $projet->entreprise->promotrice->nom}} {{ $projet->entreprise->promotrice->prenom}}</td>
                         <td class="text-center">{{ $projet->entreprise->promotrice->telephone_promoteur}} </td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->secteur_activite)}} </td>

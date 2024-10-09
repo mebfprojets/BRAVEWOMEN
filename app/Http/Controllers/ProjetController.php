@@ -85,6 +85,131 @@ class ProjetController extends Controller
             //     return redirect()->back();
             // }
     }
+
+    public function add_plan_appui2()
+    {
+       $categorie_investissments=Valeur::where('parametre_id', 38)->get();
+       $promoteur = Promotrice::where('code_promoteur',Auth::user()->code_promoteur)->first();
+       //$nombre_de_clients= Valeur::where('id', 7085)->get();
+       $entreprise = Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where('participer_a_la_formation', 1)->first();
+       $projets= Projet::where('entreprise_id',$entreprise->id)->where('statut','selectionne')->get();
+    //    foreach($projets as $projet){
+    //         $projet->devis->sum('taux_de_realisation')/$projet->devis;
+    //    }
+       return view('projet.add_appui2_plan', compact('categorie_investissments','projets'));
+    }
+
+    public function store_plan_appui2(Request $request){
+        $designations = $request->designation;
+        $couts = $request->cout;
+        $montant_total= 0;
+        $projet= Projet::find($request->projet);
+        $entreprise=$projet->entreprise;
+        foreach($couts as $cout){
+                $montant_total = $montant_total + reformater_montant2($cout);
+        }
+if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synthese_plan_de_continute_revu')){
+   if((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_total >60000000) || ($entreprise->aopOuleader=='mpme' && $montant_total >18000000)  )
+        {
+            flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
+            return redirect()->back();
+        }
+    elseif((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_total < 18000000)|| ($entreprise->aopOuleader=='mpme' && $montant_total <6000000)  )
+    {
+        flash("Verifier le montant du projet. Il ne doit pas être inférieur au planché accordé par le projet suivant la catégorie de votre entreprise !!!")->error();
+        return redirect()->back();
+    }
+    else{
+            for($i=0; $i<count($designations); $i++){
+                     if($designations[$i]!="" && $couts[$i]!="" && reformater_montant2($request->subvention[$i])!=null){
+                        InvestissementProjet::create([
+                            "projet_id"=>$projet->id,
+                            "appui"=>2,
+                            "designation"=>$designations[$i],
+                            "montant"=>reformater_montant2($couts[$i]),
+                            "apport_perso"=>reformater_montant2($request->apport_perso[$i]),
+                            "subvention_demandee"=>reformater_montant2($request->subvention[$i])
+                        ]);
+                   }
+            }
+            $projet->update([
+                'montant_demande'=>$projet->investissements->sum('montant'),
+                'statut_appui2'=>'soumis'
+            ]);
+               if ($request->hasFile('plan_de_continute_revu')) {
+                $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_PCA_REVU"));
+                $file = $request->file('plan_de_continute_revu');
+                $extension=$file->getClientOriginalExtension();
+                $fileName = $entreprise->code_promoteur.'_'.'plan_de_continute_revu'.'.'.$extension;
+                $emplacement='public/pca/'.$entreprise->aopOuleader.'/'; 
+                $urlplan_de_continute= $request['plan_de_continute_revu']->storeAs($emplacement, $fileName);
+                Piecejointe::create([
+                    'type_piece'=>env("VALEUR_ID_DOCUMENT_PCA_REVU"),
+                    'entreprise_id'=>$entreprise->id,
+                    'url'=>$urlplan_de_continute,
+                  ]);
+            }
+            else{
+                $urlplan_de_continute=null;
+            }
+            if ($request->hasFile('synthese_plan_de_continute_revu')) {
+                $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"));
+                $file = $request->file('synthese_plan_de_continute_revu');
+                $extension=$file->getClientOriginalExtension();
+                $fileName = $entreprise->code_promoteur.'_'.'synthese_plan_de_continute_revu'.'.'.$extension;
+                $emplacement='public/synthese_pca/'.$entreprise->aopOuleader.'/'; 
+                $urlsynthese_plan_de_continute= $request['synthese_plan_de_continute_revu']->storeAs($emplacement, $fileName);
+                Piecejointe::create([
+                    'type_piece'=>env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"),
+                      'entreprise_id'=>$entreprise->id,
+                      'url'=>$urlsynthese_plan_de_continute,
+                  ]);
+            }
+            else{
+                $urlsynthese_plan_de_continute=null;
+            }
+            if ($request->hasFile('devis_des_investissements')) {
+                $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_DEVIS_REVU"));
+                $file = $request->file('devis_des_investissements');
+                $extension=$file->getClientOriginalExtension();
+                $fileName = $entreprise->code_promoteur.'_'.'devis_des_investissements_revu'.'.'.$extension;
+                $emplacement='public/devis_des_investissement_ala_soumission/'.$entreprise->aopOuleader.'/'; 
+                $urldevis_des_investissements= $request['devis_des_investissements']->storeAs($emplacement, $fileName);
+                Piecejointe::create([
+                    'type_piece'=>env("VALEUR_ID_DOCUMENT_DEVIS_REVU"),
+                      'entreprise_id'=>$entreprise->id,
+                      'url'=>$urldevis_des_investissements,
+                  ]);
+            }
+            else{
+                $urldevis_des_investissements=null;
+            }
+            if ($request->hasFile('copie_document_foncier')) {
+                $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_FONCIER_REVU"));
+                $file = $request->file('copie_document_foncier');
+                $extension=$file->getClientOriginalExtension();
+                $fileName = $entreprise->code_promoteur.'_'.'copie_document_foncier_revu'.'.'.$extension;
+                $emplacement='public/foncier/'.$entreprise->aopOuleader.'/'; 
+                $urlcopie_document_foncier= $request['copie_document_foncier']->storeAs($emplacement, $fileName);
+                Piecejointe::create([
+                    'type_piece'=>env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),
+                      'entreprise_id'=>$entreprise->id,
+                      'url'=>$urlcopie_document_foncier,
+                  ]);
+            }
+            else{
+                $urlcopie_document_foncier=null;
+            }
+        flash("Le Deuxieme appui de votre projet a été enregistré avec succes  !!!")->success();
+          return redirect()->back();     
+    }
+    
+    }
+    else{
+        flash("Erreur de chargement des pieces jointes.Bien vouloir reprendre la création du projet !!!")->error();
+               return redirect()->route('profil.beneficiaire',return_liste_entreprise_par_user(Auth::user()->id)[0]);
+    }
+}
     public function lister(Request $request){
         $banques= Banque::all();
         $type_entreprise=$request->type_entreprise;
@@ -496,8 +621,6 @@ public function save_accord_beneficiaire(Request $request){
         foreach($couts as $cout){
                 $montant_total = $montant_total + reformater_montant2($cout);
         }
-    //dd($montant_total);
-    //Contrôle pour le montant maximum 
 if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestation_de_formation')&&$request->hasFile('synthese_plan_de_continute')){
    if((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_total >60000000) || ($entreprise->aopOuleader=='mpme' && $montant_total >18000000)  )
         {
@@ -874,8 +997,8 @@ public function valider_investissement(Request $request)
     $invest= InvestissementProjet::find($request->invest_id);
     $entreprise= $invest->projet->entreprise;
     $projet= $invest->projet;
-    $montant_total_valide= $projet->investissements->sum('montant_valide')  + reformater_montant2($request->cout);
-    $montant_total= ($projet->investissements->sum('montant_valide') ) + reformater_montant2($request->cout);
+    ($request->appui==1)?$montant_total_valide= $projet->investissements->sum('montant_valide')  + reformater_montant2($request->cout): $montant_total_valide=$projet->investissements->sum('montant_valide')  + reformater_montant2($request->cout);
+    ($request->appui==1)?$montant_total= ($projet->investissements->sum('montant_valide') ) + reformater_montant2($request->cout):$montant_total= ($projet->investissements->sum('montant_valide') ) + reformater_montant2($request->cout);
     $ligne_investissement_sans_statuts= InvestissementProjet::where('projet_id',$invest->projet->id)->where('statut',null)->get();
     $nombre_ligne_investissement_sans_statuts = count($ligne_investissement_sans_statuts);
 if((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_total_valide > 60000000)|| ($entreprise->aopOuleader=='mpme' && $montant_total_valide >18000000)  )
@@ -891,6 +1014,7 @@ elseif((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') &
     else{
     $invest->update([
         'designation'=> $request->designation,
+        'appui'=> $request->appui,
         'montant_valide'=> reformater_montant2($request->cout),
         'apport_perso_valide'=> reformater_montant2($request->apport_perso),
         'subvention_demandee_valide'=> reformater_montant2($request->subvention),
@@ -905,7 +1029,8 @@ elseif((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') &
 }
 public function add_investissement(Request $request){
 $projet= Projet::find($request->projet_id);
-$projet_montant= $projet->investissements->sum('montant')  + reformater_montant2($request->cout);
+    ($request->appui==1)?$projet_montant= $projet->appui1_investissements->sum('montant')  + reformater_montant2($request->cout):$projet_montant= $projet->appui2_investissements->sum('montant')  + reformater_montant2($request->cout);
+   // dd($projet_montant);
 if((($projet->entreprise->aopOuleader=='aop' ||$projet->entreprise->aopOuleader=='leader') && $projet_montant >60000000)|| ($projet->entreprise->aopOuleader=='mpme' && $projet_montant >18000000)  )
     {
         flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
@@ -919,6 +1044,7 @@ if((($projet->entreprise->aopOuleader=='aop' ||$projet->entreprise->aopOuleader=
 else{   
     InvestissementProjet::create([
         'projet_id'=>$request->projet_id,
+        'appui'=>$request->appui,
         'designation'=>$request->designation,
         'montant'=>reformater_montant2($request->cout),
         'subvention_demandee'=>reformater_montant2($request->subvention),
@@ -950,7 +1076,12 @@ public function invest_modif(Request $request){
 public function invest_modifier(Request $request){
     $invest= InvestissementProjet::find($request->invest_id);
     $projet= Projet::find($invest->projet_id);
-$projet_montant= $projet->investissements->sum('montant') -  $invest->montant + reformater_montant2($request->cout);
+    if($invest->appui==1){
+        $projet_montant= $projet->investissements->sum('montant') -  $invest->montant + reformater_montant2($request->cout);
+    }
+    elseif($invest->appui==2){
+        $projet_montant= $projet->investissements->sum('montant') -  $invest->montant + reformater_montant2($request->cout);
+    }
 if((($projet->entreprise->aopOuleader=='aop' ||$projet->entreprise->aopOuleader=='leader') && $projet_montant >60000000)|| ($projet->entreprise->aopOuleader=='mpme' && $projet_montant >18000000)  )
 {
     flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
