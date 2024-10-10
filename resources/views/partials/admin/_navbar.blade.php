@@ -203,10 +203,16 @@
                                 <li class="@yield('liste_analyse')">
                                     <a href="{{ route("projet.liste") }}?statut=soumis&type_entreprise=mpme"> A analyser</a>
                                 </li>
+                                <li class="@yield('soumis_appui2')">
+                                    <a href="{{ route("projet.liste") }}?statut=soumis_appui2&type_entreprise=mpme"> Appuis 2 a analyser </a>
+                                </li>
                             @endcan
                             @can('lister_chef_de_projet', Auth::user())
                                 <li class="@yield('analyse')">
                                     <a href="{{ route("projet.liste") }}?statut=analyse&type_entreprise=mpme"> A analyser</a>
+                                </li>
+                                <li class="@yield('appui2_avis_ugp')">
+                                    <a href="{{ route("projet.liste") }}?statut=avis_ugp_appui2&type_entreprise=mpme"> Appui 2 a analyser</a>
                                 </li>
                             @endcan
                             @can('souscription.soumis_au_comite', Auth::user())
@@ -215,6 +221,9 @@
                             </li>
                             <li class="@yield('a_affecter_au_membre_du_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=a_affecter_au_membre_du_comite&type_entreprise=mpme"> Affectés au comité</a>
+                            </li>
+                            <li class="@yield('appui2_affecter_au_membre_du_comite')">
+                                <a href="{{ route("projet.liste") }}?statut=appui2_affecte_au_membre_du_comite&type_entreprise=mpme"> Appui 2 au comité</a>
                             </li>
                             <li class="@yield('analyse_par_le_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=analyse_par_le_comite&type_entreprise=mpme"> Décision du comité</a>

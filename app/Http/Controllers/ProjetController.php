@@ -100,10 +100,15 @@ class ProjetController extends Controller
     }
 
     public function store_plan_appui2(Request $request){
+        $projet= Projet::find($request->projet);
+        if($projet->appui_statut!=null){
+            flash("Vous avez déja soumis votre appui ")->error();
+            return back();
+        }
         $designations = $request->designation;
         $couts = $request->cout;
         $montant_total= 0;
-        $projet= Projet::find($request->projet);
+      
         $entreprise=$projet->entreprise;
         foreach($couts as $cout){
                 $montant_total = $montant_total + reformater_montant2($cout);
@@ -134,7 +139,7 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
             }
             $projet->update([
                 'montant_demande'=>$projet->investissements->sum('montant'),
-                'statut_appui2'=>'soumis'
+                'appui_statut'=>'soumis'
             ]);
                if ($request->hasFile('plan_de_continute_revu')) {
                 $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_PCA_REVU"));
@@ -201,7 +206,7 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                 $urlcopie_document_foncier=null;
             }
         flash("Le Deuxieme appui de votre projet a été enregistré avec succes  !!!")->success();
-          return redirect()->back();     
+        return redirect()->route('profil.beneficiaire',return_liste_entreprise_par_user(Auth::user()->id)[0]);
     }
     
     }
@@ -279,6 +284,52 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                 $page= 'analyse_par_le_comite';
                 return view("projet.liste_selectionne", compact('projets','banques','page','texte','type_entreprise'));
             }
+            elseif($request->statut=='soumis_appui2'){
+                if($type_entreprise=='mpme'){
+                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->where('type_entreprise', 'mpme')
+                                ->where(function ($query) {
+                                    $query->where('zone_affectation', '=', Auth::user()->zone);
+                                       // ->orWhere('region', '=', Auth::user()->zone);
+                                })->orderBy('updated_at', 'desc')->get();
+                        $type_entreprise='pca_mpme';
+                }
+                else{
+                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone',null)->whereIn('type_entreprise',['leader','aop'])->where('zone_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+                    $type_entreprise='pca_aop';
+                }
+                $texte= 'deuxieme appui à évaluer par le chef de zone';
+                $page='soumis_appui2';
+            }
+            
+            elseif($request->statut=='avis_ugp_appui2'){
+                    if($type_entreprise=='mpme'){
+                        $projets = Projet::whereIn('appui_statut' ,['soumis','affecte_au_chef_de_projet'])->where('type_entreprise','mpme')->where('avis_chefdezone_appui2','!=',null)->where('avis_ugp_appui2',null)->orderBy('updated_at', 'desc')->get();
+                        $type_entreprise='pca_mpme';
+                    }
+                    else{
+                        $projets = Projet::whereIn('appui_statut' ,['soumis','affecte_au_chef_de_projet'])->whereIn('type_entreprise',['leader','aop'])->where('avis_chefdezone_appui2','!=',null)->where('avis_ugp_appui2',null)->orderBy('updated_at', 'desc')->get();
+                        //$projets = Projet::whereIn('statut',['soumis','analyse'])->where('avis_chefdezone',null)->whereIn('type_entreprise',['leader','aop'])->where('zone_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+                        $type_entreprise='pca_aop';
+                    }
+                    $texte= "deuxieme appui en attente de l'avis de l'UGP";
+                    $page= 'appui2_avis_ugp';
+                
+            }
+            elseif($request->statut=='appui2_affecte_au_membre_du_comite'){
+                if($type_entreprise=='mpme'){
+                    $projets = Projet::whereIn('appui_statut', ['soumis','affecte_au_comite'])->where('type_entreprise', 'mpme')->where('avis_ugp_appui2','!=',null)->orderBy('updated_at', 'desc')->get();
+                    $type_entreprise='pca_mpme';
+                }
+                else{
+                    $projets = Projet::whereIn('appui_statut', ['soumis','affecte_au_comite'])->where('avis_ugp_appui2','!=',null)->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'desc')->get();
+                   $type_entreprise='pca_aop';
+                }
+                $texte= "Appui 2  soumis à l'appreciation des membres du comité";
+               // $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('avis_ugp','!=',null)->orderBy('updated_at', 'desc')->get();
+                $page= 'appui2_affecter_au_membre_du_comite';
+            }
+            
+            
             return view("projet.liste_analyse", compact('projets','banques','page','texte','type_entreprise'));
     }
     public function lister_pca_liste_dattente(Request $request){
@@ -864,18 +915,37 @@ else{
 // Cette fonction permet au chef de zone de donner son avis sur un pca
 public function pca_save_avis_chefdezone(Request $request){
     $projet= Projet::find($request->projet_id);
+    if($request->type=='projet'){
         $projet->update([
             'avis_chefdezone'=>$request->avis,
             'observation_chefdezone'=>$request->observation,
         ]);
+    }
+    elseif($request->type=='appui2'){
+        $projet->update([
+            'appui_statut'=>'affecte_au_chef_de_projet',
+            'avis_chefdezone_appui2'=>$request->avis,
+            'observation_chefdezone_appui2'=>$request->observation,
+        ]);
+    }
+        
     return redirect('/administrator/lister_les_pca?statut=analyse');
 }
 public function pca_save_avis_ugp(Request $request){
     $projet= Projet::find($request->projet_id);
+    if($request->type=='projet'){
         $projet->update([
             'avis_ugp'=>$request->avis,
             'observation_ugp'=>$request->observation,
         ]);
+    }
+    elseif($request->type=='appui2'){
+        $projet->update([
+            'appui_statut'=>'affecte_au_comite',
+            'observation_ugp_appui2'=>$request->avis,
+            'avis_ugp_appui2'=>$request->observation,
+        ]);
+    }
     return redirect('/administrator/lister_les_pca?statut=analyse');
 }
 public function put_pca_to_liste_dattente(Request $request){
@@ -967,8 +1037,11 @@ public function synthese_execution_de_pca(){
      */
     public function analyser(Projet $projet)
     {
-        $piecejointes=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE"), env("VALEUR_ID_DOCUMENT_GRILLEEVAL")])->orderBy('updated_at', 'desc')->get();
-        $piecejointes= $piecejointes->unique('type_piece');
+        $piecejointes_appui1=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE"), env("VALEUR_ID_DOCUMENT_GRILLEEVAL")])->orderBy('updated_at', 'desc')->get();
+        $piecejointes_appui2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA_REVU"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"), env("VALEUR_ID_DOCUMENT_DEVIS_REVU"),env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_ATTESTATION_REVU"), env("VALEUR_ID_FICHE_DANALYSE_REVU")])->orderBy('updated_at', 'desc')->get();
+
+        $piecejointes_appui1= $piecejointes_appui1->unique('type_piece');
+        $piecejointes_appui2= $piecejointes_appui2->unique('type_piece');
         $categorie_investissments=Valeur::where('parametre_id', 38)->get();
     if($projet->entreprise->aopOuleader=='aop'|| $projet->entreprise->aopOuleader=='leader'){
         $criteres= GrilleEval::where('categorie','pa')->get();
@@ -976,7 +1049,8 @@ public function synthese_execution_de_pca(){
     else{
         $criteres= GrilleEval::where('categorie','PCA')->get();
     }
-        return view("projet.analyse", compact('projet', 'piecejointes', 'criteres', 'categorie_investissments'));
+    //dd($projet);
+        return view("projet.analyse", compact('piecejointes_appui2','projet', 'piecejointes_appui1', 'criteres', 'categorie_investissments'));
     }
 
     public function show(Projet $projet)
@@ -1336,6 +1410,9 @@ else{
     return redirect()->back();
 } 
     
+}
+public function appui2_traitement(Request $request){
+
 }
     /**
      * Show the form for editing the specified resource.

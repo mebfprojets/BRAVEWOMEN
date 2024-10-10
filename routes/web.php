@@ -212,6 +212,7 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/modifier/document/', [DocumentController::class, 'modif_document'])->name("document.modif");
     Route::post('storemodif/document', [DocumentController::class, 'modifier_document'])->name("document.modifier");
     Route::post('desistement/projet/{projet}', [ProjetController::class, 'save_desistement_projet'] )->name('save_desistement_projet');
+    Route::get("/projets/appui2/traitements" ,[ProjetController::class,'appui2_traitement'])->name('projet.appuis2_traitement');
 
 });
 Route::get("/new/souscription", [PromotriceController::class, 'create'])->name("souscription");

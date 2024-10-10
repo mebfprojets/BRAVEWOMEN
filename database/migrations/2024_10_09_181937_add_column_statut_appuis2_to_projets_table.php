@@ -14,11 +14,7 @@ class AddColumnStatutAppuis2ToProjetsTable extends Migration
     public function up()
     {
         Schema::table('projets', function (Blueprint $table) {
-            $table->string('avis_chefdezone_appui2',100)->nullable();
-            $table->text('observation_chefdezone_appui2')->nullable();
-            $table->string('avis_ugp_appui2',100)->nullable();
-            $table->text('observation_ugp_appui2')->nullable();
-            $table->string('statut_appui2',70)->nullable();
+            $table->string('appui_statut',70)->nullable();
         });
     }
 
@@ -30,7 +26,7 @@ class AddColumnStatutAppuis2ToProjetsTable extends Migration
     public function down()
     {
         Schema::table('projets', function (Blueprint $table) {
-           
+           $table->dropColumn('appui_statut');
         });
     }
 }

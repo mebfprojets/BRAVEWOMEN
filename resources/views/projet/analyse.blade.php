@@ -4,19 +4,22 @@
 @section('content')
 <div class="row">
 <div class="col-md-6 offset-md-3">
-
+    @if($projet->appui_statut =='soumis')
+    <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_zone')"><span></span>Avis du chef de zone</a>
+@endif
 @can('lister_pca_chef_de_zone', Auth::user())
-        @if($projet->statut== 'soumis')
+        @if($projet->statut=='soumis')
             <a  href="#modal-evaluer-pca" data-toggle="modal" class="btn btn-success"><span></span>Evaluer le PCA</a>
         @endif
-    @if($projet->statut== 'analyse' && $projet->avis_chefdezone==null)
-        <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success"><span></span>Donner l'avis</a>
+        
+    @if($projet->statut=='analyse' && $projet->avis_chefdezone==null)
+        <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('projet','champ_avis_chef_zone')"><span></span>Donner l'avis</a>
     @endif
     @if($projet->statut=='rejeté')
         <a href="#modal-save-repeche" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Repecher le PCA </a>
     @endif
-    @if($projet->statut=='selectionné')
-                <a href="#modal-save-desistement" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Desister </a>
+    @if($projet->statut=='selectionné' && !$projet->devis_valides)
+            <a href="#modal-save-desistement" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Desister </a>
     @endif
 @endcan
     
@@ -26,12 +29,15 @@
     <a href="#valider_lanalyse" data-toggle="modal" class="btn btn-success" onclick="recupererprojet_id({{$projet->id}})"><span></span>valider l'analyse</a>
     @endif 
     @if($projet->statut=='a_affecter_au_membre_du_comite' && $projet->avis_ugp==null)
-        <a href="#modal-avis-ugp" data-toggle="modal" class="btn btn-success" onclick="recupererprojet_id({{$projet->id}})"><span></span>Avis UGP</a>
+        <a href="#modal-avis-ugp" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('projet','champ_avis_chef_projet')"><span></span>Avis UGP </a>
+    @endif
+    @if(($projet->appui_statut=='affecte_au_chef_de_projet'))
+        <a href="#modal-avis-ugp" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_projet')"><span></span>Avis UGP sur l'appui 2 {{ $projet->appui_statut }}</a>
     @endif 
 @endcan
 
 @can('donne_verdict_du_comite_pca', Auth::user())
-    @if ($projet->observations == '' && $projet->statut== 'a_affecter_au_membre_du_comite' && $projet->avis_ugp!=null )
+    @if ($projet->observations=='' && $projet->statut=='a_affecter_au_membre_du_comite' && $projet->avis_ugp!=null )
     <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp">Décision du comité <i class="fa fa-check-square-o"></i></a>
     @if($projet->liste_dattente_observations=='')
         <a href="#modal-pca-liste-dattente" data-toggle="modal"  title="Ajouter dans la liste d'attente " class="btn btn-md btn-warning avis_ugp">Liste d'attente <i class="fa fa-check-square-o"></i></a>
@@ -67,7 +73,7 @@
         @endif
                     <div class="form-group row">
                         <div class="col-md-4">
-                        <label>Coach :</label>
+                        <label>Coach:</label>
                         </div>
                         <div class="col-sm-7 mb-3 mb-sm-0">
                         <label class="fb"> {{$projet->coach->nom}} {{$projet->coach->prenom}}</label>
@@ -225,7 +231,7 @@
                 </tr>
           </thead>
           <tbody id="tbadys">
-    @foreach($projet->investissements as $key => $investissement)
+    @foreach($projet->appui1_investissements as $key => $investissement)
     <tr 
     @if($investissement->statut == 'validé' )
         style="color:green;"
@@ -267,12 +273,72 @@
 @endforeach
 </tbody>
 </table>
-</div>             
+</div>   
+<hr>
+<div class="row">
+    <table class="table table-vcenter table-condensed table-bordered  valdetail"   >
+        <thead>
+        <h4>Les investissements de l'appui 2</h4>
+                <tr>
+                    <th>N°</th>
+                    <th>Designation</th>
+                    <th>Coût total</th>
+                    <th>Subvention Demandée</th>
+                    <th>Apport Personnel</th>
+                    <th>Coût accordé</th>
+                    <th>Subvention accordée</th>
+                    <th>Actions</th>
+                </tr>
+          </thead>
+          <tbody id="tbadys">
+    @foreach($projet->appui2_investissements as $key => $investissement)
+    <tr 
+    @if($investissement->statut == 'validé' )
+        style="color:green;"
+    @elseif($investissement->statut == 'rejeté')
+    style="color:red;"
+
+    @endif>
+            <td>
+            {{ $key + 1 }}
+            </td>
+                 <td>
+                    {{getlibelle($investissement->designation)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->montant)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->apport_perso)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->subvention_demandee)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->montant_valide)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->subvention_demandee_valide)}}
+                </td>
+    <td>
+    @can('donne_verdict_du_comite_pca', Auth::user())
+        @if ($projet->appui_statut=="affecte_au_comite")
+            <a  href="#rejetter_investissement" data-toggle="modal"title="Rejetter la ligne- d'investissement"  onclick="edit_investissemnt_by_comite({{ $investissement->id }});" class="btn btn-md btn-danger" ><i class="fa fa-times"></i> </a>
+            <a href="#modal-valider-investissment" data-toggle="modal" title="Valider la ligne d'investissement" onclick="edit_investissemnt_by_comite({{ $investissement->id }});" class="btn btn-md btn-success" ><i class="hi hi-ok"></i> </a>
+        @endif
+    @endcan
+</td>
+
+</tr>
+@endforeach
+</tbody>
+</table>
+</div>           
 <hr>
 </div>       
 <div class="row">
     
-    <div class="col-md-11">
+    <div class="col-md-6">
         <div class="block">
         <div class="block-title">
           Documents au PCA
@@ -287,7 +353,7 @@
                         </tr>
                   </thead>
                   <tbody id="tbadys">
-            @foreach($piecejointes as $key => $piecejointe)
+            @foreach($piecejointes_appui1 as $key => $piecejointe)
             <tr>
                     <td>
                     {{ $key + 1 }}
@@ -306,6 +372,41 @@
     </table>
           </div>
     </div>
+</div>
+<div class="col-md-6">
+    <div class="block">
+    <div class="block-title">
+      Documents au PCA
+  </div>
+    <div class="table-responsive">
+        <table class="table table-vcenter table-condensed table-bordered listepdf valdetail"   >
+            <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+              </thead>
+              <tbody id="tbadys">
+        @foreach($piecejointes_appui2 as $key => $piecejointe)
+        <tr>
+                <td>
+                {{ $key + 1 }}
+                </td>
+                     <td>
+                        {{getlibelle($piecejointe->type_piece)}}
+                    </td>
+        <td>
+            <a href="{{ route('telechargerpiecejointe',$piecejointe->id)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+            <a href="{{ route('detaildocument',$piecejointe->id)}}"title="Visualiser le document" class="btn btn-xs btn-default" ><i class="fa fa-eye"></i> </a>
+        </td>
+
+    </tr>
+@endforeach
+</tbody>
+</table>
+      </div>
+</div>
 </div>
 </div>
 @endsection
@@ -623,6 +724,8 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" name="projet_id"  id='projet_chef_de_zone' value="{{ $projet->id }}">
+                <input type="hidden" name=""  id='champ_avis_chef_zone'>
+
                 <div class="form-group">
                   <label for="">Entrez les observations :</label>
                   <textarea id="observation_avis_chefdezone" name="observation" placeholder="Observation"  cols="60" rows="10" onchange="activerbtn('btn_desactive','observation_avis_chefdezone')" aria-describedby="helpId"></textarea>
@@ -680,10 +783,11 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header text-center">
-                <h2 class="modal-title"><i class="fa fa-check"></i> Avis du chef de zone</h2>
+                <h2 class="modal-title"><i class="fa fa-check"></i> Avis du chef de projet</h2>
             </div>
             <div class="modal-body">
                 <input type="hidden" name="projet_id"  id='projet_avis_ugp' value="{{ $projet->id }}">
+                <input type="hidden" name="avitype"  id='champ_avis_chef_projet' >
                 <div class="form-group">
                   <label for="">Entrez les observations :</label>
                   <textarea id="observation_avis_ugp" name="observation" placeholder="Observation"  cols="60" rows="10" onchange="activerbtn('btn_desactive','observation_avis_ugp')" aria-describedby="helpId"></textarea>
@@ -701,6 +805,9 @@
     </div>
 </div> 
 <script>
+    function setTypeavis(type, champ){
+        $('#'+champ).val(type);
+    }
     //const inputElement = document.querySelector('input');
     function isValid(champ){
         
@@ -813,12 +920,13 @@
     }
     function save_pca_chefdezone(avis){
         var projet_id= $("#projet_chef_de_zone").val();
+        var type = $("#champ_avis_chef_zone").val();
         var observation= $("#observation_avis_chefdezone").val();
         var url = "{{ route('pca.save_devis_chefdezone') }}";
         $.ajax({
                 url: url,
                 type:'GET',
-                data: {projet_id: projet_id, observation:observation, avis:avis} ,
+                data: {projet_id: projet_id, observation:observation, avis:avis,type:type} ,
                 error:function(){alert('error');},
                 success:function(){
                     window.location=document.referrer;
@@ -827,12 +935,13 @@
     }
     function save_avis_ugp(avis){
         var projet_id= $("#projet_avis_ugp").val();
+        var type= $("#champ_avis_chef_projet").val();
         var observation= $("#observation_avis_ugp").val();
         var url = "{{ route('pca.save_avis_ugp') }}";
         $.ajax({
                 url: url,
                 type:'GET',
-                data: {projet_id: projet_id, observation:observation, avis:avis} ,
+                data: {projet_id: projet_id, observation:observation, avis:avis, type:type} ,
                 error:function(){alert('error');},
                 success:function(){
                   //  $('#modal-confirm-rejet').hide();
