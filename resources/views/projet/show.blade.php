@@ -57,6 +57,24 @@
                       <label class="fb"> {{ format_prix($projet->investissementvalides->sum('montant_valide'))   }} </label>
                     </div>
                 </div>
+                @if(count($projet->appui2_investissements)!=0)
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                        <label>Coût subventions validées appui 1:</label>
+                        </div>
+                        <div class="col-sm-7 mb-3 mb-sm-0">
+                        <label class="fb"> {{ format_prix($projet->appui1_investissementvalides->sum('montant_valide'))   }} </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                        <label>Coût subventions validées appui 2:</label>
+                        </div>
+                        <div class="col-sm-7 mb-3 mb-sm-0">
+                        <label class="fb"> {{ format_prix($projet->appui2_investissementvalides->sum('montant_valide'))   }} </label>
+                        </div>
+                    </div>
+                    @endif
                   <div class="form-group row">
                     <div class="col-sm-4">
                       <label>Subvention demandée:</label>
@@ -189,11 +207,50 @@
                 </div>
             </div>
         </div>
+        <hr>
+@if(count($projet->appui2_investissements)!=0)
+<div class="row">
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Avis Chef de Zone pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->avis_chefdezone_appui2}}</label>
+            </div>
+        </div>
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Observation Chef de Zone pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->observation_chefdezone_appui2}}</label>
+            </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Avis de l'UGP pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->avis_ugp_appui2}}</label>
+            </div>
+        </div>
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Observation de l'UGP pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->observation_ugp_appui2}}</label>
+            </div>
+    </div>
+</div>
+@endif
     </div>
 <div class="row">
     <table class="table table-vcenter table-condensed table-bordered  valdetail"   >
         <thead>
-        <h4>Les investissements</h4>
+        <h4>Les investissements phase 1</h4>
                 <tr
                 
                 >
@@ -208,7 +265,65 @@
                 </tr>
           </thead>
           <tbody id="tbadys">
-    @foreach($projet->investissements as $key => $investissement)
+    @foreach($projet->appui1_investissements as $key => $investissement)
+    <tr 
+        @if($investissement->statut == 'validé' )
+        style="color:green;"
+        @elseif($investissement->statut == 'rejeté')
+        style="color:red;"
+        @endif
+    >
+            <td>
+            {{ $key + 1 }}
+            </td>
+                 <td>
+                    {{getlibelle($investissement->designation)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->montant)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->apport_perso)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->subvention_demandee)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->montant_valide)}}
+                </td>
+                <td>
+                    {{format_prix($investissement->subvention_demandee_valide)}}
+                </td>
+    <td>
+        {{-- <a href="#"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+        <a href="#"title="Visualiser le document" class="btn btn-xs btn-default" ><i class="fa fa-eye"></i> </a> --}}
+    </td>
+
+</tr>
+@endforeach
+</tbody>
+</table>
+</div>              
+<hr>
+<div class="row">
+    <table class="table table-vcenter table-condensed table-bordered  valdetail"   >
+        <thead>
+        <h4>Les investissements phase 2</h4>
+                <tr
+                
+                >
+                    <th>N°</th>
+                    <th>Designation</th>
+                    <th>Coût total</th>
+                    <th>Subvention Demandée</th>
+                    <th>Apport Personnel</th>
+                    <th>Coût du projet validé</th>
+                    <th>Subvention Accordée</th>
+                    <th>Actions</th>
+                </tr>
+          </thead>
+          <tbody id="tbadys">
+    @foreach($projet->appui2_investissements as $key => $investissement)
     <tr 
         @if($investissement->statut == 'validé' )
         style="color:green;"
@@ -247,12 +362,9 @@
 </tbody>
 </table>
 </div>
-                 
-<hr>
 </div>       
 <div class="row">
-    
-    <div class="col-md-11">
+    <div class="col-md-6">
         <div class="block">
         <div class="block-title">
           Documents au PCA
@@ -267,7 +379,7 @@
                         </tr>
                   </thead>
                   <tbody id="tbadys">
-            @foreach($piecejointes as $key => $piecejointe)
+            @foreach($piecejointes_appui1 as $key => $piecejointe)
             <tr>
                     <td>
                     {{ $key + 1 }}
@@ -286,6 +398,41 @@
     </table>
           </div>
     </div>
+</div>
+<div class="col-md-6">
+    <div class="block">
+    <div class="block-title">
+      Documents appui phase 2
+  </div>
+    <div class="table-responsive">
+        <table class="table table-vcenter table-condensed table-bordered listepdf valdetail"   >
+            <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+              </thead>
+              <tbody id="tbadys">
+        @foreach($piecejointes_appui2 as $key => $piecejointe)
+        <tr>
+                <td>
+                {{ $key + 1 }}
+                </td>
+                     <td>
+                        {{getlibelle($piecejointe->type_piece)}}
+                    </td>
+        <td>
+            <a href="{{ route('telechargerpiecejointe',$piecejointe->id)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>
+            <a href="{{ route('detaildocument',$piecejointe->id)}}"title="Visualiser le document" class="btn btn-xs btn-default" ><i class="fa fa-eye"></i> </a>
+        </td>
+
+    </tr>
+@endforeach
+</tbody>
+</table>
+      </div>
+</div>
 </div>
 </div>
 

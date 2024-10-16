@@ -7,11 +7,10 @@
     @if($projet->appui_statut =='soumis')
     <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_zone')"><span></span>Avis du chef de zone</a>
 @endif
-@can('lister_pca_chef_de_zone', Auth::user())
+    @can('lister_pca_chef_de_zone', Auth::user())
         @if($projet->statut=='soumis')
-            <a  href="#modal-evaluer-pca" data-toggle="modal" class="btn btn-success"><span></span>Evaluer le PCA</a>
-        @endif
-        
+             <a  href="#modal-evaluer-pca" data-toggle="modal" class="btn btn-success"><span></span>Evaluer le PCA</a>
+    @endif
     @if($projet->statut=='analyse' && $projet->avis_chefdezone==null)
         <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('projet','champ_avis_chef_zone')"><span></span>Donner l'avis</a>
     @endif
@@ -22,7 +21,6 @@
             <a href="#modal-save-desistement" data-toggle="modal" title="Enregistrer un désistement" class="btn btn-md btn-danger"><i class="fa fa-times"></i> Desister </a>
     @endif
 @endcan
-    
 @can('valider_analyse_pca', Auth::user())
     @if ($projet->statut=='analyse')
     <a href="#rejetter_lanalyse" data-toggle="modal" onclick="recupererprojet_id({{$projet->id}})" class="btn btn-danger"><span></span>Rejetter l'analyse</a> 
@@ -32,16 +30,19 @@
         <a href="#modal-avis-ugp" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('projet','champ_avis_chef_projet')"><span></span>Avis UGP </a>
     @endif
     @if(($projet->appui_statut=='affecte_au_chef_de_projet'))
-        <a href="#modal-avis-ugp" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_projet')"><span></span>Avis UGP sur l'appui 2 {{ $projet->appui_statut }}</a>
+        <a href="#modal-avis-ugp" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_projet')"><span></span>Avis UGP sur l'appui 2</a>
     @endif 
 @endcan
 
 @can('donne_verdict_du_comite_pca', Auth::user())
     @if ($projet->observations=='' && $projet->statut=='a_affecter_au_membre_du_comite' && $projet->avis_ugp!=null )
-    <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp">Décision du comité <i class="fa fa-check-square-o"></i></a>
+    <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp" onclick="setTypeavis('appui1','champ_decision_comite')">Décision du comité <i class="fa fa-check-square-o"></i></a>
     @if($projet->liste_dattente_observations=='')
         <a href="#modal-pca-liste-dattente" data-toggle="modal"  title="Ajouter dans la liste d'attente " class="btn btn-md btn-warning avis_ugp">Liste d'attente <i class="fa fa-check-square-o"></i></a>
     @endif
+    @endif
+    @if((($projet->appui_statut=="affecte_au_comite") && $projet->statut=='selectionné') || ((count($projet->appui2_investissements)>1 && $projet->appui_statut=="affecte_au_comite") && $projet->statut=='selectionné') )
+        <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp" onclick="setTypeavis('appui2','champ_decision_comite')">Décision du comité sur l'appui 2 <i class="fa fa-check-square-o"></i></a>
     @endif
 @endcan
 </div>
@@ -105,6 +106,24 @@
                       <label class="fb"> {{ format_prix($projet->investissementvalides->sum('montant_valide'))   }} </label>
                     </div>
                 </div>
+                @if(count($projet->appui2_investissements)!=0)
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                        <label>Coût subventions validées appui 1:</label>
+                        </div>
+                        <div class="col-sm-7 mb-3 mb-sm-0">
+                        <label class="fb"> {{ format_prix($projet->appui1_investissementvalides->sum('montant_valide'))   }} </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                        <label>Coût subventions validées appui 2:</label>
+                        </div>
+                        <div class="col-sm-7 mb-3 mb-sm-0">
+                        <label class="fb"> {{ format_prix($projet->appui2_investissementvalides->sum('montant_valide'))   }} </label>
+                        </div>
+                    </div>
+                @endif
                   <div class="form-group row">
                     <div class="col-sm-4">
                       <label>Subvention demandée:</label>
@@ -134,7 +153,7 @@
                             <label>Les activités ménées :</label>
                           </div>
                           <div class="col-sm-8 mb-3 mb-sm-0">
-                            <label class="fb"> {{ $projet->activites_menees }} </label>
+                            <p style="text-align: justify">  {{ $projet->activites_menees }} </p>
                           </div>
                       </div>
                       <div class="form-group row">
@@ -142,7 +161,7 @@
                             <label>Les Atouts du projet :</label>
                           </div>
                           <div class="col-sm-8 mb-3 mb-sm-0">
-                            <label class="fb"> {{  $projet->innovation }}</label>
+                            <p style="text-align: justify"> {{  $projet->innovation }}</p>
                           </div>
                       </div>
         </div>
@@ -180,7 +199,7 @@
         </div>
     <div class="col-md-6">
         <div class="col-md-6">
-            <label>Observation Chef de Zone:</label>
+            <label>Observation chef de Zone:</label>
             </div>
             <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
             <label class="fb"> {{$projet->observation_chefdezone}}</label>
@@ -215,6 +234,45 @@
     </div>
 @endif
 </div>
+<hr>
+@if(count($projet->appui2_investissements)!=0)
+<div class="row">
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Avis Chef de Zone pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->avis_chefdezone_appui2}}</label>
+            </div>
+        </div>
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Observation Chef de Zone pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->observation_chefdezone_appui2}}</label>
+            </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Avis de l'UGP pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->avis_ugp_appui2}}</label>
+            </div>
+        </div>
+    <div class="col-md-6">
+        <div class="col-md-6">
+            <label>Observation de l'UGP pour l'appui 2:</label>
+            </div>
+            <div class="col-sm-6 mb-6 mb-sm-0" style="color: red">
+            <label class="fb"> {{$projet->observation_ugp_appui2}}</label>
+            </div>
+    </div>
+</div>
+@endif
 <div class="row">
     <table class="table table-vcenter table-condensed table-bordered  valdetail"   >
         <thead>
@@ -322,7 +380,7 @@
                 </td>
     <td>
     @can('donne_verdict_du_comite_pca', Auth::user())
-        @if ($projet->appui_statut=="affecte_au_comite")
+        @if (($projet->appui_statut=="affecte_au_comite")  && ($investissement->statut==null))
             <a  href="#rejetter_investissement" data-toggle="modal"title="Rejetter la ligne- d'investissement"  onclick="edit_investissemnt_by_comite({{ $investissement->id }});" class="btn btn-md btn-danger" ><i class="fa fa-times"></i> </a>
             <a href="#modal-valider-investissment" data-toggle="modal" title="Valider la ligne d'investissement" onclick="edit_investissemnt_by_comite({{ $investissement->id }});" class="btn btn-md btn-success" ><i class="hi hi-ok"></i> </a>
         @endif
@@ -699,6 +757,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" name="projet_id"  id='projet_comite' value="{{ $projet->id }}">
+                <input type="hidden" name="champ_decision_comite"  id='champ_decision_comite' >
                 <div class="form-group">
                   <label for="">Entrez les observations :</label>
                   <textarea id="observation" name="observation" placeholder="Observation" id="" cols="60" rows="10" onchange="activerbtn('btn_desactive','observation')" aria-describedby="helpId"></textarea>
@@ -891,11 +950,12 @@
     function save_decision_comite(avis){
         var projet_id= $("#projet_comite").val();
         var observation= $("#observation").val();
+        var type= $("#champ_decision_comite").val();
         var url = "{{ route('pca.savedecisioncomite') }}";
         $.ajax({
                 url: url,
                 type:'GET',
-                data: {projet_id: projet_id, observation:observation, avis:avis} ,
+                data: {projet_id: projet_id, observation:observation, avis:avis, type:type} ,
                 error:function(){alert('error');},
                 success:function(){
                     $('#modal-confirm-rejet').hide();

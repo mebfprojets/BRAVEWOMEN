@@ -19,8 +19,6 @@ use Illuminate\Support\Facades\Storage;
 use PDF;    
 class FactureController extends Controller
 {
-
-
     public function __construct()
     {
         $this->middleware('auth');

@@ -1,5 +1,5 @@
 @extends("layouts.espace_beneficiaire")
-@section('pca', 'active')
+@section('appui2_pca', 'active')
 @section('content')
         <div class="row mt">
           <div class="col-lg-12">

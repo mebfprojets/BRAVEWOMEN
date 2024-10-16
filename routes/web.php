@@ -114,6 +114,8 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get("create/subvention/forbeneficiary/{entreprise}",[SubventionController::class,'create_for_beneficiary'])->name('entreprise.subvention.create');
     Route::get("list/subvention/forbeneficiary/{entreprise}",[SubventionController::class,'subvention_de_la_beneficiaire'])->name('entreprise.subvention');
     Route::get("/subvention/valider_montant",[SubventionController::class,'valider_montant'])->name('valider_montant');
+    Route::get("/subvention/valider_montant/appui2",[SubventionController::class,'valider_montant_appui_2'])->name('valider_montant');
+
     Route::get("edit/account/",[SubventionController::class,'editer'])->name('subvention.editer');
     Route::post("modifier/account/",[SubventionController::class,'modifier'])->name('subvention.modifier');
     Route::resource("subvention",SubventionController::class);

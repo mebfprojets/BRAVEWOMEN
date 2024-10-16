@@ -294,7 +294,11 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                         $type_entreprise='pca_mpme';
                 }
                 else{
-                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone',null)->whereIn('type_entreprise',['leader','aop'])->where('zone_affectation', Auth::user()->zone)->orderBy('updated_at', 'desc')->get();
+                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->whereIn('type_entreprise',['leader','aop'])
+                    ->where(function ($query) {
+                        $query->where('zone_affectation', '=', Auth::user()->zone);
+                           // ->orWhere('region', '=', Auth::user()->zone);
+                    })->orderBy('updated_at', 'desc')->get();;
                     $type_entreprise='pca_aop';
                 }
                 $texte= 'deuxieme appui à évaluer par le chef de zone';
@@ -327,6 +331,19 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                 $texte= "Appui 2  soumis à l'appreciation des membres du comité";
                // $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('avis_ugp','!=',null)->orderBy('updated_at', 'desc')->get();
                 $page= 'appui2_affecter_au_membre_du_comite';
+            }
+            elseif($request->statut=='appui_analyse_par_le_comite'){
+                if($type_entreprise=='mpme'){
+                    $projets = Projet::whereIn('appui_statut', ['selectionne','rejete'])->where('type_entreprise','mpme')->orderBy('updated_at', 'desc')->get(); 
+                    $type_entreprise='pca_mpme';
+                }
+                else{
+                    $projets = Projet::whereIn('appui_statut', ['selectionne','rejete'])->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'desc')->get(); 
+                    $type_entreprise='pca_aop';
+                }
+                $texte= "Demandes d'appui 2 analysés par le comité";
+                $page= 'appui_analyse_par_le_comite';
+                return view("projet.liste_selectionne", compact('projets','banques','page','texte','type_entreprise'));
             }
             
             
@@ -984,41 +1001,82 @@ public function repecher_pca(Request $request){
 }
 public function savedecisioncomite(Request $request){
     $projet=Projet::find($request->projet_id);
-//En cas de validation sans statuer sur les lignes dinvestissments toutes les lignes sont automatiquement validées
-    if($request->avis=='selectionné'){
-        foreach($projet->investissements as $investissement){
-            if($investissement->statut==null){
-                $investissement->update([
-                    'statut'=>'validé',
-                    'montant_valide'=>$investissement->montant,
-                    'apport_perso_valide'=> $investissement->apport_perso,
-                    'subvention_demandee_valide'=> $investissement->subvention_demandee,
-                ]);
-               
-            }
-        }
-    }else{
-        foreach($projet->investissements as $investissement){
-            if($investissement->statut==null){
-                $investissement->update([
-                    'statut'=>'rejeté'
-                ]);
-            }
-        }
+    $entreprise=Entreprise::find($projet->entreprise_id);
+    $ligne_investissement_appuis1_sans_statuts= InvestissementProjet::where('projet_id',$projet->id)->where('statut',null)->where('appui',1)->get();
+    $ligne_investissement_appuis2_sans_statuts= InvestissementProjet::where('projet_id',$projet->id)->where('statut',null)->where('appui',2)->get();
+    ($request->appui==1)?$montant_total_valide= $projet->appui1_investissementvalides->sum('montant_valide') + $ligne_investissement_appuis1_sans_statuts->sum('montant'): $montant_total_valide=$projet->appui2_investissementvalides->sum('montant_valide')  + $ligne_investissement_appuis2_sans_statuts->sum('montant');
+    $ligne_investissement_sans_statuts= InvestissementProjet::where('projet_id',$projet->id)->where('statut',null)->get();
+    $nombre_ligne_investissement_sans_statuts = count($ligne_investissement_sans_statuts);
 
+    if((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_total_valide > 60000000)|| ($entreprise->aopOuleader=='mpme' && $montant_total_valide >18000000)  )
+    {
+            flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
+            return redirect()->back();
     }
-    $projet->update([
-        'statut'=>$request->avis,
-        'observations'=>$request->observation,
-        'montant_accorde'=>$projet->investissementvalides->sum('montant_valide')
-    ]);
-$entreprise= $projet->entreprise;
-$entreprise->update([
-    'verdit_pca'=>$request->avis,
-   
-]);
-
-
+    elseif((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_total_valide < 9000000 &&  $nombre_ligne_investissement_sans_statuts==1 )|| ($entreprise->aopOuleader=='mpme' && $montant_total_valide < 6000000 &&  $nombre_ligne_investissement_sans_statuts==1 )  )
+    {
+        flash("Verifier le montant du projet. Il ne doit pas être inférieur au planché accordé par le projet suivant la catégorie de votre entreprise !!!")->error();
+        return redirect()->back();
+    }
+        else{ 
+    if($request->type=='appui1'){
+        if($request->avis=='selectionné'){
+            foreach($projet->appui1_investissements as $investissement){
+                if($investissement->statut==null){
+                    $investissement->update([
+                        'statut'=>'validé',
+                        'montant_valide'=>$investissement->montant,
+                        'apport_perso_valide'=> $investissement->apport_perso,
+                        'subvention_demandee_valide'=> $investissement->subvention_demandee,
+                    ]);
+                }
+            }
+        }
+        elseif($request->avis=='rejeté'){
+            foreach($projet->appui1_investissements as $investissement){
+                if($investissement->statut==null){
+                    $investissement->update([
+                        'statut'=>'rejeté'
+                    ]);
+                }
+            }
+        }
+        $projet->update([
+            'statut'=>$request->avis,
+            'observations'=>$request->observation,
+            'montant_accorde'=>$projet->investissementvalides->sum('montant_valide')
+        ]);
+    }
+        elseif($request->type=='appui2'){
+         if($request->avis=='selectionné'){
+            foreach($projet->appui2_investissements as $investissement){
+                if($investissement->statut==null){
+                    $investissement->update([
+                        'statut'=>'validé',
+                        'montant_valide'=>$investissement->montant,
+                        'apport_perso_valide'=> $investissement->apport_perso,
+                        'subvention_demandee_valide'=> $investissement->subvention_demandee,
+                    ]);
+                }
+            }
+        }
+        elseif($request->avis=='rejeté'){
+            foreach($projet->appui1_investissements as $investissement){
+                if($investissement->statut==null){
+                    $investissement->update([
+                        'statut'=>'rejeté'
+                    ]);
+                }
+            }
+        }
+        $projet->update([
+            'appui_statut'=>$request->avis,
+            'observations'=>$request->observation,
+            'montant_accorde'=>$projet->investissementvalides->sum('montant_valide')
+        ]);
+            
+    }
+}
 return redirect('administrator/lister_les_pca?statut=a_affecter_au_membre_du_comite');
 }
 
@@ -1039,7 +1097,6 @@ public function synthese_execution_de_pca(){
     {
         $piecejointes_appui1=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE"), env("VALEUR_ID_DOCUMENT_GRILLEEVAL")])->orderBy('updated_at', 'desc')->get();
         $piecejointes_appui2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA_REVU"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"), env("VALEUR_ID_DOCUMENT_DEVIS_REVU"),env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_ATTESTATION_REVU"), env("VALEUR_ID_FICHE_DANALYSE_REVU")])->orderBy('updated_at', 'desc')->get();
-
         $piecejointes_appui1= $piecejointes_appui1->unique('type_piece');
         $piecejointes_appui2= $piecejointes_appui2->unique('type_piece');
         $categorie_investissments=Valeur::where('parametre_id', 38)->get();
@@ -1055,8 +1112,12 @@ public function synthese_execution_de_pca(){
 
     public function show(Projet $projet)
     {
-        $piecejointes=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE")])->orderBy('updated_at', 'desc')->get();
-        $piecejointes= $piecejointes->unique('type_piece');
+        $piecejointes_appui1=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE")])->orderBy('updated_at', 'desc')->get();
+        $piecejointes_appui2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA_REVU"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"), env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_DEVIS_REVU")])->orderBy('updated_at', 'desc')->get();
+
+        $piecejointes_appui1= $piecejointes_appui1->unique('type_piece');
+        $piecejointes_appui2= $piecejointes_appui2->unique('type_piece');
+
     if($projet->entreprise->aopOuleader=='aop'|| $projet->entreprise->aopOuleader=='leader'){
         $criteres= GrilleEval::where('categorie','pa')->get();
     }
@@ -1064,23 +1125,24 @@ public function synthese_execution_de_pca(){
         $criteres= GrilleEval::where('categorie','PCA')->get();
     }
     //dd($criteres);
-        return view("projet.show", compact('projet', 'piecejointes', 'criteres'));
+        return view("projet.show", compact('projet', 'criteres','piecejointes_appui1','piecejointes_appui2'));
     }
 public function valider_investissement(Request $request)
 {
     $invest= InvestissementProjet::find($request->invest_id);
     $entreprise= $invest->projet->entreprise;
     $projet= $invest->projet;
-    ($request->appui==1)?$montant_total_valide= $projet->investissements->sum('montant_valide')  + reformater_montant2($request->cout): $montant_total_valide=$projet->investissements->sum('montant_valide')  + reformater_montant2($request->cout);
-    ($request->appui==1)?$montant_total= ($projet->investissements->sum('montant_valide') ) + reformater_montant2($request->cout):$montant_total= ($projet->investissements->sum('montant_valide') ) + reformater_montant2($request->cout);
+    ($request->appui==1)?$montant_total_valide= $projet->appui1_investissementvalides->sum('montant_valide') + reformater_montant2($request->cout): $montant_total_valide=$projet->appui2_investissementvalides->sum('montant_valide')  + reformater_montant2($request->cout);
+    ($request->appui==1)?$montant_total= ($projet->appui1_investissements->sum('montant_valide') ) + reformater_montant2($request->cout):$montant_total= ($projet->appui2_investissements->sum('montant_valide') ) + reformater_montant2($request->cout);
     $ligne_investissement_sans_statuts= InvestissementProjet::where('projet_id',$invest->projet->id)->where('statut',null)->get();
     $nombre_ligne_investissement_sans_statuts = count($ligne_investissement_sans_statuts);
-if((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_total_valide > 60000000)|| ($entreprise->aopOuleader=='mpme' && $montant_total_valide >18000000)  )
+    //dd($montant_total_valide);
+if((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_total_valide > 60000000)|| ($entreprise->aopOuleader=='mpme' && $montant_total_valide >18000000)  )
 {
         flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
         return redirect()->back();
 }
-elseif((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_total < 9000000 &&  $nombre_ligne_investissement_sans_statuts==1 )|| ($entreprise->aopOuleader=='mpme' && $montant_total < 6000000 &&  $nombre_ligne_investissement_sans_statuts==1 )  )
+elseif((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_total < 9000000 &&  $nombre_ligne_investissement_sans_statuts==1 )|| ($entreprise->aopOuleader=='mpme' && $montant_total < 6000000 &&  $nombre_ligne_investissement_sans_statuts==1 )  )
 {
     flash("Verifier le montant du projet. Il ne doit pas être inférieur au planché accordé par le projet suivant la catégorie de votre entreprise !!!")->error();
     return redirect()->back();
@@ -1088,15 +1150,13 @@ elseif((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') &
     else{
     $invest->update([
         'designation'=> $request->designation,
-        'appui'=> $request->appui,
+        //'appui'=> $request->appui,
         'montant_valide'=> reformater_montant2($request->cout),
         'apport_perso_valide'=> reformater_montant2($request->apport_perso),
         'subvention_demandee_valide'=> reformater_montant2($request->subvention),
         'statut' => 'validé'
     ]);
-    // $projet->update([
-    //     'montant_accorde'=>$projet->investissementvalides->sum('montant')
-    //  ]);
+
     flash("Lignes d'investissement validée avec success !!!")->success();
     return redirect()->back();
 }

@@ -22,7 +22,7 @@ class PrestataireController extends Controller
     public function index()
     {
     if (Auth::user()->can('changer_statut_facture_ou_devis')) {
-        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
+        $regions=Valeur::where('parametre_id',1)->get();
         $prestataires= Prestataire::all();
         $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_COMPETENCE_PRESTATAIRE_ID') )->get();
         return view('prestataires.index', compact('prestataires', 'regions', 'secteur_activites'));
@@ -40,7 +40,7 @@ class PrestataireController extends Controller
      */
     public function create()
     {
-        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
+        $regions=Valeur::where('parametre_id',1 )->get();
         $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_COMPETENCE_PRESTATAIRE_ID') )->get();
         
         return view('prestataires.create', compact('regions', 'secteur_activites'));
