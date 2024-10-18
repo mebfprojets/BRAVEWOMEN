@@ -6,7 +6,6 @@
 <div class="block full">
     <div class="block-title">
         <h2><strong>Liste</strong> des demandes de KYC</h2>
-    
         @can('enregistrer_kyc',Auth::user())
             <a  href="#modal-import-result_kyc" data-toggle="modal" class="btn btn-success"><span></span>Enregistrer Resultat de KYC</a>
             <a  href="#modal-import-creation-ss-compte" data-toggle="modal" class="btn btn-success"><span></span>Charger les dates de création des sous comptes</a>

@@ -225,9 +225,7 @@
                             <li class="@yield('appui2_affecter_au_membre_du_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=appui2_affecte_au_membre_du_comite&type_entreprise=mpme"> Appui 2 au comité</a>
                             </li>
-                            <li class="@yield('appui2_affecter_au_membre_du_comite')">
-                                <a href="{{ route("projet.liste") }}?statut=appui2_affecte_au_membre_du_comite&type_entreprise=mpme"> Appui 2 au comité</a>
-                            </li>
+                            
                             <li class="@yield('analyse_par_le_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=analyse_par_le_comite&type_entreprise=mpme"> Décision du comité</a>
                             </li>

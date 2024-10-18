@@ -36,7 +36,7 @@
 
 @can('donne_verdict_du_comite_pca', Auth::user())
     @if ($projet->observations=='' && $projet->statut=='a_affecter_au_membre_du_comite' && $projet->avis_ugp!=null )
-    <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp" onclick="setTypeavis('appui1','champ_decision_comite')">Décision du comité <i class="fa fa-check-square-o"></i></a>
+    <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp" onclick="setTypeavis('appui1','champ_decision_comite')">Décision du comité sur appui 1 <i class="fa fa-check-square-o"></i></a>
     @if($projet->liste_dattente_observations=='')
         <a href="#modal-pca-liste-dattente" data-toggle="modal"  title="Ajouter dans la liste d'attente " class="btn btn-md btn-warning avis_ugp">Liste d'attente <i class="fa fa-check-square-o"></i></a>
     @endif
@@ -77,7 +77,7 @@
                         <label>Coach:</label>
                         </div>
                         <div class="col-sm-7 mb-3 mb-sm-0">
-                        <label class="fb"> {{$projet->coach->nom}} {{$projet->coach->prenom}}</label>
+                        <label class="fb"> {{$projet->coach->nom}} {{$projet->coach->prenom}} / {{$projet->coach->contact}}</label>
                         </div>
                     </div>
             
@@ -109,7 +109,7 @@
                 @if(count($projet->appui2_investissements)!=0)
                     <div class="form-group row">
                         <div class="col-sm-4">
-                        <label>Coût subventions validées appui 1:</label>
+                        <label>Coût du projet validés appui 1:</label>
                         </div>
                         <div class="col-sm-7 mb-3 mb-sm-0">
                         <label class="fb"> {{ format_prix($projet->appui1_investissementvalides->sum('montant_valide'))   }} </label>
@@ -117,7 +117,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-4">
-                        <label>Coût subventions validées appui 2:</label>
+                        <label>Coût du projet validés appui 2:</label>
                         </div>
                         <div class="col-sm-7 mb-3 mb-sm-0">
                         <label class="fb"> {{ format_prix($projet->appui2_investissementvalides->sum('montant_valide'))   }} </label>
@@ -510,7 +510,7 @@
                 </div> 
                 <div class="form-group form-actions">
                     <div class="col-md-8 col-md-offset-4">
-                        <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                        <a href="#" class="btn btn-sm btn-warning" data-dismiss="modal"><i class="fa fa-repeat"></i> Annuler</a>
                         <button type="submit" class="btn btn-sm btn-success valider_evaluation" ><i class="fa fa-arrow-right"></i> Valider</button>
                     </div>
                 </div>
@@ -544,7 +544,7 @@
             </div>   
                 <div class="form-group form-actions">
                 <div class="col-md-8 col-md-offset-4">
-                    <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                    <a href="#" class="btn btn-sm btn-warning" data-dismiss="modal"><i class="fa fa-repeat"></i> Annuler</a>
                     <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Enregistrer</button>
                 </div>
             </div>

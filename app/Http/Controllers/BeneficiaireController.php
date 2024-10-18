@@ -41,6 +41,7 @@ class BeneficiaireController extends Controller
    public function showprofil(Entreprise $entreprise){
     $promotrice= Promotrice::where('code_promoteur', Auth::user()->code_promoteur)->first();
     $projet=Projet::where('entreprise_id', $entreprise->id)->first();
+    
     if($projet){
         $montant_du_plan_soumis=$projet->investissements->sum('montant');
         $total_a_mobiliser=$projet->investissementvalides->sum('montant_valide');
@@ -85,7 +86,7 @@ class BeneficiaireController extends Controller
     $categorie_investissments=Valeur::where('parametre_id', 38)->get();
     $coachs= Coach::all();
     $banques= Banque::all(); 
-    $projet_type_pieces= Valeur::whereIn('id',[env('VALEUR_ID_DOCUMENT_DEVIS'),env('VALEUR_ID_DOCUMENT_FONCIER')])->get();
+    $projet_type_pieces= Valeur::whereIn('id',[env('VALEUR_ID_DOCUMENT_DEVIS'),env('VALEUR_ID_DOCUMENT_FONCIER'),env('VALEUR_ID_DOCUMENT_DEVIS_REVU'),env('VALEUR_ID_DOCUMENT_FONCIER_REVU')])->get();
         if($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader'){
            $activite_verticale_devs= Entreprise_activite::where('entreprise_id',$entreprise->id)->where('type','verticale')->get();
            $activite_verticale_invests= Entreprise_activite_invest::where('entreprise_id',$entreprise->id)->where('type','verticale')->get();
@@ -102,10 +103,8 @@ class BeneficiaireController extends Controller
            }
            else{
            
-                return view("public.profilbeneficiaire",compact('projet_piecejointes_appuis2','projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
+                return view("public.profilbeneficiaire",compact('projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
         }
-      
-    //return view('public.profilbeneficiaire', compact("proportion_de_depense_education","proportion_de_depense_sante","proportion_de_depense_bien_materiel","entreprise" ,"promotrice", "niveau_instructions","nb_annee_experience","regions"));
    }
    public function showentreprisedata(){
         $promotrice= Promotrice::where('code_promoteur', Auth::user()->code_promoteur)->first();

@@ -305,6 +305,7 @@
 </table>
 </div>              
 <hr>
+@if(count($projet->appui2_investissements)!=0)
 <div class="row">
     <table class="table table-vcenter table-condensed table-bordered  valdetail"   >
         <thead>
@@ -358,10 +359,12 @@
     </td>
 
 </tr>
+
 @endforeach
 </tbody>
 </table>
 </div>
+@endif
 </div>       
 <div class="row">
     <div class="col-md-6">
@@ -399,6 +402,7 @@
           </div>
     </div>
 </div>
+@if(count($projet->appui2_investissements)!=0)
 <div class="col-md-6">
     <div class="block">
     <div class="block-title">
@@ -434,11 +438,10 @@
       </div>
 </div>
 </div>
+@endif
 </div>
-
 @endsection
 @section('modal_part')
-
 <div id="modal-evaluer-pca" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

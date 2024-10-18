@@ -993,12 +993,12 @@
                 </tbody>
                 </table>
             @endif
-                @if($projet_piecejointes_appuis2)
+                @if($entreprise->projet->statut_appui!=null)
                 <div class="row">
                     <div class="col-md-11">
                         <div class="block">
                         <div class="block-title">
-                         <h4> Documents de l'appui 2 du PCA revisé  @if ($entreprise->projet->statut_appuis2 != 'soumis')<span><a href="#modal-add-piece" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span>@endif</h4> 
+                         <h4> Documents de l'appui 2 du PCA revisé  @if ($entreprise->projet->statut_appui != 'selectionné')<span><a href="#modal-add-piece" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span>@endif</h4> 
                       </div>
                         <div class="table-responsive">
                             <table class="table table-vcenter table-condensed table-bordered listepdf valdetail"   > 

@@ -60,7 +60,7 @@
                                 @endforeach
                             </select>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-5">
                         <label class=" control-label" for="example-chosen">Selectionner le coach<span class="text-danger">*</span></label>
                             <select id="coach" name="coach"  value="{{old("coach")}}" class="form-control select-select2"  data-placeholder="Selectionner le coach ayant appuyer à l'elaboration du PCA .." style="width: 80%;" required>
                                 <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
@@ -80,9 +80,7 @@
                     </div>
                 </div>   
                 </div>
-                <!-- END First Step -->
-        
-                <!-- Second Step -->
+                
                 <div id="progress-second" class="step">
                     <h2>Identification du projet</h2>
                     <div class="col-md-11" style="margin-left:10px;">
@@ -119,36 +117,50 @@
                         </div>
                     </div>
                 </div>
-                <h2>Plan  d'investissement du projet</h2>
+                <h3>Plan  d'investissement de la premiere phase du projet</h3>
                 <div class="row" style="text-weight:bold;">
-                    <span class="col-md-2"></span>
-                    <span class="col-md-3">Categorie</span>
-                    <span class="col-md-1">Coût</span>
-                    <span class="col-md-2">Subvention</span>
-                    <span class="col-md-2">Contrepartie</span>
-                   
+                    <span class="col-md-2">Categorie</span>
+                    <span class="col-md-3">Coût</span>
+                    <span class="col-md-3">Subvention</span>
+                    <span class="col-md-3">Contrepartie</span>
                 </div>
                 <div class="field_wrapper2">
                     <div >
-                        <label  for="">Ligne d'Investissement</label>
-                        <select  name="designation[]"  data-placeholder="designation" required>
+                        <select class="col-md-2" name="designation[]"  class="select-select2" data-placeholder="designation" required>
                                 <option></option>
                                 @foreach ($categorie_investissments as  $categorie_investissment)
                                     <option value='{{ $categorie_investissment->id}}'>{{ getlibelle($categorie_investissment->id) }}</option>
                                 @endforeach
                         </select>
-                        
-                        {{-- <input type="text" name="designation[]" value="" placeholder="designation"/> --}}
-                        <input type="text" name="cout[]"  value=""  placeholder="Le prix" id="cout0"  required />
-                        <input type="text" name="subvention[]"  value="" placeholder="Subvention demandée" id="sub0" required onChange="deux_somme_complementaire('sub0','apport0','cout0')"  />
-                        <input type="text" name="apport_perso[]" value=""  placeholder="Apport personne" id="apport0" required />
+                        <input class="col-md-3" type="text" name="cout[]"  value=""  placeholder="Le prix" id="cout0"  required />
+                        <input class="col-md-3" type="text" name="subvention[]"  value="" placeholder="Subvention demandée" id="sub0" required onChange="deux_somme_complementaire('sub0','apport0','cout0')"  />
+                        <input class="col-md-3" type="text" name="apport_perso[]" value=""  placeholder="Apport personne" id="apport0" required />
                         <a href="javascript:void(0);" class="add_button2" title="Add field"><span><i class="fa fa-plus"></i></span></a>
                     </div>
                 </div>
+                <br>
+                <h3>Plan  d'investissement deuxieme phase du projet</h3>
+                <div class="row" style="text-weight:bold;">
+                    <span class="col-md-2">Categorie</span>
+                    <span class="col-md-3">Coût</span>
+                    <span class="col-md-3">Subvention</span>
+                    <span class="col-md-3">Contrepartie</span>
                 </div>
-                <!-- END Second Step -->
-        
-                <!-- Third Step -->
+                <div class="field_wrapper">
+                    <div >
+                        <select class="col-md-2" name="designation_2[]"  class="select-select2" data-placeholder="designation" required>
+                                <option></option>
+                                @foreach ($categorie_investissments as  $categorie_investissment)
+                                    <option value='{{ $categorie_investissment->id}}'>{{ getlibelle($categorie_investissment->id) }}</option>
+                                @endforeach
+                        </select>
+                        <input class="col-md-3" type="text" name="cout_2[]"  value=""  placeholder="Le prix" id="cout2_0"  required />
+                        <input class="col-md-3" type="text" name="subvention_2[]"  value="" placeholder="Subvention demandée" id="sub2_0" required onChange="deux_somme_complementaire('sub2_0','apport2_0','cout2_0')"  />
+                        <input class="col-md-3" type="text" name="apport_perso_2[]" value=""  placeholder="Apport personne" id="apport2_0" required />
+                        <a href="javascript:void(0);" class="add_line" title="Add field"><span><i class="fa fa-plus"></i></span></a>
+                    </div>
+                </div>
+                </div>
                 <div id="progress-third" class="step">
                     <div class="col-md-12">
                         <h2>Joindre les documents</h2>
@@ -158,7 +170,6 @@
                                 <input class="form-control col-md-6" type="file" name="plan_de_continute" id="plan_de_continute" accept=".pdf, .jpeg, .png"   placeholder="Joindre le plan de continuité des activité" required  onchange="VerifyUploadSizeIsOK('plan_de_continute');" >
                                 <span class="input-group-addon"><i class="gi gi-file"></i></span>
                                 <span class="input-group-addon"><a href="#" class="empty_field" onclick="empty_input_file('plan_de_continute')">Vider le champ</a></span>
-
                             </div>
                             @if ($errors->has('plan_de_continute'))
                                 <span class="help-block">
@@ -262,7 +273,34 @@
                 x++; //Increment field counter
                 var desi="desi"+x;
                 var cout='cout'+x ;
-                var fieldHTML = '<div><label for="">Ligne dinvestissement:</label> <select  name="designation[]"  data-placeholder="designation" > <option></option> @foreach ($categorie_investissments as  $categorie_investissment)<option value="{{ $categorie_investissment->id}}">{{ getlibelle($categorie_investissment->id) }}</option>@endforeach </select> <input type="text" name="cout[]"  placeholder="cout"  id="' + cout + '"  required/> <input type="text" name="subvention[]"  placeholder="Subvention demandée" id="sub' + x +'"  onChange=deux_somme_complementaire("sub' + x +'","apport' + x +'","' + cout + '")  required/> <input type="text" name="apport_perso[]"   placeholder="Apport personne" id="apport' + x +'"   required />   <a href="javascript:void(0);" class="remove_button"><span> <i class="fa fa-minus"></i></a></div>';
+                var fieldHTML = '<br><div> <select class="col-md-2"  name="designation[]"  data-placeholder="designation" > <option></option> @foreach ($categorie_investissments as  $categorie_investissment)<option value="{{ $categorie_investissment->id}}">{{ getlibelle($categorie_investissment->id) }}</option>@endforeach </select> <input class="col-md-3" type="text" name="cout[]"  placeholder="cout"  id="' + cout + '"  required/> <input  class="col-md-3" type="text" name="subvention[]"  placeholder="Subvention demandée" id="sub' + x +'"  onChange=deux_somme_complementaire("sub' + x +'","apport' + x +'","' + cout + '")  required/> <input class="col-md-3" type="text" name="apport_perso[]"   placeholder="Apport personne" id="apport' + x +'"   required />   <a href="javascript:void(0);" class="remove_button"><span> <i class="fa fa-minus"></i></a></div>';
+                $(wrapper2).append(fieldHTML);
+               
+            }
+        });
+       // alert($('#cout1').val());
+        $('#cout1').change(function(){
+  alert("The text has been changed.");
+}); 
+        //Once remove button is clicked
+        $(wrapper2).on('click', '.remove_button', function(e){
+            e.preventDefault();
+            $(this).parent('div').remove(); //Remove field html
+            x--; //Decrement field counter
+        });
+    });
+    $(document).ready(function(){
+       // alert('okok');
+        var maxField = 5; //Input fields increment limitation
+        var addButton = $('.add_line'); //Add button selector
+        var wrapper2 = $('.field_wrapper'); //Input field wrapper
+        var x = 0; //Initial field counter is 1
+        $(addButton).click(function(){
+            if(x < maxField){
+                x++; //Increment field counter
+                var desi="desi"+x;
+                var cout='cout2_'+x ;
+                var fieldHTML = '<br><div> <select class="col-md-2"  name="designation_2[]"  data-placeholder="designation" > <option></option> @foreach ($categorie_investissments as  $categorie_investissment)<option value="{{ $categorie_investissment->id}}">{{ getlibelle($categorie_investissment->id) }}</option>@endforeach </select> <input class="col-md-3" type="text" name="cout_2[]"  placeholder="cout"  id="' + cout + '"  required/> <input  class="col-md-3" type="text" name="subvention_2[]"  placeholder="Subvention demandée" id="sub2_' + x +'"  onChange=deux_somme_complementaire("sub2_' + x +'","apport2_' + x +'","' + cout + '")  required/> <input class="col-md-3" type="text" name="apport_perso_2[]"   placeholder="Apport personne" id="apport2_' + x +'"   required />   <a href="javascript:void(0);" class="remove_button"><span> <i class="fa fa-minus"></i></a></div>';
                 $(wrapper2).append(fieldHTML);
                
             }
