@@ -307,7 +307,6 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                 $texte= 'deuxieme appui à évaluer par le chef de zone';
                 $page='soumis_appui2';
             }
-            
             elseif($request->statut=='avis_ugp_appui2'){
                     if($type_entreprise=='mpme'){
                         $projets = Projet::whereIn('appui_statut' ,['soumis','affecte_au_chef_de_projet'])->where('type_entreprise','mpme')->where('avis_chefdezone_appui2','!=',null)->where('avis_ugp_appui2',null)->orderBy('updated_at', 'desc')->get();
@@ -320,7 +319,6 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                     }
                     $texte= "deuxieme appui en attente de l'avis de l'UGP";
                     $page= 'appui2_avis_ugp';
-                
             }
             elseif($request->statut=='appui2_affecte_au_membre_du_comite'){
                 if($type_entreprise=='mpme'){
@@ -348,8 +346,6 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
                 $page= 'appui_analyse_par_le_comite';
                 return view("projet.liste_selectionne", compact('projets','banques','page','texte','type_entreprise'));
             }
-            
-            
             return view("projet.liste_analyse", compact('projets','banques','page','texte','type_entreprise'));
     }
     public function lister_pca_liste_dattente(Request $request){
@@ -504,6 +500,50 @@ public function lister_pca_selectionne_par_zone(Request $request){
             return redirect()->back();
         }
     }
+
+    public function lister_appui2_selectionnes_par_zone(Request $request){
+        if (Auth::user()->can('acceder_aux_pca_selectionne')) { 
+             $banques= Banque::all();
+            $type_entreprise= $request->type_entreprise;
+            $page='selectionnes';
+            $texte= 'Selectionnés par le comité technique';
+            if(Auth::user()->zone!= 100){ 
+                if($type_entreprise=='mpme') {
+                    $projets = Projet::where('appui_statut','selectionné')->where('type_entreprise', 'mpme')->where('zone_affectation', Auth::user()->zone)->get();
+                    $type_entreprise='pca_mpme';
+                }
+                else{
+                    $projets = Projet::where('appui_statut','selectionné')
+                    ->where(function ($query) {
+                        $query->where('type_entreprise','aop')
+                        ->orWhere('type_entreprise','leader');
+                    })->where('zone_affectation', Auth::user()->zone)->get();
+                    $type_entreprise='pca_aop';
+                }     
+                return view("projet.liste_selectionne", compact('projets','banques','page','texte','type_entreprise'));
+            }
+        //Si user connecté est dans une zone afficher toutes les entreprises dont le projet est selectionné dans sa zone
+            else{
+             if($type_entreprise =='mpme') {
+                $projets = Projet::where('appui_statut','selectionné')->where('type_entreprise','mpme')->get();
+                $type_entreprise='pca_mpme';
+             }
+             else{
+                $projets = Projet::where('appui_statut','selectionné')
+                ->where(function ($query) {
+                    $query->where('type_entreprise','aop')
+                    ->orWhere('type_entreprise','leader');
+                })->get();
+                $type_entreprise='pca_aop';
+             }
+            }   
+                return view("projet.liste_selectionne", compact('projets','banques','page','texte','type_entreprise'));
+            }
+            else{
+                flash("Vous n'avez pas ce droit d'access bien vouloir contacter l'administrateur !!!")->error();
+                return redirect()->back();
+            }
+        }
     public function save_de_demande_kyc(Request $request){
             $entreprise= Entreprise::find($request->entreprise);
             $date_demande_kyc= date('Y-m-d', strtotime($request->date_demande_kyc));
@@ -950,7 +990,7 @@ if (Auth::user()->can('valider_analyse_pca')) {
     else{
         $projet->update([
             'motif_du_rejet_de_lanalyse'=>'',
-            //'statut'=>'a_affecter_au_membre_du_comite'
+            'statut'=>'a_affecter_au_membre_du_comite'
         ]);
     }
     
@@ -977,8 +1017,9 @@ public function pca_save_avis_chefdezone(Request $request){
             'observation_chefdezone_appui2'=>$request->observation,
         ]);
     }
+    return redirect()->route('projet.liste', array('statut' => 'soumis','type_entreprise' => 'mpme'));
         
-    return redirect('/administrator/lister_les_pca?statut=analyse');
+    //return redirect('/administrator/lister_les_pca?statut=analyse');
 }
 public function pca_save_avis_ugp(Request $request){
     $projet= Projet::find($request->projet_id);
@@ -997,7 +1038,8 @@ public function pca_save_avis_ugp(Request $request){
             'avis_ugp_appui2'=>$request->observation,
         ]);
     }
-    return redirect('/administrator/lister_les_pca?statut=analyse');
+    return redirect()->route('projet.liste', array('statut' => 'analyse','type_entreprise' => 'mpme'));
+   // return redirect('/administrator/lister_les_pca?statut=analyse');
 }
 public function put_pca_to_liste_dattente(Request $request){
     $projet=Projet::find($request->projet_id);
@@ -1218,6 +1260,10 @@ else{
         'subvention_demandee'=>reformater_montant2($request->subvention),
         'apport_perso'=>reformater_montant2($request->apport_perso),
     ]);
+    $projet->update([
+        'montant_demande' => $projet->investissements->sum('montant')
+    ]);
+    flash("La ligne d'investissement a été ajoutée avec success !!!")->success();
     return redirect()->back();
 }
 }
@@ -1348,7 +1394,7 @@ if($pj){
         'motif_du_rejet_de_lanalyse'=>''
      ]);
      flash("Le Dossier a été évalué avec success")->success();
-     return redirect()->route('projet.liste', array('statut' => 'soumis'));
+     return redirect()->route('projet.liste', array('statut' => 'soumis','type_entreprise' => 'mpme'));
 }
 else{
     flash("Bien vouloir joindre la grille d'evaluation !!!")->error();

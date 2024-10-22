@@ -157,6 +157,9 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('/pca/avis_chefdezone', [ProjetController::class, 'pca_save_avis_chefdezone'])->name('pca.save_devis_chefdezone');
     Route::get('/pca/avis_ugp', [ProjetController::class, 'pca_save_avis_ugp'])->name('pca.save_avis_ugp');
     Route::get('/pca/selectionne/zone', [ProjetController::class, 'lister_pca_selectionne_par_zone'])->name('pca.selectionneparzone');
+    Route::get('/appui2/selectionne/zone', [ProjetController::class, 'lister_appui2_selectionnes_par_zone'])->name('pca.appui2_selectionnes_parzone');
+
+    
     Route::post('/demande_kyc/save/', [ProjetController::class, 'save_de_demande_kyc'])->name('save_de_demande_kyc');
     Route::post('/save_date_demande_creation_compte/save/', [ProjetController::class, 'save_date_demande_creation_compte'])->name('save_date_demande_creation_compte');
     Route::post('/store_creation_compte/save/', [ProjetController::class, 'save_date_creation_compte'])->name('save_date_creation_compte');

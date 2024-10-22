@@ -129,7 +129,7 @@
                       <label>Subvention demandée:</label>
                     </div>
                     <div class="col-sm-7 mb-3 mb-sm-0">
-                      <label class="fb"> {{ format_prix($projet->investissements->sum('subvention_demandee'))   }} </label>
+                      <label class="fb"> {{ format_prix($projet->appui1_investissements->sum('subvention_demandee'))   }} et {{ format_prix($projet->appui2_investissements->sum('subvention_demandee'))   }}</label>
                     </div>
                  </div>
                  <div class="form-group row">
@@ -137,7 +137,15 @@
                       <label>Apport personnel :</label>
                     </div>
                     <div class="col-sm-7 mb-3 mb-sm-0">
-                      <label class="fb"> {{ format_prix($projet->investissements->sum('apport_perso'))   }} </label>
+                      <label class="fb"> {{ format_prix($projet->appui1_investissements->sum('apport_perso'))   }} et  {{ format_prix($projet->appui2_investissements->sum('apport_perso'))   }}</label>
+                    </div>
+                 </div>
+                 <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label>Subvention accordée :</label>
+                    </div>
+                    <div class="col-sm-7 mb-3 mb-sm-0">
+                      <label class="fb"> {{ format_prix($projet->appui1_investissements->sum('subvention_demandee_valide'))   }} et  {{ format_prix($projet->appui2_investissements->sum('subvention_demandee_valide'))   }}</label>
                     </div>
                  </div>
                       <div class="form-group row">
@@ -916,6 +924,7 @@
         $(function(){
             var projet_id= $("#projet_id").val();
             var raison= $("#raison_du_rejet").val();
+            //alert(projet_id)
             var url = "{{ route('pca.valider_analyse') }}";
             $.ajax({
                 url: url,

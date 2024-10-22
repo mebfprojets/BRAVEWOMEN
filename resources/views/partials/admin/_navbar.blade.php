@@ -242,6 +242,9 @@
                             <li class="@yield('selectionnes')">
                                 <a href="{{ route("pca.selectionneparzone") }}?type_entreprise=mpme"> Projets retenus</a>
                             </li>
+                            <li class="@yield('selectionnes')">
+                                <a href="{{ route("pca.appui2_selectionnes_parzone") }}?type_entreprise=mpme"> Appui2 retenus</a>
+                            </li>
                             @endcan 
                             @can('souscription.liste', Auth::user())
                                 <li class="@yield('kyc')">
@@ -307,6 +310,9 @@
                             @can('projet.view', Auth::user())
                             <li class="@yield('selectionnes')">
                                 <a href="{{ route("pca.selectionneparzone") }}?type_entreprise=aop">  Projets retenus</a>
+                            </li>
+                            <li class="@yield('selectionnes')">
+                                <a href="{{ route("pca.appui2_selectionnes_parzone") }}?type_entreprise=aop"> Appui2 retenus</a>
                             </li>
                             @endcan 
                             @can('souscription.liste', Auth::user())

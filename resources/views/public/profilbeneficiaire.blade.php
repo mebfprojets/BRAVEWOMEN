@@ -917,7 +917,7 @@
                 </div>
                 </div>
         @endif
-        <h4>Plan d'investissement 2eme appui @if ($entreprise->projet->statut== 'selectionné')<span><a href="#modal-add-invest-appui2" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span> @endif</h4> 
+        <h4>Plan d'investissement 2eme appui @if ($entreprise->projet->appui_statut!= 'selectionné')<span><a href="#modal-add-invest-appui2" data-toggle="modal" onclick="recupererprojet_id({{ $entreprise->projet->id }})"><i class="fa fa-plus"></i></a></span> @endif</h4> 
                     <table class="table table-condensed table-bordered" style="text-align: center">
                     <thead style="text-align: center !important">
                             <tr>

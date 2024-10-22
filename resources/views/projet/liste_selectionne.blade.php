@@ -31,7 +31,8 @@
                     <th class="text-center">Apport Personnel</th>
                     <th class="text-center">Demande de financement</th>
                     <th class="text-center">Coût accordé</th>
-                    <th class="text-center">Subvention aprouvée</th>
+                    <th class="text-center">Subvention aprouvée appui1</th>
+                    <th class="text-center">Subvention aprouvée appui2</th>
                     <th class="text-center">Banque partenaire</th>
                     <th class="text-center">Décision du comite</th>
                     <th class="text-center">Observation du comité</th>
@@ -63,7 +64,8 @@
                         <td class="text-center">{{ format_prix($projet->investissements->sum('apport_perso'))}}</td>
                         <td class="text-center">{{ format_prix($projet->investissements->sum('subvention_demandee'))}}</td>
                         <td class="text-center">{{ format_prix($projet->montant_accorde)}}</td>
-                        <td class="text-center">{{ format_prix($projet->investissements->sum('subvention_demandee_valide'))}}</td>
+                        <td class="text-center">{{ format_prix($projet->appui1_investissements->sum('subvention_demandee_valide'))}}</td>
+                        <td class="text-center">{{ format_prix($projet->appui2_investissements->sum('subvention_demandee_valide'))}}</td>
                         <td class="text-center">{{$projet->entreprise->banque->nom}}</td>
                         <td class="text-center">
                             @if($projet->statut=='selectionné')

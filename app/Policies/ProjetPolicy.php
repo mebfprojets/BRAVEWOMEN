@@ -44,7 +44,7 @@ class ProjetPolicy
     }
     public function valider_analyse_pca(User $user)
     {
-        return $this->getPermission($user, 50);
+        return $this->getPermission($user, 44);
     }
     public function enregistrer_kyc(User $user){
         return $this->getPermission($user, 49);
