@@ -653,5 +653,35 @@ public function changerStatus(Request $request){
                 return redirect()->back();
             }
         }
+    public function facture_payes(){
+        if(Auth::user()->banque_id){
+            $facture_ids= DB::table('factures')
+                ->join('entreprises',function($join){
+                    $join->on('factures.entreprise_id','=','entreprises.id')
+                    ->where('factures.statut', 'payee');
+                })
+                ->where('entreprises.banque_id', Auth::user()->banque_id)
+                ->select('factures.id as facture_id')
+                ->orderBy('factures.updated_at', 'asc')
+                ->get();
+
+        }
+        else{
+            $facture_ids= DB::table('factures')
+            ->join('entreprises',function($join){
+                $join->on('factures.entreprise_id','=','entreprises.id')
+                ->where('factures.statut', 'payee');
+            })
+            ->select('factures.id as facture_id')
+            ->orderBy('factures.updated_at', 'asc')
+            ->get();
+        }
+        $factures=[];
+        foreach($facture_ids as $fact){
+            $facture= Facture::find($fact->facture_id);
+            $factures[]= $facture;
+        }
+        return view('facture.payees', compact('factures'));
+        }
     
 }

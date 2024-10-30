@@ -346,7 +346,7 @@ function Insertion_Journal($table,$operation)
                            
                         }
                     }
-                   
+
                     if(!function_exists('genererExcel')){
                         function genererExcel($items){
                             $fileName = "itemdata-".date('d-m-Y').".xls";

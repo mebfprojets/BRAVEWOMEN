@@ -337,7 +337,6 @@ Route::post('dee/modifier',[DeviController::class, 'enr_modification'] )->name('
 Route::get("/charger/devis/{url}", [DeviController::class, 'telechargerdevis'])->name('telechargerdevis');
 Route::get("/charger/doc/{url}", [FactureController::class, 'telechargerfacture'])->name('telechargerfacture');
 
-
 Route::get("changerStatus/devis", [DeviController::class, 'changerStatus'])->name('devi.changerstatus');
 Route::get("/factures/{devi}", [FactureController::class, 'facture_dun_devis'])->name('facture.liste');
 Route::post("/facture/store", [FactureController::class, 'store'])->name('facture.store');
@@ -372,6 +371,8 @@ Route::get('/all_activity/json', [ActiviteController::class, 'activity_all'])->n
 
 Route::get('rejet/devis/par_administrateur/{devi}', [DeviController::class, 'rejeter_le_devis_apres_validation'])->name('devis.rejete');
 Route::get('rejeter/facture/par_administrateur/{facture}', [FactureController::class, 'rejeter_la_facture_apres_validation'])->name('facture.rejete');
+Route::get('afficher/factures/payees', [FactureController::class, 'facture_payes'])->name('facture.payes');
+
 
 
 

@@ -993,7 +993,7 @@
                 </tbody>
                 </table>
             @endif
-                @if($entreprise->projet->statut_appui!=null)
+                @if($entreprise->projet->statut_appui ==null)
                 <div class="row">
                     <div class="col-md-11">
                         <div class="block">

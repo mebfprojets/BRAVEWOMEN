@@ -43,7 +43,7 @@
                     <div class="col-md-12">
                         <h2>Joindre les documents</h2>
                         <div class="form-group{{ $errors->has('plan_de_continute') ? ' has-error' : '' }}">
-                            <label class="control-label col-md-4" for="plan_de_continute">Plan de Continuité des Activités revu  <span class="text-danger">*</span></label>
+                            <label class="control-label col-md-4" for="plan_de_continute">Deuxieme demande de financement<span class="text-danger">*</span></label>
                             <div class="input-group col-md-6">
                                 <input class="form-control col-md-6" type="file" name="plan_de_continute_revu" id="plan_de_continute" accept=".pdf, .jpeg, .png"   placeholder="Joindre le plan de continuité des activité" required  onchange="VerifyUploadSizeIsOK('plan_de_continute');" >
                                 <span class="input-group-addon"><i class="gi gi-file"></i></span>
@@ -55,7 +55,7 @@
                                 </span>
                                 @endif
                         </div>
-                        <div class="form-group{{ $errors->has('synthese_plan_de_continute') ? ' has-error' : '' }}">
+                        {{-- <div class="form-group{{ $errors->has('synthese_plan_de_continute') ? ' has-error' : '' }}">
                             <label class="control-label col-md-4" for="synthese_plan_de_continute">Synthèse du plan de continuité revu <span class="text-danger">*</span></label>
                             <div class="input-group col-md-6">
                                 <input class="form-control col-md-6" type="file" name="synthese_plan_de_continute_revu" id="synthese_plan_de_continute" accept=".pdf, .jpeg, .png"   placeholder="Joindre la synthèse du plan de continuité des activité" required onchange="VerifyUploadSizeIsOK('synthese_plan_de_continute');">
@@ -67,7 +67,7 @@
                                     <strong>{{ $errors->first('synthese_plan_de_continute_revu') }}</strong>
                                 </span>
                                 @endif
-                        </div>
+                        </div> --}}
                         <div class="form-group{{ $errors->has('devis_des_investissements') ? ' has-error' : '' }}">
                             <label class="control-label col-md-4" for="devis_des_investissements">Devis des équipements et matériels à acquérir  <span class="text-success">*</span></label>
                             <div class="input-group col-md-6">
@@ -79,7 +79,7 @@
                                 <span class="help-block">
                                     <strong>{{ $errors->first('devis_des_investissements') }}</strong>
                                 </span>
-                                @endif
+                            @endif
                         </div>
                         <div class="form-group{{ $errors->has('copie_document_foncier') ? ' has-error' : '' }}">
                             <label class="control-label col-md-4" for="copie_document_foncier">Copie PUH, titre foncier ou tout document foncier   <span class="text-success">*</span></label>
@@ -90,7 +90,6 @@
                                 <a href="#" class="empty_field" onclick="empty_input_file('copie_document_foncier')">
                                     Vider le champ
                                   </a></span>
-                               
                             </div>
                             @if ($errors->has('copie_document_foncier'))
                                 <span class="help-block">
@@ -98,19 +97,13 @@
                                 </span>
                                 @endif
                         </div>
-                
                     </div>
-           
-                <!-- END Third Step -->
-        
-                <!-- Form Buttons -->
                 <div class="form-group form-actions button_formulaire">
                     <div class="col-md-8 col-md-offset-4">
                         <input type="reset" class="btn btn-sm btn-warning" id="back3" value="Back">
                         <input id='tester' type="submit" class="btn btn-sm btn-success " id="next3" value="Next">
                     </div>
                 </div>
-                <!-- END Form Buttons -->
             </form>
           </div>
         </div>

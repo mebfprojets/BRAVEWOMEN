@@ -22,7 +22,6 @@ class SubventionController extends Controller
      */
     public function index()
     {
-        //
     }
     public function subvention_de_la_beneficiaire(Entreprise $entreprise){
         $subventions= Subvention::where("entreprise_id",$entreprise->id)->get();
@@ -35,7 +34,6 @@ class SubventionController extends Controller
     public function valider_montant(Request $request){
         $montant_subvention=$request->montant;
         $entreprise= Entreprise::find($request->id_entreprise);
-      // dd($request->id_subvention);
         if($request->id_subvention == 0){
             $total_subvention= $entreprise->subventions->sum('montant_subvention') + $montant_subvention;
         }
@@ -47,7 +45,9 @@ class SubventionController extends Controller
         $subvention_accorde=$entreprise->projet->investissementvalides->sum('subvention_demandee_valide');
         return (($total_subvention > $subvention_accorde)|| ($total_subvention > $contrepartie_versee)) ? 2 : 0;  
     }
-
+    public function  valider_montant_appui_2(Request $request){
+        
+    } 
     /**
      * Show the form for creating a new resource.
      *
@@ -115,7 +115,7 @@ class SubventionController extends Controller
 }
     public function get_recu(Subvention $subvention){
          return $path = Storage::download($subvention->copie_du_recu);
-     }
+    }
 
     /**
      * Store a newly created resource in storage.

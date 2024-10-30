@@ -405,6 +405,12 @@
                                 <a href="{{ route("facture.a_payer_de_par_banque") }}"> Factures à payer</a>
                         </li>
                       @endcan
+                      @can('lister_facture.a_payer', Auth::user())
+                        <li class="@yield('facture_payees')">
+                                <a href="{{ route("facture.payes") }}"> Factures payées</a>
+                        </li>
+                      @endcan
+                      
                       
                        
                     </ul>

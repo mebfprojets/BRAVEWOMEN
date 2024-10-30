@@ -24,6 +24,7 @@
                     <th class="text-center">Denomination de l'entreprise</th>
                     <th class="text-center">Banque partenaire</th>
                     <th class="text-center">Nom & Prenom</th>
+                    <th class="text-center">Numéro d'identité</th>
                     <th class="text-center">Telephone</th>
                     <th class="text-center">Secteur d'activite</th>
                     <th class="text-center">Titre du projet</th>
@@ -66,6 +67,8 @@
                         <td class="text-center">{{ $projet->entreprise->banque->nom}}</td>
                         
                         <td class="text-center">{{ $projet->entreprise->promotrice->nom}} {{ $projet->entreprise->promotrice->prenom}}</td>
+                        <td class="text-center">{{ $projet->entreprise->promotrice->numero_identite}}</td>
+
                         <td class="text-center">{{ $projet->entreprise->promotrice->telephone_promoteur}} </td>
                         <td class="text-center">{{ getlibelle($projet->entreprise->secteur_activite)}} </td>
                         <td class="text-center">{{ $projet->titre_du_projet }}</td>

@@ -41,12 +41,11 @@ class BeneficiaireController extends Controller
    public function showprofil(Entreprise $entreprise){
     $promotrice= Promotrice::where('code_promoteur', Auth::user()->code_promoteur)->first();
     $projet=Projet::where('entreprise_id', $entreprise->id)->first();
-    
     if($projet){
         $montant_du_plan_soumis=$projet->investissements->sum('montant');
         $total_a_mobiliser=$projet->investissementvalides->sum('montant_valide');
         $projet_piecejointes=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION")])->orderBy('updated_at', 'desc')->get();
-        $projet_piecejointes_appuis2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_DEVIS_REVU"),env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"),env("VALEUR_ID_DOCUMENT_PCA_REVU")])->orderBy('updated_at', 'desc')->get();
+        $projet_piecejointes_appuis2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_DEVIS_REVU"),env("VALEUR_ID_DOCUMENT_PCA_REVU")])->orderBy('updated_at', 'desc')->get();
 
     }
     else{
@@ -102,8 +101,7 @@ class BeneficiaireController extends Controller
             return view("public.profilbeneficiaire",compact('projet_piecejointes_appuis2','projet_type_pieces','montant_du_plan_soumis','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','forme_juridiques','total_avoir','total_engage','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros" ,"maillon_activites",'secteur_activites',"regions","nb_annee_experience","niveau_instructions","promotrice","nombre_de_pme_partenaires_de_la_zones","montant_obtenu_aupres_des_institutions_financiaires","montant_des_achats_aupres_des_mpme_des_femmes","nombre_de_pme_partenaires","nombre_membres","pourcentage_femmes","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises","activite_horizontale_devs","activite_verticale_invests","activite_horizontale_invests"));
            }
            else{
-           
-                return view("public.profilbeneficiaire",compact('projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
+                return view("public.profilbeneficiaire",compact('projet_piecejointes_appuis2','projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
         }
    }
    public function showentreprisedata(){

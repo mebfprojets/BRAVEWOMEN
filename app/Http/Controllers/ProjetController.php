@@ -93,15 +93,13 @@ class ProjetController extends Controller
        //$nombre_de_clients= Valeur::where('id', 7085)->get();
        $entreprise = Entreprise::where('code_promoteur', $promoteur->code_promoteur)->where('participer_a_la_formation', 1)->first();
        $projets= Projet::where('entreprise_id',$entreprise->id)->where('statut','selectionne')->get();
-    //    foreach($projets as $projet){
-    //         $projet->devis->sum('taux_de_realisation')/$projet->devis;
-    //    }
+       
        return view('projet.add_appui2_plan', compact('categorie_investissments','projets'));
     }
 
-    public function store_plan_appui2(Request $request){
+public function store_plan_appui2(Request $request){
         $projet= Projet::find($request->projet);
-        if($projet->appui_statut!=null){
+        if(count($projet->appui2_investissements)>0){
             flash("Vous avez déja soumis votre appui ")->error();
             return back();
         }
@@ -113,7 +111,7 @@ class ProjetController extends Controller
         foreach($couts as $cout){
                 $montant_total = $montant_total + reformater_montant2($cout);
         }
-if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synthese_plan_de_continute_revu')){
+if($request->hasFile('plan_de_continute_revu')){
    if((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_total >60000000) || ($entreprise->aopOuleader=='mpme' && $montant_total >18000000)  )
         {
             flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
@@ -156,22 +154,6 @@ if($request->hasFile('synthese_plan_de_continute_revu')&&$request->hasFile('synt
             }
             else{
                 $urlplan_de_continute=null;
-            }
-            if ($request->hasFile('synthese_plan_de_continute_revu')) {
-                $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"));
-                $file = $request->file('synthese_plan_de_continute_revu');
-                $extension=$file->getClientOriginalExtension();
-                $fileName = $entreprise->code_promoteur.'_'.'synthese_plan_de_continute_revu'.'.'.$extension;
-                $emplacement='public/synthese_pca/'.$entreprise->aopOuleader.'/'; 
-                $urlsynthese_plan_de_continute= $request['synthese_plan_de_continute_revu']->storeAs($emplacement, $fileName);
-                Piecejointe::create([
-                    'type_piece'=>env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"),
-                      'entreprise_id'=>$entreprise->id,
-                      'url'=>$urlsynthese_plan_de_continute,
-                  ]);
-            }
-            else{
-                $urlsynthese_plan_de_continute=null;
             }
             if ($request->hasFile('devis_des_investissements')) {
                 $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_ID_DOCUMENT_DEVIS_REVU"));
@@ -1185,12 +1167,10 @@ public function synthese_execution_de_pca(){
     //dd($projet);
         return view("projet.analyse", compact('piecejointes_appui2','projet', 'piecejointes_appui1', 'criteres', 'categorie_investissments'));
     }
-
     public function show(Projet $projet)
     {
         $piecejointes_appui1=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"), env("VALEUR_ID_DOCUMENT_DEVIS"),env("VALEUR_ID_DOCUMENT_FONCIER"),env("VALEUR_ID_DOCUMENT_ATTESTATION"), env("VALEUR_ID_FICHE_DANALYSE")])->orderBy('updated_at', 'desc')->get();
-        $piecejointes_appui2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA_REVU"), env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU"), env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_DEVIS_REVU")])->orderBy('updated_at', 'desc')->get();
-
+        $piecejointes_appui2=Piecejointe::where("entreprise_id",$projet->entreprise->id)->whereIn('type_piece', [env("VALEUR_ID_DOCUMENT_PCA_REVU"), env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),env("VALEUR_ID_DOCUMENT_DEVIS_REVU")])->orderBy('updated_at', 'desc')->get();
         $piecejointes_appui1= $piecejointes_appui1->unique('type_piece');
         $piecejointes_appui2= $piecejointes_appui2->unique('type_piece');
 
