@@ -51,6 +51,7 @@ class BeneficiaireController extends Controller
     else{
         $total_a_mobiliser=null;
         $projet_piecejointes=null;
+        $projet_piecejointes_appuis2=null;
         $montant_du_plan_soumis=null;
     }
     $regions=Valeur::where('parametre_id',env('PARAMETRE_ID_REGION'))->get();
@@ -103,6 +104,8 @@ class BeneficiaireController extends Controller
            else{
                 return view("public.profilbeneficiaire",compact('projet_piecejointes_appuis2','projet_type_pieces','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
         }
+        //return view("public.profilbeneficiaire",compact('projet_piecejointes_appuis2','montant_du_plan_soumis',"projet_piecejointes",'forme_juridiques','total_engage','total_avoir','banques','coachs','categorie_investissments','projet_piecejointes','total_a_mobiliser','techno_utilisees','nature_clienteles','nb_annee_activites',"source_appros","maillon_activites","secteur_activites","regions","nb_annee_experience","niveau_instructions","promotrice","entreprise","nombre_total_client",'proportion_de_depense_education','proportion_de_depense_sante','proportion_de_depense_bien_materiel','nombre_innovation','nombre_nouveau_marche','nombre_nouveau_produit',"piecejointes","chiffre_daffaire","produit_vendus", "benefice_nets","salaire_annuelles","effectif_permanent_entreprises","effectif_temporaire_entreprises"));
+
    }
    public function showentreprisedata(){
         $promotrice= Promotrice::where('code_promoteur', Auth::user()->code_promoteur)->first();

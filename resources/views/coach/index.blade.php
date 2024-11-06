@@ -111,7 +111,7 @@
                 </div>
                 <div class="form-group form-actions">
                     <div class="col-md-8 col-md-offset-4">
-                        <a href="{{ route('prestataire.index') }}" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                        <a href="{{ route('coach.index') }}" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
                         <button type="submit" class="btn btn-sm btn-sucess"><i class="fa fa-arrow-right"></i> Valider</button>
                     </div>
                 </div>

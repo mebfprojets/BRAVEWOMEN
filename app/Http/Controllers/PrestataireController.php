@@ -100,7 +100,7 @@ class PrestataireController extends Controller
      */
     public function edit(Prestataire $prestataire)
     {
-        $regions=Valeur::where('parametre_id',1 )->whereIn('id', [env('VALEUR_ID_CENTRE'),env('VALEUR_ID_HAUT_BASSIN'), env('VALEUR_ID_BOUCLE_DU_MOUHOUN'), env('VALEUR_ID_NORD')])->get();
+        $regions=Valeur::where('parametre_id',1 )->get();
         $secteur_activites= Valeur::where('parametre_id', env('PARAMETRE_COMPETENCE_PRESTATAIRE_ID') )->get();
         
         return view('prestataire.edit', compact('prestataire', 'secteur_activites'));

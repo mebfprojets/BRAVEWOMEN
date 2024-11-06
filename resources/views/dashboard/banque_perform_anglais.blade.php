@@ -1,6 +1,6 @@
 @extends("layouts.admin")
 @section('dashboard', 'active')
-@section('dash.banque_perform', 'active')
+@section('dash.banque_perform_en', 'active')
 @section('content')
 <div class="col-md-12 col-md-offset-1 block full" style="margin-left: 10px;">
     <div class="col-md-12">
@@ -8,19 +8,19 @@
             <div class="block">
                 <!-- Quick Stats Title -->
                 <div class="block-title">
-                    <h2><i class="fa fa-line-chart"></i> <strong>Indicateurs</strong> Clés</h2>
+                    <h2><i class="fa fa-line-chart"></i> <strong>Key indicators</strong></h2>
                 </div>
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left text-warning">
-                            <strong>{{ $facture_soumis_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_soumis_par_banques->sum('montant')) }} FCFA)<br><small> Factures enregistrées</small>
+                            <strong>{{ $facture_soumis_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_soumis_par_banques->sum('montant')) }} FCFA)<br><small> Recorded invoices</small>
                         </h4>
                     </div>
                 </a>
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left text-warning">
-                            <strong>{{ $facture_payes_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_payes_par_banques->sum('montant')) }} FCFA)<br><small> Factures Payées</small>
+                            <strong>{{ $facture_payes_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_payes_par_banques->sum('montant')) }} FCFA)<br><small> Paid invoices</small>
                         </h4>
                     </div>
                 </a>
@@ -28,7 +28,7 @@
                     <div class="widget-simple">
                         
                         <h4 class="text-left text-warning">
-                            <strong>{{ $facture_a_payees_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_a_payees_par_banques->sum('montant')) }} FCFA)<br><small>Factures à payer</small>
+                            <strong>{{ $facture_a_payees_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_a_payees_par_banques->sum('montant')) }} FCFA)<br><small>Bills payable</small>
                         </h4>
                     </div>
                 </a>
@@ -41,7 +41,7 @@
                                 @else
                                     0 %
                                 @endif
-                            </strong><br><small>Taux de mobilisation</small>
+                            </strong><br><small>Mobilization rate</small>
                         </h4>
                     </div>
                 </a>
@@ -54,7 +54,7 @@
                                 @else
                                     0 %
                                 @endif
-                            </strong><br><small>Taux de consommation de la subvention</small>
+                            </strong><br><small>Subsidy consumption rate</small>
 
                         </h4>
                     </div>
@@ -68,13 +68,13 @@
             <div class="block">
                 <div class="block-title">
                     <div class="block-options pull-right">
-                        <span class="label label-success">Total financement mobilisé: <strong>{{ format_prix($subvention_mobilise_par_banques->sum('montant') + $contrepartie_mobilise_par_banques->sum('montant'))}} FCFA</strong></span>
+                        <span class="label label-success">Total financing mobilized: <strong>{{ format_prix($subvention_mobilise_par_banques->sum('montant') + $contrepartie_mobilise_par_banques->sum('montant'))}} FCFA</strong></span>
                     </div>
-                    <h2><i class="fa fa-money"></i> <strong>Situation de la Mobilisation des fonds par banque en FCFA</strong>  </h2>
+                    <h2><i class="fa fa-money"></i> <strong>Funds mobilization by bank in FCFA</strong>  </h2>
                 </div>
             <table class="table table-bordered table-striped table-vcenter ">
                 <tr style="background-color: #52836338">
-                    <th>Banque</th>
+                    <th>BANK</th>
                     @foreach ($financement_par_banks as $financement_par_bank)
                         <th style="width:25%"> {{ return_sigle_bank($financement_par_bank->nom_banque)}}</th>
                     @endforeach
@@ -82,7 +82,7 @@
 
                 </tr>
                 <tr>
-                    <th>Contrepartie á mobiliser <span data-toggle="tooltip" title="La situation des finacements à mobiliser sur la base des projets validés par le comité de selection."><i class="fa fa-info-circle"></i></span></th>
+                    <th>Consideration to be mobilized <span data-toggle="tooltip" title="La situation des finacements à mobiliser sur la base des projets validés par le comité de selection."><i class="fa fa-info-circle"></i></span></th>
                     @foreach ($montant_projet_valide_par_comites as $montant_projet_valide_par_comite)
                         <td>{{ format_prix($montant_projet_valide_par_comite->montant/2)}}</td>
                         @php
@@ -110,7 +110,7 @@
                     @php
                         $somme=0;
                     @endphp
-                    <th>Subvention consommée</th>
+                    <th>Consideration mobilized</th>
                     @foreach ($facture_payes_par_banques as $facture_payes_par_banque)
                         <td>{{ format_prix($facture_payes_par_banque->montant/2)}}</td>
                         @php
@@ -124,7 +124,7 @@
                         $somme=0;
                     @endphp
                     <tr style="background-color: #52836338">
-                        <th >Taux d'exécution des projets</th>
+                        <th >Project completion rate</th>
                         @foreach ($taux_de_consommation_par_banque as $taux_de_consommation_par_bank)
                             <td>
                                     @if($taux_de_consommation_par_bank->montant_decaisse ==null)
@@ -151,9 +151,9 @@
             <div class="block">
                 <div class="block-title">
                 <div class="block-options pull-right">
-                        <span class="label label-success">Montant total des factures payées : <strong>{{ format_prix($taux_de_consommation_par_banque->sum('montant_decaisse')) }}</strong></span>
+                        <span class="label label-success">Total amount of paid invoices : <strong>{{ format_prix($taux_de_consommation_par_banque->sum('montant_decaisse')) }}</strong></span>
                     </div>
-                    <h2><i class="fa fa-money"></i> <strong>Details des factures par Banque</strong></h2>
+                    <h2><i class="fa fa-money"></i> <strong>Invoice details by bank</strong></h2>
                 </div>
            
             <table  class="table table-bordered table-striped table-vcenter " >
@@ -164,27 +164,27 @@
                     @endforeach
                 </tr>
                 <tr>
-                    <th>Factures validées</th>
+                    <th>Approuved invoices</th>
                     @foreach ($facture_valides_par_banques as $facture_valides_par_bank)
                         <td>
-                            <strong>  {{ $facture_valides_par_bank->nombre}}</strong> Factures
+                            <strong>  {{ $facture_valides_par_bank->nombre}}</strong> Invoices
                             <hr> 
                             {{format_prix($facture_valides_par_bank->montant)}} Fcfa</td>
                     @endforeach 
                 </tr>
                 
                 <tr>
-                    <th>Factures Payées</th>
+                    <th>Paid invoices</th>
                     @foreach ($facture_payes_par_banques as $facture_payes_par_bank)
                         <td>
-                           <strong>  {{ $facture_payes_par_bank->nombre}}</strong> Factures
+                           <strong>  {{ $facture_payes_par_bank->nombre}}</strong> Invoices
                             <hr> 
                             {{ format_prix($facture_payes_par_bank->montant)}} Fcfa
                         </td>
                     @endforeach 
                 </tr>
                 <tr>
-                    <th>Factures à payer</th>
+                    <th>Bills to pay</th>
                     @foreach ($facture_a_payees_par_banques as $facture_a_payees_par_bank)
                         <td>
                            <strong style="font-size: 18px">  {{ $facture_a_payees_par_bank->nombre}}</strong> Factures
@@ -195,7 +195,7 @@
                     @endforeach 
                 </tr> 
                 <tr style="background-color: #52836338">
-                    <th >Taux de consommation des fonds</th>
+                    <th >Fund consumption rate</th>
                     @foreach ($taux_de_consommation_par_banque as $taux_de_consommation_par_bank)
                         <td>
                                 @if($taux_de_consommation_par_bank->montant_decaisse ==null)
@@ -216,7 +216,7 @@
     
     <div class="row">
         
-        <p class="col-md-offset-1 col-md-10 titre_tableau">Respect du délai de paiement des Fournisseurs par banque</p>
+        <p class="col-md-offset-1 col-md-10 titre_tableau">Supplier payment terms by bank</p>
        
         <div class="col-md-4 graphique_respect_delais_de_paiement" id="delais_de_paiement_atlantique">
 
@@ -231,7 +231,7 @@
     </div>
     <div class="row">
         
-        <p class="col-md-offset-2 col-md-8 center titre_tableau" >Nombre de Demandes de paiement rejétés par les banques </p>
+        <p class="col-md-offset-2 col-md-8 center titre_tableau">Number of payment requests rejected by banks </p>
        
         <div class="col-md-offset-2 col-md-6 graphique_respect_delais_de_paiement" id="demande_depaiement_rejete">
 
@@ -307,7 +307,7 @@
                                  categories: status
                             },
                         title: {
-                            text: 'Statut des factures par banque'
+                            text: 'Invoice status by bank'
                         },
                         credits : {
                             enabled: false
@@ -369,7 +369,7 @@
                                  categories: status
                             },
                         title: {
-                            text: 'Nombre de facture rejétée par les banques'
+                            text: 'Number of invoices rejected by banks'
                         },
                         credits : {
                             enabled: false
@@ -468,7 +468,7 @@
                             }
                         },
                         series: [{
-                            name: 'Factures',
+                            name: 'Bills',
                             colorByPoint: true,
                             data: donnch
                         }]

@@ -45,7 +45,10 @@
                             </li>
                         @endcan
                             <li class="@yield('dash.banque_perform')">
-                                <a href="{{ route("dash.banque_perform") }}" ><i class="fa fa-money sidebar-nav-icon"></i>Activites Banques </span></a>
+                                <a href="{{ route("dash.banque_perform") }}?lang=francais" ><i class="fa fa-money sidebar-nav-icon"></i>Activites Banques </span></a>
+                            </li>
+                            <li class="@yield('dash.banque_perform_en')">
+                                <a href="{{ route("dash.banque_perform") }}?lang=anglais" ><i class="fa fa-money sidebar-nav-icon"></i>Banks activities </span></a>
                             </li>
                             <li class="@yield('dashboard_detail')">
                                 <a href="{{ route("dashboard") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Plus Detaillé</span></a>

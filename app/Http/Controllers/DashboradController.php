@@ -309,22 +309,53 @@ public function detail_dashboard(Request $request){
     $nombre_de_pca= count($pca_enregistres);
     $fond_mobilise= $contre_partie_mobilise + $subvention_debloque;
     $mpme_formes= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
+    $mpme_formes_phase_1= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('entrepriseaop',null)->where('phase_de_souscription',null)->orderBy('updated_at', 'desc')->get();
+    $mpme_formes_phase_2= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('entrepriseaop',null)->where('phase_de_souscription',2)->orderBy('updated_at', 'desc')->get();
+
     $leader_AOP_formes=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->orderBy('updated_at', 'desc')->get();
+    $leader_AOP_formes_phase1=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)
+                                        ->where(function ($query) {
+                                            $query->where('phase_de_souscription' , null)
+                                            ->orWhere('phase_de_souscription', [2]);
+                                    })->orderBy('updated_at', 'desc')->get();
+    $leader_AOP_formes_phase2=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('phase_de_souscription',3)->orderBy('updated_at', 'desc')->get();
+
   if($type_detail=='mpme'){
     $total_mpme_enregistre=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->count();
+    $total_mpme_enregistre_phase1=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->where('phase_de_souscription',null)->count();
+    $total_mpme_enregistre_phase2=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->where('phase_de_souscription',2)->count();
+    
     $total_aop_leader_enregistres=Entreprise::where('entrepriseaop',1)->where("status",'!=',0)->orderBy('updated_at', 'desc')->count();
+    $total_aop_leader_enregistres_phase1=Entreprise::where('entrepriseaop',1)->where("status",'!=',0)
+                                                    ->where(function ($query) {
+                                                        $query->where('phase_de_souscription' , null)
+                                                        ->orWhere('phase_de_souscription', [2]);
+                                                })->orderBy('updated_at', 'desc')->count();
+    $total_aop_leader_enregistres_phase2=Entreprise::where('entrepriseaop',1)->where("status",'!=',0)->where('phase_de_souscription',3)->orderBy('updated_at', 'desc')->count();
+
     $total_aop_enregistres=Entreprise::where('aopOuleader','aop')->where("status",'!=',0)->orderBy('updated_at', 'desc')->count();
     $total_leader_enregistres=Entreprise::where('aopOuleader','leader')->where("status",'!=',0)->orderBy('updated_at', 'desc')->count();
     $total_mpme_rejetes= Entreprise::where("decision_du_comite_phase1", "ajournee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->count();
     $total_aop_rejetes= Entreprise::where("decision_du_comite_phase1", "ajournee")->where('entrepriseaop',1)->orderBy('updated_at', 'desc')->count();
     $total_mpme_aformation= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->count();
+    $total_mpme_aformation_phase1= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->where('phase_de_souscription',null)->count();
+    $total_mpme_aformation_phase2= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->where('phase_de_souscription',2)->count();
+
     $entreprisesLeaderAOP_aformer=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->orderBy('updated_at', 'desc')->count();
+    $entreprisesLeaderAOP_aformer_phase_1=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")
+                                                        ->where(function ($query) {
+                                                            $query->where('phase_de_souscription' , null)
+                                                            ->orWhere('phase_de_souscription', [2]);
+                                                        })->count();
+    $entreprisesLeaderAOP_aformer_phase_2=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('phase_de_souscription',3)->count();
+
+
     //$total_souscription_enregistres= count($all_souscriptions);
     $total_mpme_formes=count($mpme_formes);
 
     $total_mpme_formees= count($mpme_formes);
     $total_aopleader_formes=count($leader_AOP_formes);
-    return view('dashboard.detail_mpme', compact('nombre_de_pca','fond_mobilise','total_mpme_rejetes','total_aop_rejetes','total_mpme_enregistre','total_souscription_enregistres', 'total_aop_leader_enregistres','total_aop_enregistres','total_leader_enregistres', 'total_mpme_aformation', 'total_mpme_formes','entreprisesLeaderAOP_aformer','total_aopleader_formes'));
+    return view('dashboard.detail_mpme', compact('leader_AOP_formes_phase2','leader_AOP_formes_phase1','mpme_formes_phase_1','mpme_formes_phase_2','total_mpme_aformation_phase1','total_mpme_aformation_phase2','entreprisesLeaderAOP_aformer_phase_1','entreprisesLeaderAOP_aformer_phase_2','total_aop_leader_enregistres_phase1','total_aop_leader_enregistres_phase2','total_mpme_enregistre_phase1','total_mpme_enregistre_phase2','nombre_de_pca','fond_mobilise','total_mpme_rejetes','total_aop_rejetes','total_mpme_enregistre','total_souscription_enregistres', 'total_aop_leader_enregistres','total_aop_enregistres','total_leader_enregistres', 'total_mpme_aformation', 'total_mpme_formes','entreprisesLeaderAOP_aformer','total_aopleader_formes'));
 
   }
   elseif($type_detail=='finance'){
@@ -1320,7 +1351,7 @@ public function entreprise_forme_geopresenation(Request $request )
         {
            $datageo[] = array('id'=>$value->id,'denomination'=>$value->denomination,'telephone'=>$value->telephone_entreprise, 'longitude'=>$value->longitude, 'latitude'=>$value->latitude, 'secteur_activite'=> getlibelle($value->secteur_activite),'region'=>getlibelle($value->region) );
         }
-
+//dd($datageo);
         return json_encode($datageo);
 }
 public function entreprise_detail($id){
@@ -1397,7 +1428,7 @@ else{
 
 }
 
-function dashboard_banque_perform(){
+function dashboard_banque_perform(Request $request){
 if(Auth::user()->can('tableau.debord')){ 
     $facture_valides_par_banques= DB::table('banques')
                             ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
@@ -1496,8 +1527,13 @@ $taux_de_consommation_par_banque= DB::table('entreprises')
 
     
                                                 //dd($nombre_de_dossier_rejete_par_les_banques);
-              
-    return view('dashboard.banque_perform', compact('facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+              if($request->lang=='francais'){
+                    return view('dashboard.banque_perform', compact('facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+
+              }
+              elseif($request->lang=='anglais'){
+                return view('dashboard.banque_perform_anglais', compact('facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+              }
 }
 else
 {

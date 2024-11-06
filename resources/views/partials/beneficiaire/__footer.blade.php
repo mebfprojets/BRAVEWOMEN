@@ -28,8 +28,6 @@
   <script src="{{ asset("assets_beneficiare/lib/jquery-ui-1.9.2.custom.min.js") }}"  type="text/javascript"></script>
   <script type="text/javascript" src="{{ asset("assets_beneficiare/lib/bootstrap-fileupload/bootstrap-fileupload.js") }}"></script>
   
-  
-  
   <script src=" {{ asset("js/app.js") }}"></script>
   <script src="{{ asset("js/mon.js") }}"></script>
   <script src={{ asset("js/test.min.js") }}></script>
@@ -37,8 +35,6 @@
   
   <script>$(function(){ FormsWizard.init(); });</script>
   @yield('script_additionnel')
- 
- 
   <script>
 
     $('#cout1').change(function(){

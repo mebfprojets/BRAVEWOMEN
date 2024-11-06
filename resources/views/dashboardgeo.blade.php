@@ -137,11 +137,13 @@
     }
     function entreprise_aformer_geo(type_entreprise, valeur_de_forme)
     { 
+        //alert('test');
         var markers = L.markerClusterGroup();
         (type_entreprise=="mpme")?(categorie_entreprise="Les MPME"):(categorie_entreprise="Les Entreprises leaders et les AOP");
         (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="Selectionnées pour la formation ");
         var markers = L.markerClusterGroup();
         var url = "{{ route('entreprise_forme') }}";
+       // alert('test');
         $.ajax({
                 url: url,
                 type: 'GET',
@@ -149,11 +151,15 @@
                 data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme },
                 error:function(data){alert("Erreur");},
                 success: function (data) {
-                    console.log(data)
+                   // alert('test');
+                   //console.log(data);
+                    //console.log(data)
                     for(var i=0; i<data.length; i++)
                         {
                             if(data[i].longitude){
-                                marker= L.marker([data[i].longitude, data[i].latitude]);
+                                marker= L.marker([data[i].longitude, data[i].latitude],{
+                                    title:data[i].denomination
+                            });
                                 marker.bindPopup("<b>"+'Denomination :'+data[i].denomination+"!</b><br>"+'Zone :'+data[i].region).openPopup();
                                 markers.addLayer(marker);
                             } 

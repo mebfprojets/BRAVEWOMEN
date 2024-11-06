@@ -905,7 +905,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 }
             }
 
-        flash("Projet soumis avec success !!!")->success();
+                flash("Projet soumis avec success !!!")->success();
                return redirect()->route('profil.beneficiaire',return_liste_entreprise_par_user(Auth::user()->id)[0]);
         }
     }

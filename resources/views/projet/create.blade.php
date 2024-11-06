@@ -154,9 +154,9 @@
                                     <option value='{{ $categorie_investissment->id}}'>{{ getlibelle($categorie_investissment->id) }}</option>
                                 @endforeach
                         </select>
-                        <input class="col-md-3" type="text" name="cout_2[]"  value=""  placeholder="Le prix" id="cout2_0"  required />
-                        <input class="col-md-3" type="text" name="subvention_2[]"  value="" placeholder="Subvention demandée" id="sub2_0" required onChange="deux_somme_complementaire('sub2_0','apport2_0','cout2_0')"  />
-                        <input class="col-md-3" type="text" name="apport_perso_2[]" value=""  placeholder="Apport personne" id="apport2_0" required />
+                        <input class="col-md-3" type="text" name="cout_2[]"  value=""  placeholder="Le prix" id="cout2_0"   />
+                        <input class="col-md-3" type="text" name="subvention_2[]"  value="" placeholder="Subvention demandée" id="sub2_0"  onChange="deux_somme_complementaire('sub2_0','apport2_0','cout2_0')"  />
+                        <input class="col-md-3" type="text" name="apport_perso_2[]" value=""  placeholder="Apport personne" id="apport2_0" />
                         <a href="javascript:void(0);" class="add_line" title="Add field"><span><i class="fa fa-plus"></i></span></a>
                     </div>
                 </div>
