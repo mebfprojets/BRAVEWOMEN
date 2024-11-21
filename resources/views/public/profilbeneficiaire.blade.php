@@ -969,7 +969,7 @@
                 <tbody id="tbadys">
                 @foreach($entreprise->projet->appui2_investissementvalides as $investissment)
                 <tr >
-                    @if ($entreprise->projet->statut!='selectionné')
+                    @if ($entreprise->projet->appui_statut!= 'selectionné')
                         <td>
                             <a href="#modal-modif-invest" data-toggle="modal"  onclick="edit_investissement({{ $investissment->id }});" >{{getlibelle($investissment->designation)}}</a>
                         </td>
@@ -993,7 +993,7 @@
                 </tbody>
                 </table>
             @endif
-                @if($entreprise->projet->statut_appui ==null)
+                @if($entreprise->projet->appui_statut!= 'selectionné')
                 <div class="row">
                     <div class="col-md-11">
                         <div class="block">

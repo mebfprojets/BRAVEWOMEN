@@ -4,10 +4,11 @@
 @section('content')
 <div class="row">
 <div class="col-md-6 offset-md-3">
-    @if($projet->appui_statut =='soumis')
-    <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_zone')"><span></span>Avis du chef de zone</a>
-@endif
+    
     @can('lister_pca_chef_de_zone', Auth::user())
+    @if($projet->appui_statut =='soumis')
+        <a  href="#modal-avis-chefdezone-pca" data-toggle="modal" class="btn btn-success" onclick="setTypeavis('appui2','champ_avis_chef_zone')"><span></span>Avis du chef de zone</a>
+    @endif
         @if($projet->statut=='soumis')
              <a  href="#modal-evaluer-pca" data-toggle="modal" class="btn btn-success"><span></span>Evaluer le PCA</a>
     @endif
@@ -460,7 +461,7 @@
                 {{ $key + 1 }}
                 </td>
                      <td>
-                        {{getlibelle($piecejointe->type_piece)}}
+                        {{getlibelle($piecejointe->type_piece)}} 
                     </td>
         <td>
             <a href="{{ route('telechargerpiecejointe',$piecejointe->id)}}"title="télécharger" class="btn btn-xs btn-default"  target="_blank"><i class="fa fa-download"></i> </a>

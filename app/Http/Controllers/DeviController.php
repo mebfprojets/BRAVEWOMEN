@@ -362,7 +362,10 @@ else{
         $devi=Devi::find($id_devi);
         //Ici nous Verifions si le totale de la contre partie a été versée avant de valider le devis
         $montant_total_des_accomptes_verses_par_entreprise=Accompte::where('entreprise_id', $devi->entreprise->id)->sum('montant');
-        $montant_total_accorde_du_projet_de_lentreprise=Projet::where('entreprise_id', $devi->entreprise->id)->sum('montant_accorde');
+        $projet=Projet::where('entreprise_id', $devi->entreprise->id)->where('statut','selectionné')->first();
+       // $montant_accorde_appui1=$projet->appui1_investissementvalides->sum('montant_valide');
+        //dd($montant_accorde_appui1);
+        //$montant_total_accorde_du_projet_de_lentreprise=Projet::where('entreprise_id', $devi->entreprise->id)->sum('montant_accorde');
         $mail_promotrice=$devi->entreprise->promotrice->email_promoteur;
         $chef_de_zone= User::where('zone', $devi->entreprise->region)->orWhere('zone', $devi->entreprise->region_affectation)->first();
         $e_msg="Vous avez des devis qui sont en attentes de validation.";
@@ -398,7 +401,7 @@ else{
                 $mail= env('emailChefdeProjet');
             }
             elseif($devi->statut =='transmis_au_chef_de_projet' && return_role_adequat(env('ID_ROLE_CHEF_DE_PROJET'))){
-                if($montant_total_accorde_du_projet_de_lentreprise > $montant_total_des_accomptes_verses_par_entreprise *2){
+                if($montant_accorde_appui1 > $montant_total_des_accomptes_verses_par_entreprise *2){
                     flash("Ce devis ne peut etre validé car la mobilisation de la contrepartie n'est pas terminée !!!")->error();
                     return 0;
                 }

@@ -148,7 +148,7 @@
                 </div>
                 <div class="field_wrapper">
                     <div >
-                        <select class="col-md-2" name="designation_2[]"  class="select-select2" data-placeholder="designation" required>
+                        <select class="col-md-2" name="designation_2[]"  class="select-select2" data-placeholder="designation">
                                 <option></option>
                                 @foreach ($categorie_investissments as  $categorie_investissment)
                                     <option value='{{ $categorie_investissment->id}}'>{{ getlibelle($categorie_investissment->id) }}</option>

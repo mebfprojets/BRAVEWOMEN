@@ -201,6 +201,9 @@
                             <li class="@yield('all')">
                                 <a href="{{ route("projet.index") }}?type_entreprise=mpme"> Plan enregistrés</a>
                             </li>
+                            <li class="@yield('soumis_appui2')">
+                                <a href="{{ route("projet.liste") }}?statut=soumis_appui2&type_entreprise=mpme"> Appuis 2 enregistrés </a>
+                            </li>
                             @endcan
                             @can('lister_pca_chef_de_zone', Auth::user())
                                 <li class="@yield('liste_analyse')">
@@ -223,7 +226,7 @@
                                 <a href="{{ route("projet.liste") }}?statut=soumis_au_comite&type_entreprise=mpme"> Avis UGP favorable</a>
                             </li>
                             <li class="@yield('a_affecter_au_membre_du_comite')">
-                                <a href="{{ route("projet.liste") }}?statut=a_affecter_au_membre_du_comite&type_entreprise=mpme"> Affectés au comité</a>
+                                <a href="{{ route("projet.liste") }}?statut=a_affecter_au_membre_du_comite&type_entreprise=mpme">Affectés au comité</a>
                             </li>
                             <li class="@yield('appui2_affecter_au_membre_du_comite')">
                                 <a href="{{ route("projet.liste") }}?statut=appui2_affecte_au_membre_du_comite&type_entreprise=mpme"> Appui 2 au comité</a>
@@ -258,6 +261,9 @@
                                 </li>
                                 <li class="@yield('pca_rejete')">
                                     <a  href="{{ route('projet.liste_rejetes') }}?type_entreprise=mpme"></i> Demandes rejetées</a>
+                                </li>
+                                <li class="@yield('pca_desister')">
+                                    <a  href="{{ route('lister_les_desistement') }}?type_entreprise=mpme"></i> Désistements</a>
                                 </li>
                             @endcan
                             

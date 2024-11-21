@@ -11,10 +11,10 @@
             <div class="block-title">
                 <div class="row">
                         <div class="col-md-12">
-                            <h2 >Situation des activités du projet à la date du <strong> {{ format_date($date_deffet) }} </strong></h2>
+                            <h2 >Status of project activities as of <strong> {{ format_date($date_deffet) }} </strong></h2>
                         </div> 
                         <div class="row" style="margin:0 15px">
-                            <div class="col-md-3 ml-2">Taux de réalisation global</div>
+                            <div class="col-md-3 ml-2">Overall achievement rate</div>
                             <div class="col-md-9">
                                 @if($taux_de_realisation_global<50)
                                 <div class="progress">
@@ -38,11 +38,11 @@
     <table class="table table-striped table-vcenter  ">
             <thead>
                     <tr>
-                        <th>Numero </th>
-                        <th>Activité </th>
-                        <th>Debut</th>
-                        <th>Fin</th>
-                        <th>Taux </th>
+                        <th>Number </th>
+                        <th>Activity </th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Rate </th>
                     </tr>
             </thead>
             <tbody>

@@ -17,12 +17,12 @@
                     <a href="#modal-confirm-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}}, 2)" title="non conforme" class="btn btn-md btn-warning">Non éligible<i class="gi gi-remove_2"></i></a>
                 @endcan
                 @endif
-                @if($entreprise->conforme!=null && ($entreprise->note_critere_qualitatif == null)) 
+                @if($entreprise->conforme!=2 && ($entreprise->note_critere_qualitatif == null)) 
                     @can('avisqualitative_ugp', Auth::user()) 
                         <a href="#modal-note-critere-qualitatif-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="Noter les critères qualitatifs" class="btn btn-md btn-danger ">Noter les critères qualitatifs<i class="fa fa-check-square-o"></i></a>
                     @endcan
                 @endif
-             @if(!($entreprise->note_critere_qualitatif == null) && $entreprise->decision_ugp==null)
+             @if(!($entreprise->conforme==null && $entreprise->note_critere_qualitatif == null) && $entreprise->decision_ugp==null)
              @can('avisfinal_ugp', Auth::user()) 
                 <a href="#modal-decision-de-ugp" data-toggle="modal" onclick="recupererentreprise_id({{$entreprise->id}})" title="La décision de l'ugp" class="btn btn-md btn-danger avis_ugp">Avis final UGP<i class="fa fa-check-square-o"></i></a>
              @endcan 

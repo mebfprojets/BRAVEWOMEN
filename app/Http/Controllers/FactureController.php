@@ -132,7 +132,7 @@ public function generer_lettre_de_paiement(Facture $facture){
         'paiement_print'=>1,
     ]);
     $denomination_prestataire= htmlspecialchars($devi->prestataire->denomination_entreprise);
-    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('/Applications/MAMP/htdocs/BRAVEWOMEN/templatesWord/demande_de_paiement.docx');
+    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('/var/www/bravewomen.bf/templatesWord/demande_de_paiement.docx');
     $templateProcessor->setValue('NomDeLaBanque', $entreprise->banque->nom);
     $templateProcessor->setValue('NomDeLaPromotrice', $entreprise->promotrice->nom);
     $templateProcessor->setValue('PrenomDeLaPromotrice', htmlspecialchars($entreprise->promotrice->prenom));

@@ -11,7 +11,7 @@
             <div class="block-title">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 >Situation de l'exécution <strong>Budgétaire</strong></h2>
+                        <h2 > <strong>Budget performance</strong></h2>
                     </div> 
               
                     </div>
@@ -22,16 +22,16 @@
 <table class="table table-striped table-vcenter">
         <thead>
                 <tr style="font-size:10px !important; font-family: 'helvetica neue', helvetica, arial, sans-serif; font-style: italic;">
-                    <th style="width: 28%">Composantes </th>
-                    <th style="width: 14%">Montant budgétisé</th>
+                    <th style="width: 28%">Components </th>
+                    <th style="width: 14%">Budgeted amount</th>
                     @if($trimestre==1)
-                        <th style="width: 14%">Cumul dépensé au T4 {{ $annee -1 }}</th>
+                        <th style="width: 14%">Total spent Q4 {{ $annee -1 }}</th>
                     @else
-                        <th style="width: 14%">Cumul dépensé au T {{ $trimestre - 1}}</th>
+                        <th style="width: 14%">Total spent Q T {{ $trimestre - 1}}</th>
                     @endif
-                    <th style="width: 14%">Dépense T {{ $trimestre}}</th>
-                    <th style="width: 14%">Solde au T {{ $trimestre}}</th>
-                    <th style="width: 2%">Taux de consommation</th>
+                    <th style="width: 14%">Expenses Q {{ $trimestre}}</th>
+                    <th style="width: 14%">Balance at Q {{ $trimestre}}</th>
+                    <th style="width: 2%">Consumption rate</th>
                 </tr>
         </thead>
         <tbody>
@@ -79,7 +79,7 @@
     <div class="block-title">
         <div class="row">
             <div class="col-md-12">
-                <h2 >Prevision <strong>Budgétaire pour les trimestres a venir</strong></h2>
+                <h2 >Budget forecast for the coming quarters</h2>
             </div> 
       
             </div>
@@ -90,8 +90,8 @@
 <table class="table  table-striped table-vcenter">
 <thead>
         <tr style="font-size:10px !important; font-family: 'helvetica neue', helvetica, arial, sans-serif; font-style: italic;">
-            <th>Composantes </th>
-            <th>Montant budgétiser</th>
+            <th>Component </th>
+            <th>Amount budgeted</th>
             <th>T{{ $ptrimestre}}-{{ $prev_annee }} </th>
         @if($ptrimestre==1)
             <th>T {{$ptrimestre +1}}-{{ $prev_annee }} </th>
@@ -178,7 +178,7 @@
 </thead>
 <tbody>
     <tr>
-        <td style="with:100%">Entrées</td>
+        <td style="with:100%">Inputs</td>
     </tr>
     @foreach($cashflow_entres as $cashflow_entre)
         <tr>
@@ -200,7 +200,7 @@
     </tr>
     <hr>
     <tr>
-        <td style="with:100%">Depenses</td>
+        <td style="with:100%">Expenses</td>
     </tr>
     @foreach($cashflow_depenses as $cashflow_depense)
     <tr>

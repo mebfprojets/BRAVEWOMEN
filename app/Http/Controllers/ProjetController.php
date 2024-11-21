@@ -269,22 +269,33 @@ if($request->hasFile('plan_de_continute_revu')){
                 $page= 'analyse_par_le_comite';
                 return view("projet.liste_selectionne", compact('projets','banques','page','texte','type_entreprise'));
             }
+            
             elseif($request->statut=='soumis_appui2'){
                 if($type_entreprise=='mpme'){
-                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->where('type_entreprise', 'mpme')
-                                ->where(function ($query) {
-                                    $query->where('zone_affectation', '=', Auth::user()->zone);
-                                       // ->orWhere('region', '=', Auth::user()->zone);
-                                })->orderBy('updated_at', 'desc')->get();
+                    if(Auth::user()->zone==100){
+                        $projets = Projet::whereIn('appui_statut',['soumis','analyse','avis_chefdezone_appui2'])->where('type_entreprise', 'mpme')->orderBy('updated_at', 'desc')->get();
                         $type_entreprise='pca_mpme';
-                }
-                else{
-                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->whereIn('type_entreprise',['leader','aop'])
+                    }
+                elseif(Auth::user()->zone!=100){
+                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->where('type_entreprise', 'mpme')
                     ->where(function ($query) {
                         $query->where('zone_affectation', '=', Auth::user()->zone);
-                           // ->orWhere('region', '=', Auth::user()->zone);
-                    })->orderBy('updated_at', 'desc')->get();;
-                    $type_entreprise='pca_aop';
+                    })->orderBy('updated_at', 'desc')->get();
+                    
+                }
+                    $type_entreprise='pca_mpme'; 
+                }
+                else{
+                    if(Auth::user()->zone==100){
+                        $projets = Projet::whereIn('appui_statut',['soumis','analyse','avis_chefdezone_appui2'])->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'desc')->get();;
+                    }
+                elseif(Auth::user()->zone!=100){
+                    $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->whereIn('type_entreprise',['leader','aop'])
+                        ->where(function ($query) {
+                            $query->where('zone_affectation', '=', Auth::user()->zone);
+                        })->orderBy('updated_at', 'desc')->get();
+                }
+                        $type_entreprise='pca_aop';
                 }
                 $texte= 'deuxieme appui à évaluer par le chef de zone';
                 $page='soumis_appui2';
@@ -731,17 +742,20 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
         flash("Verifier le montant du projet. Le montant total de chaque phase du projet ne doit pas être inférieur au planché accordé par le projet suivant la catégorie de votre entreprise !!!")->error();
         return redirect()->back();
     }
-    elseif((($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_investissement_total_appui2 >60000000) || ($entreprise->aopOuleader=='mpme' && $montant_investissement_total_appui2 >18000000)  )
-        {
-            flash("Verifier le montant du projet. Le montant total de chaque phase du projet ne doit pas être supérieur au plafond accordé par le projet")->error();
-            return redirect()->back();
-        }
-    elseif((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_investissement_total_appui2 < 18000000)|| ($entreprise->aopOuleader=='mpme' && $montant_investissement_total_appui2 <6000000)  )
-    {
-        flash("Verifier le montant du projet. Le montant total de chaque phase du projet ne doit pas être inférieur au planché accordé par le projet suivant la catégorie de votre entreprise !!!")->error();
-        return redirect()->back();
-    }
-        else{
+    
+    elseif((($montant_investissement_total_appui2>0)&&($entreprise->aopOuleader=='aop' ||$entreprise->aopOuleader=='leader') && $montant_investissement_total_appui2 >60000000) || (($montant_investissement_total_appui2>0) && $entreprise->aopOuleader=='mpme' && $montant_investissement_total_appui2 >18000000)  )
+            {
+                flash("Verifier le montant du projet. Le montant total de chaque phase du projet ne doit pas être supérieur au plafond accordé par le projet")->error();
+                return redirect()->back();
+            }
+            elseif((($montant_investissement_total_appui2>0)&&($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') && $montant_investissement_total_appui2 < 18000000)|| (($montant_investissement_total_appui2>0) && $entreprise->aopOuleader=='mpme' && $montant_investissement_total_appui2 <6000000)  )
+                {
+                    flash("Verifier le montant du projet. Le montant total de chaque phase du projet ne doit pas être inférieur au planché accordé par le projet suivant la catégorie de votre entreprise !!!")->error();
+                    return redirect()->back();
+                }               
+        
+   
+ else{
             ($entreprise->region_affectation == null )?($zone= $entreprise->region):($zone=$entreprise->region_affectation );
             $promoteur = Promotrice::where('code_promoteur',Auth::user()->code_promoteur)->first();
             $proportiondedepence=Proportion_de_depense_promotrice::where('promotrice_id', $promoteur->id )->get();
@@ -1567,6 +1581,13 @@ else{
     return redirect()->back();
 } 
     
+}
+public function lister_les_desistement(){
+        $projets= Projet::where('desister',1)->get();
+        $type_entreprise='mpme';
+        $texte= 'dont les promoteurs ont desisté';
+        $page= 'analyse';
+        return view('projet.liste_desister',compact('projets','type_entreprise','texte','page'));
 }
 public function appui2_traitement(Request $request){
 

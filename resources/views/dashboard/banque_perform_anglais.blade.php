@@ -94,7 +94,7 @@
     
                
                 <tr>
-                    <th>Contrepartie mobilisée</th>
+                    <th>Mobilized consideration</th>
                     @php
                         $somme=0;
                     @endphp
@@ -269,7 +269,7 @@
                         en_attente_de_paiement.push(parseInt(donnee[i].nbre_facture_en_attente));
                     }
                     donnch.push({
-                                name: 'soumises',
+                                name: 'register',
                                 data:soumises,
                                 color:'blue',
                                 dataLabels: {
@@ -277,7 +277,7 @@
                                 }
                             })
                     donnch.push({
-                                name: 'payees',
+                                name: 'paid',
                                 data:payees,
                                 color:'green',
                                 dataLabels: {
@@ -285,7 +285,7 @@
                                 }
                             })
                     donnch.push({
-                                name: 'En attente de paiement',
+                                name: 'Pending payment',
                                 data:en_attente_de_paiement,
                                 color:'red',
                                 dataLabels: {
@@ -410,26 +410,36 @@
                  success: function (donnee) {
                         var donnch= new Array();
                         var status = new Array();
-                        
+                        // var dans_les_delais= [];
+                        // var retard_trois_jours= [];
+                        // var  retard_sept_jours= [];
+                        // var  retard_dix_jours= [];
+                        // var  retard_dix_jours_et_plus= [];
+                    
                     for(var i=0; i<donnee.length; i++)
                     {
                         if(donnee[i].statut_paiement== 'Dans les delais'){
                                 var cl='green'
+                                var nam='On schedule'
                         }
                         else if(donnee[i].statut_paiement== 'Retard [0,3] jrs'){
                                 var cl='#d3d326'
+                                 var nam='Delay [0,3] days'
                         }
                         else if(donnee[i].statut_paiement== 'Retard ]3,7] jrs'){
                                 var cl='#d8b71f'
+                                 var nam='Delay ]3,7] days'
                         }
                         else if(donnee[i].statut_paiement== 'Retard ]7,10] jrs'){
                                 var cl='orange'
+                                 var nam='Delay ]7,10] days'
                         }
                         else{
                             var cl='red'
+                             var nam='Over 10 days late';
                         }
                       donnch.push({
-                                name: donnee[i].statut_paiement,
+                                name: nam,
                                 y:  parseInt(donnee[i].nombre), 
                                 color:cl,
                                 dataLabels: {
@@ -441,7 +451,22 @@
                    // console.log(donnch)
                     for(var i=0; i<donnee.length; i++)
                             {
-                                    status[i] = donnee[i].statut_paiement
+                                if(donnee[i].statut_paiement=='Dans les delais'){
+                                        var stat='On schedule';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard [0,3] jrs'){
+                                    var stat='Delay [0,3] days';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard ]3,7] jrs'){
+                                    var stat='Delay ]3,7] days';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard ]7,10] jrs'){
+                                    var stat='Delay ]7,10] days';
+                                }
+                                else{
+                                    var stat='Over 10 days late';
+                                }
+                                    status[i] = stat
                             }
                     Highcharts.chart('delais_de_paiement_atlantique', {
                         chart: {
@@ -494,23 +519,29 @@
                         var status = new Array();
                     for(var i=0; i<donnee.length; i++)
                     {
+                        
                         if(donnee[i].statut_paiement== 'Dans les delais'){
                                 var cl='green'
+                                var nam='On schedule'
                         }
                         else if(donnee[i].statut_paiement== 'Retard [0,3] jrs'){
                                 var cl='#d3d326'
+                                 var nam='Delay [0,3] days'
                         }
                         else if(donnee[i].statut_paiement== 'Retard ]3,7] jrs'){
                                 var cl='#d8b71f'
+                                 var nam='Delay ]3,7] days'
                         }
                         else if(donnee[i].statut_paiement== 'Retard ]7,10] jrs'){
                                 var cl='orange'
+                                 var nam='Delay ]7,10] days'
                         }
                         else{
                             var cl='red'
+                             var nam='Over 10 days late';
                         }
                       donnch.push({
-                                name: donnee[i].statut_paiement,
+                                name: nam,
                                 y:  parseInt(donnee[i].nombre),
                                 color:cl,
                                 dataLabels: {
@@ -520,9 +551,24 @@
                     }
                     for(var i=0; i<donnee.length; i++)
                             {
-                                    status[i] = donnee[i].statut_paiement
+                                if(donnee[i].statut_paiement=='Dans les delais'){
+                                        var stat='On schedule';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard [0,3] jrs'){
+                                    var stat='Delay [0,3] days';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard ]3,7] jrs'){
+                                    var stat='Delay ]3,7] days';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard ]7,10] jrs'){
+                                    var stat='Delay ]7,10] days';
+                                }
+                                else{
+                                    var stat='Over 10 days late';
+                                }
+                                    status[i] = stat
                             }
-                    console.log(donnee);
+                    //console.log(donnee);
                     Highcharts.chart('delais_de_paiement_coris', {
                         chart: {
                                     type: 'column'
@@ -537,9 +583,9 @@
                             enabled: false
                         },
                         
-                        // tooltip: {
-                        //     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                        // },
+                         tooltip: {
+                            pointFormat: '{series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)<br/>'
+                         },
                         plotOptions: {
                             pie: {
                                 allowPointSelect: true,
@@ -551,7 +597,7 @@
                             }
                         },
                         series: [{
-                            name: 'Factures',
+                            name: 'Bills',
                             colorByPoint: true,
                             data: donnch
                         }],
@@ -580,21 +626,26 @@
                     {
                         if(donnee[i].statut_paiement== 'Dans les delais'){
                                 var cl='green'
+                                var name ='On schedule'
                         }
                         else if(donnee[i].statut_paiement== 'Retard [0,3] jrs'){
                                 var cl='#d3d326'
+                                 var name ='Delay [0,3] days'
                         }
                         else if(donnee[i].statut_paiement== 'Retard ]3,7] jrs'){
                                 var cl='#d8b71f'
+                                 var name ='Delay ]3,7] days';
                         }
                         else if(donnee[i].statut_paiement== 'Retard ]7,10] jrs'){
                                 var cl='orange'
+                                 var name ='Delay ]7,10] days';
                         }
                         else{
                             var cl='red'
+                             var name ='Over 10 days late';
                         }
                       donnch.push({
-                                name: donnee[i].statut_paiement,
+                                name: name,
                                 y:  parseInt(donnee[i].nombre),
                                 color:cl,
                                 dataLabels: {
@@ -604,7 +655,23 @@
                     }
                     for(var i=0; i<donnee.length; i++)
                             {
-                                    status[i] = donnee[i].statut_paiement
+                                if(donnee[i].statut_paiement=='Dans les delais'){
+                                        var stat='On schedule';
+                                        
+                                }
+                                else if(donnee[i].statut_paiement=='Retard [0,3] jrs'){
+                                    var stat='Delay [0,3] days';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard ]3,7] jrs'){
+                                    var stat='Delay ]3,7] days';
+                                }
+                                else if(donnee[i].statut_paiement=='Retard ]7,10] jrs'){
+                                    var stat='Delay ]7,10] days';
+                                }
+                                else{
+                                    var stat='Over 10 days late';
+                                }
+                                    status[i] = stat
                             }
                     Highcharts.chart('delais_de_paiement_boa', {
                         chart: {
@@ -615,6 +682,9 @@
                             },
                         title: {
                             text: 'BOA'
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                         },
                         credits : {
                             enabled: false
@@ -631,7 +701,7 @@
                             }
                         },
                         series: [{
-                            name: 'Factures',
+                            name: 'Bills',
                             colorByPoint: true,
                             data: donnch
                         }]
@@ -684,7 +754,7 @@
                             }
                         },
                         series: [{
-                            name: 'Factures',
+                            name: 'Bills',
                             colorByPoint: true,
                             data: donnch
                         }]
@@ -748,7 +818,7 @@
                         },
                     
                         series: [{
-                                    name: 'Factures',
+                                    name: 'Bills',
                                     colorByPoint: true,
                                     data: donnch
                                 }]

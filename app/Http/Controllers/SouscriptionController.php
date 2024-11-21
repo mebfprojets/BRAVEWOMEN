@@ -153,7 +153,7 @@ public function listerallsouscriptionrejete( Request $request){
         $observation= $request->observation;
         //$tatut la decicision qui ajournée ou selectionnée  recupéré à partir du modal de decision du comité 
         $statut=$request->statut;
-        $entreprise = Entreprise::find("$id_entreprise");
+        $entreprise = Entreprise::find($id_entreprise);
             $entreprise->update([
                 "decision_du_comite_phase1"=>$statut, 
                 "commentaire_membre_comite_phase1"=>$observation,
@@ -352,13 +352,13 @@ public function listerallsouscriptionrejete( Request $request){
    
             return redirect()->back();
     }
-    public function savenote_qualitatif(Request $request){
+    public function savenote_qualitatif(Request $request)
+    {
         $entreprise = Entreprise::find($request->id_entreprise);
         $entreprise->update([
             'note_critere_qualitatif'=>$request->note_qualitatif,
             ]);
             return redirect()->back();
-
     }
     public function save_avis_ugp(Request $request){
         $entreprise = Entreprise::find($request->id_entreprise);
@@ -366,13 +366,19 @@ public function listerallsouscriptionrejete( Request $request){
         'decision_ugp'=>$request->avis,
         'observation_ugp'=>$request->observation
         ]);
+        if($request->avis=='inéligible'){
+            $entreprise->update([
+                  "decision_du_comite_phase1"=>"ajournee",
+                  'note_critere_qualitatif'=>0,
+                  'commentaire_membre_comite_phase1'=>$request->observation,
+            ]);
+        }
         return redirect()->back();
 }
 
 
 public function afficherrechercher(){
     $entreprises = Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->get(); 
-    
     $regions=Valeur::where('parametre_id',1 )->get();
     $secteur_activites= Valeur::where("parametre_id",env('PARAMETRE_SECTEUR_ACTIVITE_ID'))->get();
     $maillon_activites= Valeur::where('parametre_id',7 )->get();

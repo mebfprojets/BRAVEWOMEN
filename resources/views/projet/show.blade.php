@@ -442,6 +442,40 @@
 </div>
 @endsection
 @section('modal_part')
+<div id="modal-save-desistement" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Enregistrer un desistement</h2>
+            </div>
+            <div class="modal-body">
+                <form id="form-validation" method="POST"  action="{{ route('save_desistement_projet', $projet) }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="entreprise" id="id_entreprise_beneficaire" value="">
+            <div class="row">
+            <div class="form-group{{ $errors->has('libelle') ? ' has-error' : '' }} col-md-8" style="margin-left:10px;">
+                <label class=" control-label" for="declaration_desistement">Joindre la declaration<span class="text-danger">*</span></label>
+                <input class="form-control col-md-6" type="file" name="declaration_desistement" id="declaration_desistement" accept=".pdf, .jpeg, .png" onchange="VerifyUploadSizeIsOK('declaration_desistement');" placeholder="Joindre une copie de la declaration de desistement" required>  
+                    @if ($errors->has('declaration_desistement'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('declaration_desistement') }}</strong>
+                    </span>
+                    @endif
+            </div>
+            </div>   
+                <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <a href="#" class="btn btn-sm btn-warning" data-dismiss="modal"><i class="fa fa-repeat"></i> Annuler</a>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Enregistrer</button>
+                </div>
+            </div>
+            </form>
+        </div>
+            </div>
+            <!-- END Modal Body  modal-devis-edit -->
+        </div>
+    </div>
 <div id="modal-evaluer-pca" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
