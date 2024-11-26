@@ -29,6 +29,7 @@ use App\Http\Controllers\CoachController;
 use App\Http\Controllers\AcquisitionController;
 use App\Http\Controllers\ImpactController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DashboardByPhaseController;
 
 
 use App\Http\Controllers\SimpleExcelController;
@@ -132,6 +133,8 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::get('Liste_facture_validee_par_banque', [FactureController::class, 'facture_valide_par_banque'])->name('facture.a_payer_de_par_banque');
     Route::get('genere/lettre/demande_de_paiement/{facture}', [FactureController::class, 'generer_lettre_de_paiement'])->name('facture.generer_dem_paiement');
     Route::post('store/paiement/facture', [FactureController::class, 'store_paiement'])->name('facture.storepaiement');
+    Route::post('dossier_de_paiement/store/', [FactureController::class, 'store_paiement_file'])->name('facture.storepaiement_file');
+
     Route::get('confirmer/facture', [FactureController::class, 'confirmer_facture'])->name('facture.confirmer');
     Route::resource('prestataire', PrestataireController::class);
     Route::get('er/modif',[PrestataireController::class, 'modifier'] )->name('prestataire.modif');
@@ -218,7 +221,6 @@ Route::group(['prefix'=>'administrator'], function(){
     Route::post('storemodif/document', [DocumentController::class, 'modifier_document'])->name("document.modifier");
     Route::post('desistement/projet/{projet}', [ProjetController::class, 'save_desistement_projet'] )->name('save_desistement_projet');
     Route::get('desistements/projet/', [ProjetController::class, 'lister_les_desistement'] )->name('lister_les_desistement');
-
     Route::get("/projets/appui2/traitements" ,[ProjetController::class,'appui2_traitement'])->name('projet.appuis2_traitement');
 
 });
@@ -249,6 +251,8 @@ Route::get("/listerlesentreprise/retenues/parpromoteur", [PromotriceController::
 Route::get("/tableau_de_detail", [DashboradController::class, 'dashboard'])->name("dashboard");
 //Les details du tableau de bord
 Route::get("/detail_dashboard", [DashboradController::class, 'detail_dashboard'])->name("detail_dashboard");
+Route::get("/ByAppui/detail_dashboard", [DashboardByPhaseController::class, 'detail_dashboard'])->name("detail_dashboard_appui");
+
 Route::get('dashboard/subvention_debloque_par_banque',  [DashboradController::class, 'situation_des_subventions_debloque_par_banque'])->name('situation_des_subventions_debloque_par_banque');
 Route::get('dashboard/contrepartie/banque',[DashboradController::class, 'mobilisation_dela_contrepartie_par_banque'])->name("contrepartie.parbanque");
 Route::get('dashboard/subvention/banque',[DashboradController::class, 'mobilisation_dela_subvention_par_banque'])->name("subvention.parbanque");

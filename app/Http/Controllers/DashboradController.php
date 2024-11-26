@@ -495,7 +495,6 @@ $subvention_valide_par_banque= DB::table('entreprises')
                                     ->groupBy('banques.nom')
                                     ->select('banques.nom as nom_banque', DB::raw("COUNT(projets.id) as nombre"), DB::raw("SUM(investissement_projets.subvention_demandee_valide) as montant"))
                                     ->get();
-
     return view("dashboard.detail_finance", compact('subvention_par_regions','contrepartie_par_region','devis_valides_par_categories','devis_valides_par_banques','subvention_valide_par_banque','paiement_en_attentes','paiement_par_banque','facture_par_statut','montant_facture_enregistrees','contrepartie_par_categorie','contrepartie_par_banque','subvention_par_banque','subvention_par_categorie',
                                                     'mobilisation_par_categorie','mobilisation_par_banque','nombre_de_pca','fond_mobilise',
                                                     'total_souscription_enregistres','total_contrepartie_verse', 'total_subvention_verse',

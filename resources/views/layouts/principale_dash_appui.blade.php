@@ -22,6 +22,10 @@
         <link rel="apple-touch-icon" href="img/icon144.png" sizes="144x144">
         <link rel="apple-touch-icon" href="img/icon152.png" sizes="152x152">
         <link rel="apple-touch-icon" href="img/icon180.png" sizes="180x180">
+        <!-- END Icons -->
+
+        <!-- Stylesheets -->
+        <!-- Bootstrap is included in its original form, unaltered -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <link rel="stylesheet" href='{{ asset("js/plugins/fontawesome-free/css/all.min.css") }}'>
   <!-- Theme style -->
@@ -31,7 +35,7 @@
         <link rel="stylesheet" href="{{ asset('css/adminlte.css') }}">
         <!-- Related styles of various icon packs and plugins -->
         <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
-
+        
         <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
         <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
@@ -160,9 +164,7 @@
                         </div>
                         <!-- END Widgets Row -->
                     </div>
-                    <!-- END Page Content -->
 
-                    <!-- Footer -->
                     @include('partials.admin.footer')
                     <!-- END Footer -->
                 </div>
@@ -180,10 +182,10 @@
         <!-- END User Settings -->
 
         <!-- jQuery, Bootstrap.js, jQuery plugins and Custom JS code -->
-        <script src="{{ asset('js/vendor/jquery.min.js')}}"></script>
-        <script src="{{ asset('js/vendor/bootstrap.min.js')}}"></script>
-        <script src="{{ asset('js/plugins.js')}}"></script>
-        <script src="{{ asset('js/app.js')}}"></script>
+        <script src="{{ asset('js/vendor/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/plugins.js') }}"></script>
+        <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/highcharts.js') }}"></script>
         
 
@@ -192,10 +194,10 @@
         {{-- <script src="https://maps.googleapis.com/maps/api/js?key="></script> --}}
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
       
-        <script src="{{ asset('js/helpers/gmaps.min.js')}}"></script>
+        <script src="{{ asset('js/helpers/gmaps.min.js') }}"></script>
        @yield('script_add')
         <!-- Load and execute javascript code used only in this page -->
-        <script src="{{ asset('js/pages/index.js')}}"></script>
+        <script src="{{ asset('js/pages/index.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script>$(function(){ Index.init(); });</script>
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="

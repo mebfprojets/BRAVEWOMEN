@@ -7,26 +7,25 @@
       <span ><img src="{{ asset('img/upload_img.jpeg') }}" alt="" width="35"></span> <span><p>Visualiser les biens acquis en image</p></span>
     </a>
 </div>
-
 <div class="col-md-4 document_style">
     <a class="" href="#modal-rapport-suivi" data-toggle="modal">
       <span ><img src="{{ asset('img/upload_img.jpeg') }}" alt="" width="35"></span> <span><p>Visualiser le rapport du dernier suivi</p></span>
     </a>
 </div>
 <div class="row">
-@if($facture->statut=='payée')
-    <div class="col-md-3 document_style">
-      <a  target="_blank"  href="{{ route("telechargerfacture", $facture->id) }}?file=recu_paiement">
-        <span ><img src="{{ asset('img/upload_img.jpeg') }}" alt="" width="35"></span> <span><p>Visualiser le recu de paiement</p></span>
-      </a>
-    </div>
-@endif
-    
+    @if($facture->statut=='payée')
+        <div class="col-md-3 document_style">
+        <a  target="_blank"  href="{{ route("telechargerfacture", $facture->id) }}?file=recu_paiement">
+            <span ><img src="{{ asset('img/upload_img.jpeg') }}" alt="" width="35"></span> <span><p>Visualiser le recu de paiement</p></span>
+        </a>
+        </div>
+    @endif
 </div>
 <div class="col-md-12">
     <div class="block">
         <!-- Basic Form Elements Title -->
         <div class="block-title">
+            {{-- <a href="{{ route('facture.rejete',$facture) }}" data-toggle="tooltip" title="Visualiser" class="btn btn-lg btn-danger"><i class="fa fa-times"></i></a> --}}
             <div class="block-options pull-right">
                 <a onclick="window.history.back();" class="btn btn-sm btn-success"><i class="fa fa-repeat"></i> Fermer</a>
 
@@ -92,6 +91,9 @@
                             </div>
                             
                             @endif
+                                <div class="form-group">
+                                    <a href="#modal-recharger-facture" data-toggle="modal" onclick="affectervaleur_a_unchamp('facture_id', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Recharger le dossier de paiement</a>
+                                </div>
 
                     </div>
                     <div class="col-lg-8 img-bg" style="cursor: pointer;">
@@ -146,6 +148,43 @@
   </div>
 @endsection
 @section('modal_part')
+
+<div id="modal-recharger-facture" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header text-center">
+                <h2 class="modal-title"><i class="fa fa-pencil"></i> Recharger le dossier de paiement</h2>
+            </div>
+            <div class="modal-body">
+                <form id="form-validation" method="POST"  action="{{ route('facture.storepaiement_file') }}" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="facture_id" value="{{ $facture->id }}">
+            <div class="row">
+                <div class="form-group{{ $errors->has('dossier_de_paiement') ? ' has-error' : '' }} col-md-6" style="margin-left:10px;">
+                    <label class="control-label" for="dossier_de_paiement">Joindre le dossier de paiement <span class="text-danger">*</span></label>
+                        <input class="form-control docsize"  type="file" name="dossier_de_paiement" id="dossier_de_paiement" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('dossier_de_paiement');" placeholder="Charger le dossier de paiement ">
+                    @if ($errors->has('dossier_de_paiement'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('dossier_de_paiement') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>   
+   
+                <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Annuler</a>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-arrow-right"></i> Valider le paiement</button>
+                </div>
+            </div>
+            </form>
+        </div>
+            </div>
+            <!-- END Modal Body  modal-devis-edit -->
+        </div>
+</div>
+
 <div id="modal-images-biens" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog-lg">
         <div class="modal-content" style="height: 150%">

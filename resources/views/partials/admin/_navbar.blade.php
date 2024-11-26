@@ -53,6 +53,12 @@
                             <li class="@yield('dashboard_detail')">
                                 <a href="{{ route("dashboard") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Plus Detaillé</span></a>
                             </li>
+                            <li class="@yield('dashboard_detail_appui')">
+                                <a href="{{ route("detail_dashboard_appui")}}?phase=1&type_detail=mpme"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Details Phase 1</span></a>
+                            </li>
+                            <li class="@yield('dashboard_detail_appui')">
+                                <a href="{{ route("detail_dashboard_appui")}}?phase=2&type_detail=mpme"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Details Phase 2</span></a>
+                            </li>
                             <li class="@yield('success-storie')">
                                 <a href="{{ route("sucessStorie.index") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Success Stories</span></a>
                             </li>
@@ -275,6 +281,9 @@
                             @can('projet.view', Auth::user())
                             <li class="@yield('all')">
                                 <a href="{{ route("projet.index") }}?type_entreprise=aop"> Plan enregistrés</a>
+                            </li>
+                            <li class="@yield('soumis_appui2')">
+                                <a href="{{ route("projet.liste") }}?statut=soumis_appui2&type_entreprise=aop"> Appuis 2 enregistrés </a>
                             </li>
                             @endcan
                             @can('lister_pca_chef_de_zone', Auth::user())

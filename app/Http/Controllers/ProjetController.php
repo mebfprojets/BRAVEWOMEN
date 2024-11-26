@@ -79,11 +79,7 @@ class ProjetController extends Controller
         $annees=Valeur::where('parametre_id',16 )->get();
             // if(!$projet){
             return view('projet.create', compact('coachs','categorie_investissments','proportiondedepences', "nombre_de_clients", 'annees', 'afficherproportion', 'entreprises','banques'));
-            // }
-            // else{
-            //     flash("Vous avez déjà soumis votre Plan de continuté des activité. Veillez contacter l'administrateur!!!")->error();
-            //     return redirect()->back();
-            // }
+            
     }
 
     public function add_plan_appui2()
@@ -228,8 +224,7 @@ if($request->hasFile('plan_de_continute_revu')){
             elseif($request->statut=='a_affecter_au_membre_du_comite'){
                 if($type_entreprise=='mpme'){
                     $projets = Projet::where(function ($query) {
-                                            $query->where('statut' , ['a_affecter_au_membre_du_comite'])
-                                            ->orWhere('appui_statut', ['affecte_au_comite']);
+                                            $query->where('statut' , ['a_affecter_au_membre_du_comite']);
                                     })->where('type_entreprise', 'mpme')->where('avis_ugp','!=',null)->where('liste_dattente_observations',null)->orderBy('updated_at', 'desc')->get();
                     $type_entreprise='pca_mpme';
                 }
@@ -238,7 +233,7 @@ if($request->hasFile('plan_de_continute_revu')){
                    $type_entreprise='pca_aop';
                 }
                 $texte= "PCA/PA soumis à l'appreciation des membres du comité";
-               // $projets = Projet::whereIn('statut', ['a_affecter_au_membre_du_comite'])->where('avis_ugp','!=',null)->orderBy('updated_at', 'desc')->get();
+               
                 $page= 'a_affecter_au_membre_du_comite';
             }
             elseif($request->statut=='soumis_au_comite'){
@@ -273,19 +268,20 @@ if($request->hasFile('plan_de_continute_revu')){
             elseif($request->statut=='soumis_appui2'){
                 if($type_entreprise=='mpme'){
                     if(Auth::user()->zone==100){
-                        $projets = Projet::whereIn('appui_statut',['soumis','analyse','avis_chefdezone_appui2'])->where('type_entreprise', 'mpme')->orderBy('updated_at', 'desc')->get();
+                        $projets = Projet::whereIn('appui_statut',['soumis'])->where('type_entreprise', 'mpme')->orderBy('updated_at', 'desc')->get();
                         $type_entreprise='pca_mpme';
                     }
                 elseif(Auth::user()->zone!=100){
                     $projets = Projet::whereIn('appui_statut',['soumis','analyse'])->where('avis_chefdezone_appui2',null)->where('type_entreprise', 'mpme')
-                    ->where(function ($query) {
-                        $query->where('zone_affectation', '=', Auth::user()->zone);
-                    })->orderBy('updated_at', 'desc')->get();
+                                        ->where(function ($query) {
+                                            $query->where('zone_affectation', '=', Auth::user()->zone);
+                                        })->orderBy('updated_at', 'desc')->get();
                     
                 }
                     $type_entreprise='pca_mpme'; 
                 }
                 else{
+                 
                     if(Auth::user()->zone==100){
                         $projets = Projet::whereIn('appui_statut',['soumis','analyse','avis_chefdezone_appui2'])->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'desc')->get();;
                     }

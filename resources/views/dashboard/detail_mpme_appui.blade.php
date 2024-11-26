@@ -1,4 +1,4 @@
-@extends('layouts.principale_dash')
+@extends('layouts.principale_dash_appui')
 @section('dashboard', 'active')
 @section('dashboard_view', 'active')
 @section('content')
@@ -8,7 +8,7 @@
         <div class="block">
             <!-- Quick Stats Title -->
             <div class="block-title">
-                <h2 class="compteur">  Total souscriptions enregistrées: {{ $total_mpme_enregistre + $total_aop_leader_enregistres}}  <strong></strong></h2>
+                <h2 class="compteur">Total souscriptions enregistrées: {{ $total_mpme_enregistre + $total_aop_leader_enregistres}}  <strong></strong></h2>
             </div>
         <a href="javascript:void(0)" onclick="dashboardaopenregistre('mpme', 'nostatut');" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
@@ -20,7 +20,6 @@
             
             <a href="javascript:void(0)" onclick="dashboardaopenregistre('aop', 'nostatut');"  class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
-                   
                     <h4 class="text-left text-danger compteur">
                         <strong> {{ $total_aop_leader_enregistres }}/</strong> <small>phase 1: <span style="color:brown">{{ $total_aop_leader_enregistres_phase1 }}</span> </small> <small>phase 2: <span style="color: brown">{{ $total_aop_leader_enregistres_phase2 }}</span> </small><br><small>Nombre des souscriptions AOP/Entreprise Leader</small>
                     </h4>
@@ -59,6 +58,7 @@
                     </h4>
                 </div>
             </a>
+           
             <a  onclick="entreprise_aformer('aop', 0);" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                     {{-- <div class="widget-icon pull-right themed-background-danger">

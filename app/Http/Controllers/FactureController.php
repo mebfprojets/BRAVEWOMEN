@@ -147,6 +147,20 @@ public function generer_lettre_de_paiement(Facture $facture){
     header("Content-Disposition: attachment; filename= lettre_de_demande.docx");
     $templateProcessor->saveAs('php://output');
 }
+
+public function store_paiement_file(Request $request){
+    $facture=Facture::find($request->facture_id);
+    $devi= $facture->devi;
+    //dd( $devi);
+    if($request->hasFile('dossier_de_paiement')){
+        $facture_file=$this->get_file_emplacement($devi->entreprise->code_promoteur,'facture_file',$request->file('dossier_de_paiement'),$devi->id,$facture->num_facture);
+     }
+     $facture->update([
+        'url_fac'=>$facture_file,
+     ]);
+    return redirect()->back();
+}
+
  public function store_paiement(Request $request){
 
     if(Auth::user()->can('enregistrer_paiement')){
