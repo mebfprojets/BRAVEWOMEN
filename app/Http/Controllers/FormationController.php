@@ -174,7 +174,7 @@ class FormationController extends Controller
     // Recuperer la liste des entreprises rétenues pour la formation 
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
                                     //->where('participer_a_la_formation',null)
-                                    ->where('entrepriseaop',null)
+                                    ->where('aopOuleader',null)
                                     ->Where(function ($query) {
                                         $query->orwhere('region',Auth::user()->zone)
                                         ->orwhere('region_affectation', Auth::user()->zone);
@@ -192,11 +192,8 @@ class FormationController extends Controller
                                     })->orderBy('updated_at', 'desc')->get();
        
     }
-   // dd($entreprises);
-        $entreprises_retenues= $entreprises->except($id_entreprises);
-        //dd( count($entreprises_retenues));
 
-// if(count($entreprises_retenues)>0){
+        $entreprises_retenues= $entreprises->except($id_entreprises);
     $participants = ParticipantFormation::where("formation_id", $formation->id)->get();
     return view("formations.ajouterParticipant", compact("formation","entreprises_retenues", "participants") );
 

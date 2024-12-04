@@ -1,6 +1,6 @@
 @extends('layouts.principale_dash')
 @section('dashboard', 'active')
-@section('dashboard_view', 'active')
+@section($dash_phase, 'active')
 @section('content')
 
 <div class="row" >

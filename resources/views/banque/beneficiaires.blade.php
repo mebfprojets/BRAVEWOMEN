@@ -10,6 +10,7 @@
             <thead>
                 <tr>
                     <th class="text-center">N°</th>
+                    <th class="text-center">cohorte</th>
                     <th class="text-center">Region</th>
                     <th class="text-center">Promotrice</th>
                     <th class="text-center">Code bénéficiaire</th>
@@ -17,7 +18,8 @@
                     <th class="text-center">Entreprise</th>
                     <th class="text-center">Banque</th>
                     <th class="text-center">Télephone</th>
-                    <th class="text-center">Coût du projet</th>
+                    <th class="text-center">Total validé appui 1</th>
+                    <th class="text-center">Total validé appui 2</th>
                     <th class="text-center">Contre partie versée</th>
                     <th class="text-center">Virements du bailleur</th>
                     <th class="text-center">Fond disponible</th>
@@ -34,14 +36,16 @@
                         @endphp
                     <tr>
                          <td class="text-center" style="width: 2%">{{ $i }}</td>
+                         <td class="text-center" style="width: 10%">
+                            Phase {{ $entreprise->phase_de_souscription }}
+                        </td>
                         <td class="text-center" style="width: 2%"> {{ getlibelle($entreprise->region) }}</td>
                         <td class="text-center" style="width: 2%"> {{ $entreprise->promotrice->nom }} {{ $entreprise->promotrice->prenom }}</td>
 
                         <td class="text-center" style="width: 2%"> {{ $entreprise->code_promoteur }}</td>
-                         <td class="text-center">
-                                {{ $entreprise->num_ss_compte }}
+                        <td class="text-center">
+                            {{ $entreprise->num_ss_compte }}
                         </td>
-
                         <td class="text-center" style="width: 5%;" >
                             {{ $entreprise->denomination }}
                         </td>
@@ -53,9 +57,16 @@
                         </td>
                         <td class="text-center" style="width: 5%;">
                             @if($entreprise->projet)
-                            {{ format_prix($entreprise->projet->investissementvalides->sum('montant_valide')) }} 
+                                {{ format_prix($entreprise->projet->appui1_investissements->sum('montant_valide')) }}
                             @else
-                            Non disponible 
+                                Non disponible 
+                            @endif
+                        </td>
+                        <td class="text-center" style="width: 5%;">
+                            @if($entreprise->projet)
+                                    {{ format_prix($entreprise->projet->appui2_investissements->sum('montant_valide')) }}
+                            @else
+                                 Non disponible 
                             @endif
                         </td>
                         <td class="text-center" style="width: 5%;">{{ format_prix($entreprise->accomptes->sum('montant')) }}</td>
@@ -71,9 +82,6 @@
                             @can('enregistrer_subvention',Auth::user())
                                 <a href="{{ route("entreprise.subvention",$entreprise) }}" data-toggle="tooltip" title="Gérer les virements ICD sur le compte du bénéficiaire" class="btn btn-md btn-warning"><i class="gi gi-down_arrow"></i></a>
                             @endcan
-                            {{-- @can('enregistrer_paiement',Auth::user())
-                                <a href="{{ route("facture.valide_de_lentreprise",$entreprise) }}" data-toggle="tooltip" title="Gérer les paiements fournisseurs" class="btn btn-md btn-danger"><i class="gi gi-bullhorn"></i></a>
-                                 @endcan --}}
                             </div>
                         </td>
                     </tr>

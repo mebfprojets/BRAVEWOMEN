@@ -104,7 +104,7 @@
                                 <div class="icon">
                                   <i class="ion ion-stats-bars"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=mpme" class="small-box-footer block1">Plus details <i class="fa fa-long-arrow-right"></i></a>
+                                <a href="{{ route('detail_dashboard') }}?type_detail=mpme&phase={{ $phase }}" class="small-box-footer block1">Plus details <i class="fa fa-long-arrow-right"></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -118,7 +118,7 @@
                                 <div class="icon">
                                   <i class="ion ion-stats-bars"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=pca" class="small-box-footer block2">Plus de details <i class="fa fa-long-arrow-right"></i></i></a>
+                                <a href="{{ route('detail_dashboard_appui') }}?type_detail=pca&phase={{ $phase }}" class="small-box-footer block2">Plus de details <i class="fa fa-long-arrow-right"></i></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -132,7 +132,7 @@
                                 <div class="icon">
                                   <i class="ion ion ion-stats-bars"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=finance" class="small-box-footer block3">Plus de details <i class="fa fa-long-arrow-right"></i></a>
+                                <a href="{{ route('detail_dashboard_appui') }}?type_detail=finance&phase={{ $phase }}" class="small-box-footer block3">Plus de details <i class="fa fa-long-arrow-right"></i></a>
                               </div>
                             </div>
                             <!-- ./col -->
@@ -146,7 +146,7 @@
                                 <div class="icon">
                                   <i class="ion ion-pie-graph"></i>
                                 </div>
-                                <a href="{{ route('detail_dashboard') }}?type_detail=impact" class="small-box-footer block4">Plus de details <i class="fa fa-long-arrow-right"></i></a>
+                                <a href="{{ route('detail_dashboard_appui') }}?type_detail=impact&phase={{ $phase }}" class="small-box-footer block4">Plus de details <i class="fa fa-long-arrow-right"></i></a>
                               </div>
                             </div>
                             <!-- ./col -->

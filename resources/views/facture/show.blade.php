@@ -111,7 +111,6 @@
     <div class="block-title">
         Historique de traitement
     </div>
-    
       <div class="table-responsive">
         <table  class="table table-vcenter table-condensed table-bordered listepdf">
             <thead>
@@ -148,7 +147,6 @@
   </div>
 @endsection
 @section('modal_part')
-
 <div id="modal-recharger-facture" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

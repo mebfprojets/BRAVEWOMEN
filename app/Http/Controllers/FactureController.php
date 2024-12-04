@@ -160,9 +160,7 @@ public function store_paiement_file(Request $request){
      ]);
     return redirect()->back();
 }
-
  public function store_paiement(Request $request){
-
     if(Auth::user()->can('enregistrer_paiement')){
         $facture = Facture::find($request->facture_id);
         $date_paiement= date('Y-m-d', strtotime($request->date_paiement));
@@ -537,7 +535,8 @@ public function changerStatus(Request $request){
         $historiques = Historiquefacture::where('facture_id', $facture->id)->orderBy('created_at', 'asc')->get();
        
         $devi= $facture->devi;
-        $suiviExecution = SuiviExecutionDevi::where('devi_id', $devi->id)->orderBy('date_visite','asc')->first();
+        $suiviExecution = SuiviExecutionDevi::where('devi_id', $devi->id)->orderBy('date_visite','desc')->first();
+       // dd($suiviExecution);
         $motifs_de_rejects=Valeur::where('parametre_id', 37 )->get();
         if($request->action=='analyser'){
             //dd($facture->images_des_biens);

@@ -31,10 +31,13 @@
                     <th class="text-center">Apport Personnel</th>
                     <th class="text-center">Demande de financement</th>
                     <th class="text-center">Coût accordé</th>
+                    <th class="text-center">Subvention demandée appui1</th>
+                    <th class="text-center">Subvention demandée appui2</th>
                     <th class="text-center">Subvention aprouvée appui1</th>
                     <th class="text-center">Subvention aprouvée appui2</th>
                     <th class="text-center">Banque partenaire</th>
-                    <th class="text-center">Décision du comite</th>
+                    <th class="text-center">Décision du comite phase 1</th>
+                    <th class="text-center">Décision du comite phase 2</th>
                     <th class="text-center">Observation du comité</th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -64,6 +67,8 @@
                         <td class="text-center">{{ format_prix($projet->investissements->sum('apport_perso'))}}</td>
                         <td class="text-center">{{ format_prix($projet->investissements->sum('subvention_demandee'))}}</td>
                         <td class="text-center">{{ format_prix($projet->montant_accorde)}}</td>
+                        <td class="text-center">{{ format_prix($projet->appui1_investissements->sum('subvention_demandee'))}}</td>
+                        <td class="text-center">{{ format_prix($projet->appui2_investissements->sum('subvention_demandee'))}}</td>
                         <td class="text-center">{{ format_prix($projet->appui1_investissements->sum('subvention_demandee_valide'))}}</td>
                         <td class="text-center">{{ format_prix($projet->appui2_investissements->sum('subvention_demandee_valide'))}}</td>
                         <td class="text-center">{{$projet->entreprise->banque->nom}}</td>
@@ -71,6 +76,13 @@
                             @if($projet->statut=='selectionné')
                                Selectionné
                            @elseif($projet->statut=='rejeté')
+                                Réjeté
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($projet->appui_statut=='selectionné')
+                               Selectionné
+                           @elseif($projet->appui_statut=='rejeté')
                                 Réjeté
                             @endif
                         </td>

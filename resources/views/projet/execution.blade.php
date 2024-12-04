@@ -505,7 +505,7 @@
                 </div>
                 <div class="form-group{{ $errors->has('fiche_analyse') ? ' has-error' : '' }} col-md-5" style="margin-left:5px;">
                     <label class="control-label" for="listedepresence">Fiche d'analyse <span class="text-danger">*</span></label>
-                        <input class="form-control docsize col-md-6"  type="file" name="fiche_analyse" id="fiche_analyse_c" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK_lourd('fiche_analyse_c');" placeholder="Charger une copie de fiche d'analyse des offres" required style="100%">
+                        <input class="form-control docsize col-md-6"  type="file" name="fiche_analyse" id="fiche_analyse_c" accept=".pdf, .jpeg, .png"   onchange="VerifyUploadSizeIsOK('fiche_analyse_c');" placeholder="Charger une copie de fiche d'analyse des offres" required style="100%">
                     @if ($errors->has('fiche_analyse'))
                         <span class="help-block">
                             <strong>{{ $errors->first('fiche_analyse') }}</strong>

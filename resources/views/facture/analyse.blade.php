@@ -153,7 +153,6 @@
                                         <a href="#modal-rejeter_devis" onclick="affectervaleur_a_unchamp('id_entreprise', {{ $facture->id  }});"  data-toggle="modal" class="btn btn-lg btn-danger"><i class="fa fa-repeat"></i> Rejeter</a>
                                         <a href="#modal-conforme-facture" data-toggle="modal" onclick="affectervaleur_a_unchamp('id_entreprise_conforme', {{ $facture->id}});" class="btn btn-lg btn-success"><i class="fa fa-repeat"></i>Conforme</a>
                                     </div>
-                                    
                                 @endif
                                 @if($facture->statut=='validé' && $facture->conforme==1 )
                                     <div class="form-group">
@@ -165,7 +164,7 @@
                     <div class="col-lg-8 img-bg" style="cursor: pointer;">
                             <div style="box-shadow: 1px 2px 5px 1px #999">
                               <embed src= "{{ Storage::disk('local')->url($facture->url_fac) }}" height=400 type='application/pdf' style="width: 100%;" />
-                        </div>
+                    </div>
 
                      </div>
                     </div>

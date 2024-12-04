@@ -379,6 +379,7 @@ Route::get('rejet/devis/par_administrateur/{devi}', [DeviController::class, 'rej
 Route::get('rejeter/facture/par_administrateur/{facture}', [FactureController::class, 'rejeter_la_facture_apres_validation'])->name('facture.rejete');
 Route::get('afficher/factures/payees', [FactureController::class, 'facture_payes'])->name('facture.payes');
 
+Route::get('traiter/phase/souscription', [ProjetController::class, 'traiter_les_phases'])->name('projets.traiter_les_phase');
 
 
 

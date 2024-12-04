@@ -53,10 +53,10 @@
                             <li class="@yield('dashboard_detail')">
                                 <a href="{{ route("dashboard") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Plus Detaillé</span></a>
                             </li>
-                            <li class="@yield('dashboard_detail_appui')">
+                            <li class="@yield('dashboard_detail_appui_1')">
                                 <a href="{{ route("detail_dashboard_appui")}}?phase=1&type_detail=mpme"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Details Phase 1</span></a>
                             </li>
-                            <li class="@yield('dashboard_detail_appui')">
+                            <li class="@yield('dashboard_detail_appui_2')">
                                 <a href="{{ route("detail_dashboard_appui")}}?phase=2&type_detail=mpme"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Details Phase 2</span></a>
                             </li>
                             <li class="@yield('success-storie')">

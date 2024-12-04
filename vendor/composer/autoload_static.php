@@ -712,6 +712,7 @@ class ComposerStaticInitb87426becd89eeb4a3e48f1febd128db
         'App\\Http\\Controllers\\BudgetController' => __DIR__ . '/../..' . '/app/Http/Controllers/BudgetController.php',
         'App\\Http\\Controllers\\CoachController' => __DIR__ . '/../..' . '/app/Http/Controllers/CoachController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\DashboardByPhaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardByPhaseController.php',
         'App\\Http\\Controllers\\DashboradController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboradController.php',
         'App\\Http\\Controllers\\DeviController' => __DIR__ . '/../..' . '/app/Http/Controllers/DeviController.php',
         'App\\Http\\Controllers\\DocumentController' => __DIR__ . '/../..' . '/app/Http/Controllers/DocumentController.php',

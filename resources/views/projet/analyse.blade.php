@@ -36,7 +36,7 @@
 @endcan
 
 @can('donne_verdict_du_comite_pca', Auth::user())
-    @if ($projet->observations=='' && $projet->statut=='a_affecter_au_membre_du_comite' && $projet->avis_ugp!=null )
+    @if (($projet->observations==''|| $projet->raison_repeche !='') && $projet->statut=='a_affecter_au_membre_du_comite' && $projet->avis_ugp!=null )
     <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp" onclick="setTypeavis('appui1','champ_decision_comite')">Décision du comité sur appui 1 <i class="fa fa-check-square-o"></i></a>
     @if($projet->liste_dattente_observations=='')
         <a href="#modal-pca-liste-dattente" data-toggle="modal"  title="Ajouter dans la liste d'attente " class="btn btn-md btn-warning avis_ugp">Liste d'attente <i class="fa fa-check-square-o"></i></a>
@@ -969,7 +969,8 @@
                 error:function(){alert('error');},
                 success:function(){
                     $('#modal-confirm-rejet').hide();
-                    window.location=document.referrer;
+                    location.reload();
+                    //window.location=document.referrer;
                 }
             });
     }
