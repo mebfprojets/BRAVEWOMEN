@@ -20,6 +20,10 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class DashboardByPhaseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['souscriptiongeopresenation','souscriptionparzone','souscriptiongeopresenation','aopparsecteuractivite','entreprisepreselectionneparzone','souscriptionparzone','souscriptionparsecteuractivite','souscriptionretenueparsecteuractivite','aopregisterparzone','enregistreSecteurActiviteZone']);
+    }
 public function detail_dashboard(Request $request){
     $type_detail= $request->type_detail;
     $phase= $request->phase;
@@ -46,11 +50,11 @@ if($phase==1){
 else{
     $dash_phase = 'dashboard_detail_appui_2';
 }
+//dd($dash_phase);
     
   if($type_detail=='mpme'){
-    
     $total_mpme_enregistre=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->where('phase_projet', $phase)->count();
-        $leader_AOP_formes=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)
+    $leader_AOP_formes=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)
                                         ->where('phase_projet', $phase)->orderBy('updated_at', 'desc')->get();
     $mpme_formes= Entreprise::where("decision_du_comite_phase1", "selectionnee")->where('participer_a_la_formation', 1)->where('entrepriseaop',null)->where('phase_projet', $phase)->get();
     $total_mpme_enregistre=Entreprise::where("status",'!=',0)->orderBy('updated_at', 'desc')->where('entrepriseaop',null)->where('phase_projet', $phase)->count();
@@ -66,7 +70,6 @@ else{
 
   }
   elseif($type_detail=='finance'){
-
                     $total_subvention_verse=DB::table('subventions')
                                                 ->join('entreprises','entreprises.id','=','subventions.entreprise_id')
                                                 ->where('entreprises.phase_projet', $phase)
@@ -236,8 +239,8 @@ $subvention_valide_par_banque= DB::table('entreprises')
                                     ->select('banques.nom as nom_banque', DB::raw("COUNT(projets.id) as nombre"), DB::raw("SUM(investissement_projets.subvention_demandee_valide) as montant"))
                                     ->get();
 
-
-    return view("dashboard.detail_finance", compact('phase','dash_phase','subvention_par_regions','contrepartie_par_region','devis_valides_par_categories','devis_valides_par_banques','subvention_valide_par_banque','paiement_en_attentes','paiement_par_banque','facture_par_statut','montant_facture_enregistrees','contrepartie_par_categorie','contrepartie_par_banque','subvention_par_banque','subvention_par_categorie',
+                                        //dd($dash_phase);
+    return view("dashboard.detail_finance_appui", compact('phase','dash_phase','subvention_par_regions','contrepartie_par_region','devis_valides_par_categories','devis_valides_par_banques','subvention_valide_par_banque','paiement_en_attentes','paiement_par_banque','facture_par_statut','montant_facture_enregistrees','contrepartie_par_categorie','contrepartie_par_banque','subvention_par_banque','subvention_par_categorie',
                                                     'mobilisation_par_categorie','mobilisation_par_banque','nombre_de_pca','fond_mobilise',
                                                     'total_souscription_enregistres','total_contrepartie_verse', 'total_subvention_verse',
                                                     'nombre_devis_soumis', 'montant_devis_soumis', 'montant_devi_valide', 'montant_facture_valide',

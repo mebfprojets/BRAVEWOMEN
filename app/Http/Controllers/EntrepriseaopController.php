@@ -81,6 +81,7 @@ class EntrepriseaopController extends Controller
     public function store(Request $request)
     {       
         return redirect()->back();
+        $year=date("Y");
         $cat_entreprise=$request->cat_entreprise;
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $entreprise_nn_traite= Entreprise::where('code_promoteur', $promoteur->code_promoteur)->whereIn("aopOuleader",["aop","leader"])->where("conforme",null)->get();
@@ -159,7 +160,7 @@ class EntrepriseaopController extends Controller
             "num_ss_compte"=>"non défini"
         ]);
         if ($request->hasFile('docidentite')) {
-            $urldocidentite= $request->docidentite->store('public/docidentification');
+            $urldocidentite= $request->docidentite->store('public/'.$year.'/'.'docidentification');
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_IDENTITE"),
                   'promotrice_id'=>$promoteur->id,
@@ -207,7 +208,7 @@ class EntrepriseaopController extends Controller
             }
         }
         if ($request->hasFile('docagrement')) {
-            $docagrement= $request->docagrement->store('public/docagrement');
+            $docagrement= $request->docagrement->store('public/'.$year.'/'.'docagrement');
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_AGREMENT"),
                   'entreprise_id'=>$entreprise->id,
@@ -218,7 +219,7 @@ class EntrepriseaopController extends Controller
             $urldocrccm=null;
         }
         if ($request->hasFile('docrccm')) {
-            $urldocrccm= $request->docrccm->store('public/docrccm');
+            $urldocrccm= $request->docrccm->store('public/'.$year.'/'.'docrccm');
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_RCCM"),
                   'entreprise_id'=>$entreprise->id,
@@ -231,16 +232,7 @@ class EntrepriseaopController extends Controller
         $promoteur->update([
             "suscriptionaopleader_etape"=>2,
         ]);
-        // if($entreprises->count()<1){
-        //     $promoteur->update([
-        //         "suscriptionaopleader_etape"=>2,
-        //     ]);
-        // }
-        // if($entreprises->count()==1){
-        //     $promoteur->update([
-        //         "etape_suscription2"=>2,
-        //     ]);
-        //}
+        
         foreach($rentabilite_criteres as $rentabilite_critere){
             foreach($annees as $annee){
                 $variable=$rentabilite_critere->id.$annee->id;

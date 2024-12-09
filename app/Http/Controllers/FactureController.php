@@ -30,9 +30,10 @@ class FactureController extends Controller
      */
     public function get_file_emplacement($code_promoteur, $input_name,$file,$devi,$num){
         $devi_designation=Devi::find($devi)->designation;
+        $year=date("Y");
         $extension=$file->getClientOriginalExtension();
         $fileName = $num.'_'.$devi_designation.'.'.$extension;
-        $emplacement='public/'.$input_name.'/'.$code_promoteur; 
+        $emplacement='public/'.$year.'/'.$input_name.'/'.$code_promoteur; 
         $url_store= $file->storeAs($emplacement, $fileName);
         return $url_store;
     }
@@ -283,7 +284,7 @@ public function store_paiement_file(Request $request){
      */
     public function store(Request $request)
     {
-      
+        $year=date("Y");
         $images = $request->images;
         $champ_nombre_dimage = $request->champ_nombre_dimage;
         $devi=Devi::find($request->devi_id);
@@ -337,7 +338,7 @@ public function store_paiement_file(Request $request){
                 $file = $request->file($inputname);
                 $fileName = $file->getClientOriginalName();
                 //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise
-                $emplacement='public/image_aquisitions/'.$devi->entreprise->code_promoteur.'/'.$facture->num_facture; 
+                $emplacement='public/'.$year.'/'.'image_aquisitions/'.$devi->entreprise->code_promoteur.'/'.$facture->num_facture; 
                 $image_acquisition= $request[$inputname]->storeAs($emplacement, $fileName);
                 FactureImage::create([
                     'facture_id'=>  $facture->id,
@@ -581,13 +582,14 @@ public function changerStatus(Request $request){
     }
     
    public function modifier_image_bien_acquis(Request $request){
+        $year=date("Y");
         $factureimage= FactureImage::find($request->image_id);
         $devi= $factureimage->facture->devi;
     if($request->hasFile('image_bien')){
         $file = $request->file('image_bien');
         $fileName = $file->getClientOriginalName();
         //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise
-        $emplacement='public/image_aquisitions/'.$devi->entreprise->code_promoteur; 
+        $emplacement='public/'.$year.'/'.'image_aquisitions/'.$devi->entreprise->code_promoteur; 
         $image_acquisition= $request['image_bien']->storeAs($emplacement, $fileName);
         $factureimage->update([
             'url_image' =>$image_acquisition
@@ -596,12 +598,13 @@ public function changerStatus(Request $request){
         return redirect()->back();
    }
    public function ajouter_image_bien_acquis(Request $request){
+    $year=date("Y");
     $facture= Facture::find($request->facture_id);
     if($request->hasFile('image_bien')){
         $file = $request->file('image_bien');
         $fileName = $file->getClientOriginalName();
         //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise
-        $emplacement='public/image_aquisitions/'.$facture->devi->entreprise->code_promoteur; 
+        $emplacement='public/'.$year.'/'.'image_aquisitions/'.$facture->devi->entreprise->code_promoteur; 
         $image_acquisition= $request['image_bien']->storeAs($emplacement, $fileName);
         FactureImage::create([
             'facture_id'=>  $facture->id,

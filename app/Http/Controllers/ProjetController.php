@@ -140,7 +140,7 @@ if($request->hasFile('plan_de_continute_revu')){
                 $file = $request->file('plan_de_continute_revu');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'plan_de_continute_revu'.'.'.$extension;
-                $emplacement='public/pca/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'pca/'.$entreprise->aopOuleader.'/'; 
                 $urlplan_de_continute= $request['plan_de_continute_revu']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_PCA_REVU"),
@@ -156,7 +156,7 @@ if($request->hasFile('plan_de_continute_revu')){
                 $file = $request->file('devis_des_investissements');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'devis_des_investissements_revu'.'.'.$extension;
-                $emplacement='public/devis_des_investissement_ala_soumission/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'devis_des_investissement_ala_soumission/'.$entreprise->aopOuleader.'/'; 
                 $urldevis_des_investissements= $request['devis_des_investissements']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_DEVIS_REVU"),
@@ -172,7 +172,7 @@ if($request->hasFile('plan_de_continute_revu')){
                 $file = $request->file('copie_document_foncier');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'copie_document_foncier_revu'.'.'.$extension;
-                $emplacement='public/foncier/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'foncier/'.$entreprise->aopOuleader.'/'; 
                 $urlcopie_document_foncier= $request['copie_document_foncier']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_FONCIER_REVU"),
@@ -308,11 +308,11 @@ if($request->hasFile('plan_de_continute_revu')){
             }
             elseif($request->statut=='appui2_affecte_au_membre_du_comite'){
                 if($type_entreprise=='mpme'){
-                    $projets = Projet::whereIn('appui_statut', ['soumis','affecte_au_comite'])->where('type_entreprise', 'mpme')->where('avis_ugp_appui2','!=',null)->orderBy('updated_at', 'asc')->get();
+                    $projets = Projet::whereIn('appui_statut', ['affecte_au_comite'])->where('type_entreprise', 'mpme')->where('avis_ugp_appui2','!=',null)->orderBy('updated_at', 'asc')->get();
                     $type_entreprise='pca_mpme';
                 }
                 else{
-                    $projets = Projet::whereIn('appui_statut', ['soumis','affecte_au_comite'])->where('avis_ugp_appui2','!=',null)->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'asc')->get();
+                    $projets = Projet::whereIn('appui_statut', ['affecte_au_comite'])->where('avis_ugp_appui2','!=',null)->whereIn('type_entreprise',['leader','aop'])->orderBy('updated_at', 'asc')->get();
                    $type_entreprise='pca_aop';
                 }
                 $texte= "Appui 2  soumis à l'appreciation des membres du comité";
@@ -656,6 +656,7 @@ public function save_date_creation_compte(Request $request){
     return redirect()->back();
 }
 public function save_accord_beneficiaire(Request $request){
+    $year=date("Y");
     if ($request->hasFile('accord_beneficiaire')) {
        // dd($request->all());
         $entreprise= Entreprise::find($request->entreprise);
@@ -672,7 +673,7 @@ public function save_accord_beneficiaire(Request $request){
             $file = $request->file('accord_beneficiaire');
             $extension=$file->getClientOriginalExtension();
             $fileName = $entreprise->code_promoteur.'.'.$extension;
-            $emplacement='public/accord_beneficiaire'; 
+            $emplacement='public/'.$year.'/'.'accord_beneficiaire'; 
             $accord_beneficiaire= $request['accord_beneficiaire']->storeAs($emplacement, $fileName);
            // $accord_beneficiaire= $request->accord_beneficiaire->store('public/accord_beneficiaire');
      $this->supprimer_doublon_de_pj($entreprise->id, env("VALEUR_PIECE_ACCORD_BENEFICIAIRE"));
@@ -703,7 +704,7 @@ public function save_accord_beneficiaire(Request $request){
      */
     public function store(Request $request)
     {
-       // dd($request->all());
+        $year=date("Y");
         $this->validate($request, [
     		'entreprise_id'=>'unique:projets,entreprise_id',
     	]);
@@ -800,7 +801,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('plan_de_continute');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'plan_de_continute'.'.'.$extension;
-                $emplacement='public/pca/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'pca/'.$entreprise->aopOuleader.'/'; 
                 $urlplan_de_continute= $request['plan_de_continute']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_PCA"),
@@ -816,7 +817,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('synthese_plan_de_continute');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'synthese_plan_de_continute'.'.'.$extension;
-                $emplacement='public/synthese_pca/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'synthese_pca/'.$entreprise->aopOuleader.'/'; 
                 $urlsynthese_plan_de_continute= $request['synthese_plan_de_continute']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_SYNTHESE_PCA"),
@@ -832,7 +833,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('devis_des_investissements');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'devis_des_investissements'.'.'.$extension;
-                $emplacement='public/devis_des_investissement_ala_soumission/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'devis_des_investissement_ala_soumission/'.$entreprise->aopOuleader.'/'; 
                 $urldevis_des_investissements= $request['devis_des_investissements']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_DEVIS"),
@@ -848,7 +849,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('copie_document_foncier');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'copie_document_foncier'.'.'.$extension;
-                $emplacement='public/foncier/'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'foncier/'.$entreprise->aopOuleader.'/'; 
                 $urlcopie_document_foncier= $request['copie_document_foncier']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_FONCIER"),
@@ -864,7 +865,7 @@ if($request->hasFile('synthese_plan_de_continute')&& $request->hasFile('attestat
                 $file = $request->file('attestation_de_formation');
                 $extension=$file->getClientOriginalExtension();
                 $fileName = $entreprise->code_promoteur.'_'.'attestation_de_formation'.'.'.$extension;
-                $emplacement='public/attestation_de_formation'.$entreprise->aopOuleader.'/'; 
+                $emplacement='public/'.$year.'/'.'attestation_de_formation'.$entreprise->aopOuleader.'/'; 
                 $urlattestation_de_formation= $request['attestation_de_formation']->storeAs($emplacement, $fileName);
                 Piecejointe::create([
                     'type_piece'=>env("VALEUR_ID_DOCUMENT_ATTESTATION"),
@@ -935,6 +936,7 @@ public function lister_les_demandes_de_kyc(Request $request){
     return view('projet.demande_kyc', compact('demande_de_kycs','type_entreprise'));
 }
 public function save_fiche_danalyse(Request $request){
+    $year=date("Y");
     $fiche_danalyse= Piecejointe::where('type_piece',env("VALEUR_ID_FICHE_DANALYSE"))->where('entreprise_id',$request->entreprise )->first();
     if($fiche_danalyse){
         $fiche_danalyse->delete();
@@ -943,7 +945,7 @@ public function save_fiche_danalyse(Request $request){
             $file = $request->file('fiche_danalyse');
             $extension=$file->getClientOriginalExtension();
             $fileName = $entreprise->code_promoteur.'_'.'fiche_danalyse'.'.'.$extension;
-            $emplacement='public/fiche_danalyse_de_PCA'; 
+            $emplacement='public/'.$year.'/'.'fiche_danalyse_de_PCA'; 
             $urlfiche_danalyse= $request['fiche_danalyse']->storeAs($emplacement, $fileName);
             Piecejointe::create([
               'type_piece'=>env("VALEUR_ID_FICHE_DANALYSE"),
@@ -1222,7 +1224,6 @@ elseif((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') 
     else{
     $invest->update([
         'designation'=> $request->designation,
-        //'appui'=> $request->appui,
         'montant_valide'=> reformater_montant2($request->cout),
         'apport_perso_valide'=> reformater_montant2($request->apport_perso),
         'subvention_demandee_valide'=> reformater_montant2($request->subvention),
@@ -1236,7 +1237,6 @@ elseif((($entreprise->aopOuleader=='aop' || $entreprise->aopOuleader=='leader') 
 public function add_investissement(Request $request){
 $projet= Projet::find($request->projet_id);
     ($request->appui==1)?$projet_montant= $projet->appui1_investissements->sum('montant')  + reformater_montant2($request->cout):$projet_montant= $projet->appui2_investissements->sum('montant')  + reformater_montant2($request->cout);
-   // dd($projet_montant);
 if((($projet->entreprise->aopOuleader=='aop' ||$projet->entreprise->aopOuleader=='leader') && $projet_montant >60000000)|| ($projet->entreprise->aopOuleader=='mpme' && $projet_montant >18000000)  )
     {
         flash("Verifier le montant du projet. Il ne doit pas être supérieur au plafond accordé par le projet")->error();
@@ -1264,7 +1264,6 @@ else{
 }
 }
 public function rejetter_investissement(Request $request){
-    //dd($request->all());
     $invest= InvestissementProjet::find($request->invest_id);
     $invest->update([
         'statut' => 'rejeté'
@@ -1309,7 +1308,6 @@ else{
         'apport_perso'=> reformater_montant2($request->apport_perso),
         'subvention_demandee'=> reformater_montant2($request->subvention)
     ]);
-
     $projet->update([
         'montant_demande' => $projet->investissements->sum('montant')
     ]);
@@ -1355,7 +1353,7 @@ if (Auth::user()->can('lister_pca_chef_de_zone')) {
         $file = $request->file('grille_devaluation');
         $extension=$file->getClientOriginalExtension();
         $fileName = $projet->entreprise->code_promoteur.'_'.'fiche_devaluation'.'.'.$extension;
-        $emplacement='public/grilleEval'; 
+        $emplacement='public/'.$year.'/'.'grilleEval'; 
         $urlpiece= $request['grille_devaluation']->storeAs($emplacement, $fileName);
       $pj=  Piecejointe::create([
           'type_piece'=> env("VALEUR_ID_DOCUMENT_GRILLEEVAL"),
@@ -1450,7 +1448,7 @@ elseif($type_piece==env('VALEUR_ID_DOCUMENT_FONCIER_REVU')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'copie_document_foncier_revu'.'.'.$extension;
-    $chaine='public/foncier/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'foncier/'.$cat_entreprise;
 }
     $urlpiece= $request['piece_file']->storeAs($chaine, $fileName);
     if ($request->hasFile('piece_file')) {
@@ -1474,6 +1472,7 @@ public function modif_piecej(Request $request){
 
 }
 public function modifier_piecej(Request $request){
+    $year=date("Y");
     $piecejointe= Piecejointe::find($request->piece_id);
     $piecejointe_type=$piecejointe->type_piece;
     $cat_entreprise=$piecejointe->entreprise->aopOuleader;
@@ -1481,32 +1480,32 @@ if($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_DEVIS')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'devis_des_investissements'.'.'.$extension;
-    $chaine='public/devis_des_investissement_ala_soumission/'.$cat_entreprise; 
+    $chaine='public/'.$year.'/'.'devis_des_investissement_ala_soumission/'.$cat_entreprise; 
 }
 elseif( $piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_PCA')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'plan_de_continute'.'.'.$extension;
-    $chaine='public/pca/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'pca/'.$cat_entreprise;
 }
 elseif( $piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_SYNTHESE_PCA')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'synthese_plan_de_continute'.'.'.$extension;
-    $chaine='public/synthese_pca/'.$cat_entreprise; 
+    $chaine='public/'.$year.'/'.'synthese_pca/'.$cat_entreprise; 
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_FONCIER')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'copie_document_foncier'.'.'.$extension;
-    $chaine='public/foncier/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'foncier/'.$cat_entreprise;
 
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_ATTESTATION')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'attestation_de_formation'.'.'.$extension;
-    $chaine='public/attestation_de_formation/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'attestation_de_formation/'.$cat_entreprise;
 }
 
 
@@ -1514,25 +1513,25 @@ elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_PCA_REVU')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'plan_de_continute_revu'.'.'.$extension;
-    $chaine='public/pca/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'pca/'.$cat_entreprise;
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_SYNTHESE_PCA_REVU')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'synthese_plan_de_continute_revu'.'.'.$extension;
-    $chaine='public/synthese_pca/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'synthese_pca/'.$cat_entreprise;
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_DEVIS_REVU')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'devis_des_investissements_revu'.'.'.$extension;
-    $chaine='public/devis_des_investissement_ala_soumission/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'devis_des_investissement_ala_soumission/'.$cat_entreprise;
 }
 elseif($piecejointe->type_piece==env('VALEUR_ID_DOCUMENT_FONCIER_REVU')){
     $file = $request->file('piece_file');
     $extension=$file->getClientOriginalExtension();
     $fileName = Auth::user()->code_promoteur.'_'.'copie_document_foncier_revu'.'.'.$extension;
-    $chaine='public/foncier/'.$cat_entreprise;
+    $chaine='public/'.$year.'/'.'foncier/'.$cat_entreprise;
 }
     if ($request->hasFile('piece_file')) {
         $urlpiece= $request->piece_file->storeAs($chaine,$fileName);
@@ -1549,12 +1548,12 @@ public function liste_des_devis_asuivre_par_projet(Projet $projet){
 }
 
 public function save_desistement_projet(Projet $projet, Request $request){
-   
+    $year=date("Y");
 if($projet->entreprise->factures->sum('montant') == 0){
     $file = $request->file('declaration_desistement');
     $extension=$file->getClientOriginalExtension();
     $fileName = $projet->entreprise->code_promoteur.'.'.$extension;
-    $chaine='public/declaration_desistement';
+    $chaine='public/'.$year.'/'.'declaration_desistement';
     $chaine= $request['declaration_desistement']->storeAs($chaine, $fileName);
     Piecejointe::create([
         'type_piece'=>env("VALEUR_PIECE_DECLARATION_DESISTEMENT"),

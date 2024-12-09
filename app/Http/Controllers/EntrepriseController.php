@@ -188,6 +188,7 @@ else{
     public function store(Request $request)
     {
         return redirect()->back();
+        $year=date("Y");
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
         $rentabilite_criteres=Valeur::where('parametre_id',14)->where('id','!=',env("VALEUR_ID_NOMBRE_CLIENT"))->whereNotIn('id',[7098,7099,7100,7101,7102,7116])->get();
@@ -241,7 +242,7 @@ else{
             "num_ss_compte"=>"non défini"
         ]);
         if($request->hasFile('docagrement')) {
-            $docagrement= $request->docagrement->store('public/docagrement');
+            $docagrement= $request->docagrement->store('public/'.$year.'/'.'docagrement');
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_AGREMENT"),
                   'entreprise_id'=>$entreprise->id,
@@ -255,7 +256,7 @@ else{
             $file = $request->file('docrccm');
             $extension=$file->getClientOriginalExtension();
             $fileName = $entreprise->code_promoteur.'.'.$extension;
-            $emplacement='public/docrccm'; 
+            $emplacement='public/'.$year.'/'.'docrccm'; 
             $urldocrccm= $request['docrccm']->storeAs($emplacement, $fileName);
             Piecejointe::create([
                 'type_piece'=>env("VALEUR_ID_DOCUMENT_RCCM"),

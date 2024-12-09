@@ -8,9 +8,9 @@
         <div class="block">
             <!-- Quick Stats Title -->
             <div class="block-title">
-                <h2 class="compteur">Total souscriptions enregistrées: {{ $total_mpme_enregistre + $total_aop_leader_enregistres}}  <strong></strong></h2>
+                <h2 class="compteur">Total souscriptions enregistrées de la phase {{ $phase }} : {{ $total_mpme_enregistre + $total_aop_leader_enregistres}} <strong></strong></h2>
             </div>
-        <a href="javascript:void(0)" onclick="dashboardaopenregistre('mpme', 'nostatut');" class="widget widget-hover-effect2 themed-background-muted-light">
+        <a href="javascript:void(0)" onclick="dashboardaopenregistre('mpme', 'nostatut', {{ $phase }});" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                     <h4 class="text-left text-danger compteur">
                         <strong >{{ $total_mpme_enregistre }}</strong> </small><br><small> Nombre des souscriptions MPME</small>
@@ -18,14 +18,14 @@
                 </div>
             </a>
             
-            <a href="javascript:void(0)" onclick="dashboardaopenregistre('aop', 'nostatut');"  class="widget widget-hover-effect2 themed-background-muted-light">
+            <a href="javascript:void(0)" onclick="dashboardaopenregistre('aop', 'nostatut', {{ $phase }});"  class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                     <h4 class="text-left text-danger compteur">
                         <strong> {{ $total_aop_leader_enregistres }}</strong> <br><small>Nombre des souscriptions AOP/Entreprise Leader</small>
                     </h4>
                 </div>
             </a>
-            <a  href="javascript:void(0)" onclick="dashboardaopenregistre('aop', 'rejette');" class="widget widget-hover-effect2 themed-background-muted-light">
+            <a  href="javascript:void(0)" onclick="dashboardaopenregistre('aop', 'rejette',{{ $phase }});" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                    
                     <h4 class="text-left text-danger compteur">
@@ -33,7 +33,7 @@
                     </h4>
                 </div>
             </a>
-            <a href="javascript:void(0)" onclick="dashboardaopenregistre('mpme', 'rejette');" class="widget widget-hover-effect2 themed-background-muted-light">
+            <a href="javascript:void(0)" onclick="dashboardaopenregistre('mpme', 'rejette',{{ $phase }});" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                     
                     <h4 class="text-left text-danger compteur">
@@ -50,7 +50,7 @@
                 <h2 class="compteur"> Total des préselections : {{ $total_mpme_aformation + $entreprisesLeaderAOP_aformer}}  <strong></strong></h2>
             </div>
             
-        <a onclick="entreprise_aformer('mpme',0);" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
+        <a onclick="entreprise_aformer('mpme',0, {{ $phase }});" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                     
                     <h4 class="text-left text-danger compteur">
@@ -59,7 +59,7 @@
                 </div>
             </a>
            
-            <a  onclick="entreprise_aformer('aop', 0);" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
+            <a  onclick="entreprise_aformer('aop', 0, {{ $phase }});" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                    
                     <h4 class="text-left text-danger compteur">
@@ -67,7 +67,7 @@
                     </h4>
                 </div>
             </a>
-            <a  onclick="entreprise_aformer('mpme',1);" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
+            <a  onclick="entreprise_aformer('mpme',1, {{ $phase }});" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                     {{-- <div class="widget-icon pull-right themed-background-muted">
                         <i class="fa fa-ticket"></i>
@@ -77,7 +77,7 @@
                     </h4>
                 </div>
             </a>
-            <a onclick="entreprise_aformer('aop',1);" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
+            <a onclick="entreprise_aformer('aop',1, {{ $phase }});" href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                 <div class="widget-simple">
                    
                     <h4 class="text-left text-danger compteur">

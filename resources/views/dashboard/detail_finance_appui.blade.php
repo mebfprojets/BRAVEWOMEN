@@ -1,8 +1,7 @@
 @extends('layouts.principale_dash')
 @section('dashboard', 'active')
-@section('dashboard_view', 'active')
+@section($dash_phase, 'active')
 @section('content')
-
 <div class="row" >
     <div class="row text-center">
         <div class="col-sm-6 col-lg-3">

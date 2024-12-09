@@ -293,7 +293,10 @@
                             {
                               donnch.push({
                                         name: donnee[i].region,
-                                        y:  parseInt(donnee[i].nombre)} )
+                                        y:  parseInt(donnee[i].nombre),
+                                        dataLabels: {
+                                                enabled: true,
+                                        }} )
                             }
                             for(var i=0; i<donnee.length; i++)
                             {
@@ -347,7 +350,10 @@
                             {
                               donnch.push({
                                         name: donnee[i].secteur,
-                                        y:  parseInt(donnee[i].nombre)} )
+                                        y:  parseInt(donnee[i].nombre),
+                                        dataLabels: {
+                                                enabled: true,
+                                        }} )
                             }
                             for(var i=0; i<donnee.length; i++)
                             {
@@ -776,9 +782,7 @@ responsive: {
 });
      }
  });
- 
     var url = "{{ route('situation_subvention_par_zone') }}";
-
               $.ajax({
                   url: url,
                  type: 'GET',
@@ -791,7 +795,10 @@ responsive: {
                         {
                           donnch.push({
                                     name: donnee[i].region,
-                                    y:  parseInt(donnee[i].montant_debloque)} )
+                                    y:  parseInt(donnee[i].montant_debloque),
+                                    dataLabels: {
+                                                enabled: true,
+                                        }} )
                         }
                         for(var i=0; i<donnee.length; i++)
                         {
@@ -830,7 +837,7 @@ responsive: {
         }      
 </script>
 <script language = "JavaScript">
-    function entreprise_aformer(type_entreprise, valeur_de_forme){
+    function entreprise_aformer(type_entreprise, valeur_de_forme, phase){
         (type_entreprise=="mpme")?(categorie_entreprise="Les MPME"):(categorie_entreprise="Les Entreprises leaders et les AOP");
         (valeur_de_forme==1)?(former="ayant suivis la formation"):(former="sélectionnées pour la formation ");
         var url = "{{ route('souscriptionretenueparsecteuractivite') }}";
@@ -838,7 +845,7 @@ responsive: {
                             url: url,
                             type: 'GET',
                             dataType: 'json',
-                            data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme },
+                            data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme, phase:phase },
                             error:function(data){alert("Erreur");},
                             success: function (donnee) {
                         var donnch= new Array();
@@ -847,7 +854,10 @@ responsive: {
                         {
                           donnch.push({
                                     name: donnee[i].secteur,
-                                    y:  parseInt(donnee[i].nombre)} )
+                                    y:  parseInt(donnee[i].nombre),
+                                    dataLabels: {
+                                                enabled: true,
+                                        }} )
                         }
                         for(var i=0; i<donnee.length; i++)
                         {
@@ -892,7 +902,7 @@ var url = "{{ route('entreprise.preselectionneparzone') }}";
 $.ajax({
                      url: url,
                      type: 'GET',
-                    data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme},
+                    data:{type_entreprise:type_entreprise, valeur_de_forme:valeur_de_forme, phase:phase},
                      dataType: 'json',
                      error:function(data){alert("Erreur");},
                      success: function (donnee) {
@@ -902,7 +912,10 @@ $.ajax({
                         {
                           donnch.push({
                                     name: donnee[i].region,
-                                    y:  parseInt(donnee[i].nombre)} )
+                                    y:  parseInt(donnee[i].nombre),
+                                    dataLabels: {
+                                                enabled: true,
+                                        }} )
                         }
                         for(var i=0; i<donnee.length; i++)
                         {
@@ -1056,7 +1069,7 @@ $.ajax({
         }      
     </script> --}}
     <script language = "JavaScript">
-        function dashboardaopenregistre(type_entreprise, statut){
+        function dashboardaopenregistre(type_entreprise, statut, phase){
             var url = "{{ route('aopleader.enregistreparsecteuractivite') }}";
             (type_entreprise=='mpme')?(type="MPME"):(type="AOP");
             (statut=='nostatut')?(result="enregistrés"):(result="ajournés");
@@ -1064,7 +1077,7 @@ $.ajax({
               $.ajax({
                                 url: url,
                                 type: 'GET',
-                                data:{type_entreprise:type_entreprise, statut:statut},
+                                data:{type_entreprise:type_entreprise, statut:statut, phase:phase},
                                 dataType: 'json',
                                 error:function(data){alert("Erreur");},
                                 success: function (donnee) {
@@ -1074,7 +1087,10 @@ $.ajax({
                             {
                               donnch.push({
                                         name: donnee[i].secteur,
-                                        y:  parseInt(donnee[i].nombre)} )
+                                        y:  parseInt(donnee[i].nombre),
+                                        dataLabels: {
+                                                enabled: true,
+                                        }} )
                             }
                             for(var i=0; i<donnee.length; i++)
                             {
@@ -1114,7 +1130,7 @@ $.ajax({
                          url: url,
                          type: 'GET',
                          dataType: 'json',
-                        data:{type_entreprise:type_entreprise, statut:statut},
+                        data:{type_entreprise:type_entreprise, statut:statut, phase:phase},
                          error:function(data){alert("Erreur");},
                          success: function (donnee) {
                                 var donnch= new Array();
@@ -1123,7 +1139,11 @@ $.ajax({
                             {
                               donnch.push({
                                         name: donnee[i].region,
-                                        y:  parseInt(donnee[i].nombre)} )
+                                        y:  parseInt(donnee[i].nombre),
+                                        dataLabels: {
+                                                enabled: true,
+                                        }
+                                    } )
                             }
                             for(var i=0; i<donnee.length; i++)
                             {
@@ -1179,7 +1199,10 @@ $.ajax({
                             {
                               donnch.push({
                                         name: donnee[i].secteur,
-                                        y:  parseInt(donnee[i].nombre)} )
+                                        y:  parseInt(donnee[i].nombre),
+                                        dataLabels: {
+                                                enabled: true,
+                                        }} )
                             }
                             for(var i=0; i<donnee.length; i++)
                             {
@@ -1227,7 +1250,10 @@ $.ajax({
                             {
                               donnch.push({
                                         name: donnee[i].region,
-                                        y:  parseInt(donnee[i].nombre)} )
+                                        y:  parseInt(donnee[i].nombre),
+                                        dataLabels: {
+                                                enabled: true,
+                                        }} )
                             }
                             for(var i=0; i<donnee.length; i++)
                             {

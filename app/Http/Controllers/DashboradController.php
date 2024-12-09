@@ -348,15 +348,10 @@ public function detail_dashboard(Request $request){
                                                             ->orWhere('phase_de_souscription', [2]);
                                                         })->count();
     $entreprisesLeaderAOP_aformer_phase_2=Entreprise::where("status",'!=',0)->where('entrepriseaop',1)->where("decision_du_comite_phase1", "selectionnee")->where('phase_de_souscription',3)->count();
-
-
-    //$total_souscription_enregistres= count($all_souscriptions);
     $total_mpme_formes=count($mpme_formes);
-
     $total_mpme_formees= count($mpme_formes);
     $total_aopleader_formes=count($leader_AOP_formes);
     return view('dashboard.detail_mpme', compact('leader_AOP_formes_phase2','leader_AOP_formes_phase1','mpme_formes_phase_1','mpme_formes_phase_2','total_mpme_aformation_phase1','total_mpme_aformation_phase2','entreprisesLeaderAOP_aformer_phase_1','entreprisesLeaderAOP_aformer_phase_2','total_aop_leader_enregistres_phase1','total_aop_leader_enregistres_phase2','total_mpme_enregistre_phase1','total_mpme_enregistre_phase2','nombre_de_pca','fond_mobilise','total_mpme_rejetes','total_aop_rejetes','total_mpme_enregistre','total_souscription_enregistres', 'total_aop_leader_enregistres','total_aop_enregistres','total_leader_enregistres', 'total_mpme_aformation', 'total_mpme_formes','entreprisesLeaderAOP_aformer','total_aopleader_formes'));
-
   }
   elseif($type_detail=='finance'){
     $total_contrepartie_verse=Accompte::sum('montant');
@@ -1086,7 +1081,6 @@ $nombre_demploi_par_zones = DB::table('entreprises')
     }
     public function entreprise_pca( Request $request)
     {
-        //dd('oko');
         $categorieentreprise= $request->typeentreprise;
         $pca_selectionne= $request->pca_selectionne;
         ($categorieentreprise=='mpme')?($categorieentreprise=null):($categorieentreprise=1);
@@ -1131,7 +1125,8 @@ $nombre_demploi_par_zones = DB::table('entreprises')
         $type_entreprise= $request->type_entreprise;
         $valeur_de_forme= $request->valeur_de_forme;
         $pca= $request->pca;
-        /// $pca = 1 retourne la liste des PCA selectionnés
+        $phase= $request->phase;
+       // dd($phase);
     if($pca==1){
         if($type_entreprise=='mpme'){
             $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v, projets p where p.entreprise_id=e.id and e.secteur_activite = v.id and p.statut='selectionné' and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
@@ -1146,29 +1141,51 @@ $nombre_demploi_par_zones = DB::table('entreprises')
         }
        elseif($type_entreprise=='aop'){
             $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v, projets p where p.entreprise_id=e.id and e.secteur_activite = v.id and e.entrepriseaop=1 GROUP by e.secteur_activite, v.libelle");
-            //dd($entreprises_retenus);
 
        }
     }
     else{
     if($valeur_de_forme==0){
-        if($type_entreprise=='mpme'){
-            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
+        if($phase==null){
+            if($type_entreprise=='mpme'){
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
+            }
+            else{
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NOT NULL GROUP by e.secteur_activite, v.libelle");
+            }
+    
         }
         else{
-            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NOT NULL GROUP by e.secteur_activite, v.libelle");
+            
+            if($type_entreprise=='mpme'){
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL and e.phase_projet=? GROUP by e.secteur_activite, v.libelle",[$phase]);
+            }
+            else{
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NOT NULL and e.phase_projet=?  GROUP by e.secteur_activite, v.libelle",[$phase]);
+            }
         }
-
     }
     else{
-        if($type_entreprise=='mpme'){
-            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL and e.participer_a_la_formation= $valeur_de_forme GROUP by e.secteur_activite, v.libelle");
+        if($phase==null){
+            if($type_entreprise=='mpme'){
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL GROUP by e.secteur_activite, v.libelle");
+            }
+            else{
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NOT NULL GROUP by e.secteur_activite, v.libelle");
+            }
         }
         else{
-            $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NOT NULL and e.participer_a_la_formation= $valeur_de_forme GROUP by e.secteur_activite, v.libelle");
+            //dd($valeur_de_forme);
+            if($type_entreprise=='mpme'){
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NULL and e.phase_projet=? and e.participer_a_la_formation= $valeur_de_forme  GROUP by e.secteur_activite, v.libelle",[$phase]);
+            }
+            else{
+                $entreprises_retenus=DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.decision_du_comite_phase1= 'selectionnee' and e.secteur_activite = v.id and e.entrepriseaop IS NOT NULL and e.phase_projet=? and e.participer_a_la_formation= $valeur_de_forme GROUP by e.secteur_activite, v.libelle",[$phase]);
+            }
+    
         }
-
-    }
+    
+}  
 }
          //Entreprise:: $valeur_de_forme=$request->valeur_de_forme;where("decision_du_comite_phase1", "selectionnee")->where('entrepriseaop',null)->orderBy('updated_at', 'desc')->get();
         if($entreprises_retenus){
@@ -1182,8 +1199,7 @@ $nombre_demploi_par_zones = DB::table('entreprises')
          return $souscriptionreteunuephase1=0;
     }
     public function souscriptionparsecteuractivite(){
-        //select  p.categorie_id, v.libelle, SUM(l.quantite) as quantiteCmde FROM ligne_de_commandes l , produits p, valeurs v where p.categorie_id = v.id and l.produit_id = p.id GROUP by p.categorie_id, v.libelle;
-       //$souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(distinct(e.id)) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop IS NULL and e.updated_at BETWEEN '2022-05-27 00-00-00' AND '2022-07-01 00-00-00' AND e.status=1 GROUP by e.secteur_activite, v.libelle");
+        
        $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id  and e.status=1 GROUP by e.secteur_activite, v.libelle');
         $datacategorie=[];
             foreach( $souscriptionsParsecteur as $value)
@@ -1198,20 +1214,37 @@ $nombre_demploi_par_zones = DB::table('entreprises')
 public function aopparsecteuractivite(Request $request){
     $type_entreprise= $request->type_entreprise;
     $statut= $request->statut;
-    if($type_entreprise=='mpme'&& $statut=='nostatut'){
-        $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop is NULL and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle');
-    }
-    elseif($type_entreprise=='aop'&& $statut=='nostatut'){
-    $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop=1 and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle');
-    }
-    elseif($type_entreprise=='mpme'&& $statut=='rejette'){
-        $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop  is NULL and e.decision_du_comite_phase1='ajournee' and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle");
-    }
-    else{
-        $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop=1 and e.decision_du_comite_phase1='ajournee' and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle");
+    $phase= $request->phase;
+   if($phase==null){
+            if($type_entreprise=='mpme'&& $statut=='nostatut'){
+                $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop is NULL and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle');
+            }
+            elseif($type_entreprise=='aop'&& $statut=='nostatut'){
+            $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop=1 and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle');
+            }
+            elseif($type_entreprise=='mpme'&& $statut=='rejette'){
+                $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop  is NULL and e.decision_du_comite_phase1='ajournee' and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle");
+            }
+            else{
+                $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop=1 and e.decision_du_comite_phase1='ajournee' and e.description_du_projet IS NOT NULL GROUP by e.secteur_activite, v.libelle");
+            }
+   }
+   else{
+   
+        if($type_entreprise=='mpme'&& $statut=='nostatut'){
+            $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop is NULL and e.description_du_projet IS NOT NULL AND e.phase_projet=? GROUP by e.secteur_activite, v.libelle', [$phase]);
+        }
+        elseif($type_entreprise=='aop'&& $statut=='nostatut'){
+        $souscriptionsParsecteur= DB::select('select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop=1 and e.description_du_projet IS NOT NULL AND e.phase_projet=?  GROUP by e.secteur_activite, v.libelle', [$phase]);
+        }
+        elseif($type_entreprise=='mpme'&& $statut=='rejette'){
+            $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop  is NULL and e.decision_du_comite_phase1='ajournee'  and e.description_du_projet IS NOT NULL AND e.phase_projet=? GROUP by e.secteur_activite, v.libelle", [$phase]);
+        }
+        else{
+            $souscriptionsParsecteur= DB::select("select  e.secteur_activite, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.secteur_activite = v.id and e.entrepriseaop=1 and e.decision_du_comite_phase1='ajournee' and e.description_du_projet IS NOT NULL AND e.phase_projet=? GROUP by e.secteur_activite, v.libelle", [$phase]);
+        }
 
-    }
-    //select  p.categorie_id, v.libelle, SUM(l.quantite) as quantiteCmde FROM ligne_de_commandes l , produits p, valeurs v where p.categorie_id = v.id and l.produit_id = p.id GROUP by p.categorie_id, v.libelle;
+   }
     $datacategorie=[];
         foreach( $souscriptionsParsecteur as $value)
         {
@@ -1232,7 +1265,8 @@ public function enregistreSecteurActiviteZone()
 }
 //fonction pour le représentation graphique de souscriptions enregistrées par zone
 public function souscriptionparzone(Request $request)
-{
+{  
+
    $souscriptionsParsecteur= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id  and e.status=1  GROUP by e.region, v.libelle');
     $datacategorie=[];
         foreach( $souscriptionsParsecteur as $value)
@@ -1244,19 +1278,38 @@ public function souscriptionparzone(Request $request)
 public function aopregisterparzone(Request $request)
 {  $type_entreprise= $request->type_entreprise;
     $statut= $request->statut;
-    if($request->type_entreprise=='mpme' && $statut=='nostatut'){
-            $souscriptionsParzone= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop is null and e.status=1  GROUP by e.region, v.libelle');
-    }
-    elseif($request->type_entreprise=='aop' && $statut=='nostatut'){
-        $souscriptionsParzone= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop= 1 and e.status=1  GROUP by e.region, v.libelle');
-    }
-    elseif($request->type_entreprise=='aop' && $statut=='rejette'){
-        $souscriptionsParzone= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop= 1 and e.decision_du_comite_phase1='ajournee' and e.status=1  GROUP by e.region, v.libelle");
-    }
-    elseif($request->type_entreprise=='mpme' && $statut=='rejette'){
-        $souscriptionsParzone= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and  e.decision_du_comite_phase1='ajournee' and e.entrepriseaop IS NULL and e.status=1  GROUP by e.region, v.libelle");
+    $phase= $request->phase;
+            if($phase==null){
+                if($request->type_entreprise=='mpme' && $statut=='nostatut'){
+                    $souscriptionsParzone= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop is null and e.status=1  GROUP by e.region, v.libelle');
+            }
+            elseif($request->type_entreprise=='aop' && $statut=='nostatut'){
+                $souscriptionsParzone= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop= 1 and e.status=1  GROUP by e.region, v.libelle');
+            }
+            elseif($request->type_entreprise=='aop' && $statut=='rejette'){
+                $souscriptionsParzone= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop= 1 and e.decision_du_comite_phase1='ajournee' and e.status=1  GROUP by e.region, v.libelle");
+            }
+            elseif($request->type_entreprise=='mpme' && $statut=='rejette'){
+                $souscriptionsParzone= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and  e.decision_du_comite_phase1='ajournee' and e.entrepriseaop IS NULL and e.status=1  GROUP by e.region, v.libelle");
+            }
 
     }
+            else{
+                if($request->type_entreprise=='mpme' && $statut=='nostatut'){
+                    $souscriptionsParzone= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop is null and e.status=1 and e.phase_projet=? e GROUP by e.region, v.libelle',[$phase]);
+            }
+            elseif($request->type_entreprise=='aop' && $statut=='nostatut'){
+                $souscriptionsParzone= DB::select('select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop= 1 and e.status=1 and e.phase_projet=? GROUP by e.region, v.libelle',[$phase]);
+            }
+            elseif($request->type_entreprise=='aop' && $statut=='rejette'){
+                $souscriptionsParzone= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop= 1 and e.decision_du_comite_phase1='ajournee' and e.status=1  and e.phase_projet=? GROUP by e.region, v.libelle",[$phase]);
+            }
+            elseif($request->type_entreprise=='mpme' && $statut=='rejette'){
+                $souscriptionsParzone= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and  e.decision_du_comite_phase1='ajournee' and e.entrepriseaop IS NULL and e.status=1 and e.phase_projet=?  GROUP by e.region, v.libelle",[$phase]);
+            }
+
+    }
+    
     $datacategorie=[];
         foreach( $souscriptionsParzone as $value)
         {
@@ -1268,7 +1321,9 @@ public function entreprisepreselectionneparzone(Request $request)
 {
     $type_entreprise= $request->type_entreprise;
     $valeur_de_forme= $request->valeur_de_forme;
+    $phase = $request->phase;
  if($valeur_de_forme==0){
+    if($phase==null){
         if($type_entreprise=='mpme'){
             $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee'  GROUP by e.region, v.libelle");
         }
@@ -1278,6 +1333,19 @@ public function entreprisepreselectionneparzone(Request $request)
         }
     }
     else{
+       // dd('ok');
+        if($type_entreprise=='mpme'){
+            $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee' AND e.phase_projet=?   GROUP by e.region, v.libelle", [$phase]);
+        }
+        else{
+            $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NOT NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee' AND e.phase_projet=?   GROUP by e.region, v.libelle", [$phase]);
+
+        }
+    }
+      
+    }
+    else{
+        if($phase==null){
         if($type_entreprise=='mpme'){
             $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee' and e.participer_a_la_formation= $valeur_de_forme GROUP by e.region, v.libelle");
         }
@@ -1285,6 +1353,18 @@ public function entreprisepreselectionneparzone(Request $request)
             $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NOT NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee' and e.participer_a_la_formation= $valeur_de_forme GROUP by e.region, v.libelle");
 
         }
+    }
+    else{
+
+        if($type_entreprise=='mpme'){
+            $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee' and e.participer_a_la_formation=? AND e.phase_projet=? GROUP by e.region, v.libelle",[$valeur_de_forme,$phase]);
+        }
+        else{
+            $souscriptionsParsecteur= DB::select("select  e.region, v.libelle, COUNT(e.id) as nombre FROM entreprises e , valeurs v where e.region = v.id and e.entrepriseaop IS NOT NULL and e.status=1 AND e.decision_du_comite_phase1='selectionnee' and e.participer_a_la_formation=?  AND e.phase_projet=?  GROUP by e.region, v.libelle",[$valeur_de_forme,$phase]);
+
+        }
+
+    }
 }
     $dataregion=[];
     if($souscriptionsParsecteur){
@@ -1292,7 +1372,7 @@ public function entreprisepreselectionneparzone(Request $request)
         {
            $dataregion[] = array('region'=>$value->libelle, 'nombre'=>$value->nombre);
         }
-        //dd($dataregion);
+       
         return json_encode($dataregion);
     }
         else
@@ -1309,7 +1389,7 @@ public function aoppreselectionneparzone()
         }
         return json_encode($dataregion);
 }
-//La géoprésentation des MPME enregistés
+
 public function beneficiairegeopresenation(Request $request )
 {
    $type_entreprise= $request->type_entreprise;

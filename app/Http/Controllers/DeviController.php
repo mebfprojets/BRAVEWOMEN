@@ -31,10 +31,10 @@ class DeviController extends Controller
     }
     public function get_file_emplacement($code_promoteur,$input_name,$file, $designation,)
     {
-       // $code_promoteur=Auth::user()->code_promoteur;
+        $year=date("Y");
         $extension=$file->getClientOriginalExtension();
         $fileName = $designation.'.'.$extension;
-        $emplacement='public/'.$input_name.'/'.$code_promoteur; 
+        $emplacement='public/'.$year.'/'.$input_name.'/'.$code_promoteur; 
         $url_store= $file->storeAs($emplacement, $fileName);
         return $url_store;
     }
@@ -446,7 +446,7 @@ else{
 }
 }
 public function store_suiviDevis(Request $request){
-
+    $year=date("Y");
 if(Auth::user()->can('update_suivi_execution_devis')){
     $champ_nombre_dimage = $request->champ_nombre_dimage;
     $date_visite= date('Y-m-d', strtotime($request->date_visite));
@@ -465,7 +465,7 @@ for($i=1; $i<$champ_nombre_dimage+1; $i++){
             $file = $request->file($inputname);
             $fileName = $file->getClientOriginalName();
             //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise
-            $emplacement='public/images_suivi/'.$devis->entreprise->code_promoteur; 
+            $emplacement='public/'.$year.'/'.'images_suivi/'.$devis->entreprise->code_promoteur; 
             $image_suivi= $request[$inputname]->storeAs($emplacement, $fileName);
             ImageSuivi::create([
                 'suivi_execution_devi_id'=>  $suivi_devis->id,
@@ -488,13 +488,14 @@ else{
 }
 }
 public function modifier_suivi_image(Request $request){
+    $year=date("Y");
     $suivimage= ImageSuivi::find($request->image_id);
     $devi= $suivimage->suivi->devis;
 if($request->hasFile('image_bien')){
     $file = $request->file('image_bien');
     $fileName = $file->getClientOriginalName();
     //Definir l'emplacement de sorte à créer un sous repertoire pour chaque entreprise
-    $emplacement='public/images_suivi/'.$devi->entreprise->code_promoteur; 
+    $emplacement='public/'.$year.'/'.'images_suivi/'.$devi->entreprise->code_promoteur; 
     $image_acquisition= $request['image_bien']->storeAs($emplacement, $fileName);
     $suivimage->update([
         'url_image' =>$image_acquisition
@@ -515,12 +516,13 @@ public function suivi_devis_modif(Request $request){
     return json_encode($data);
 }
 public function ajouter_image_suivi(Request $request){
+    $year=date("Y");
     $suivi= SuiviExecutionDevi::find($request->suivi_id);
     $devi= $suivi->devis;
     if($request->hasFile('image_suivi')){
         $file = $request->file('image_suivi');
         $fileName = $file->getClientOriginalName();
-        $emplacement='public/images_suivi/'.$devi->entreprise->code_promoteur; 
+        $emplacement='public/'.$year.'/'.'images_suivi/'.$devi->entreprise->code_promoteur; 
         $image_suivi= $request['image_suivi']->storeAs($emplacement, $fileName);
         ImageSuivi::create([
             'suivi_execution_devi_id'=>  $suivi->id,
@@ -531,13 +533,13 @@ public function ajouter_image_suivi(Request $request){
     return redirect()->back();
    }
 public function suivi_devis_modifier(Request $request){
-   // dd($request->all());
+    $year=date("Y");
 if(Auth::user()->can('update_suivi_execution_devis')){
     $suivi_modif= SuiviExecutionDevi::find($request->suivi);
     $date_visite= date('Y-m-d', strtotime($request->date_visite));
     $devis= $suivi_modif->devis;
     if($request->hasFile('image_visite')){
-        $image_visite= $request->image_visite->store('public/visite_image');
+        $image_visite= $request->image_visite->store('public/'.$year.'/'.'visite_image');
         Piecejointe::create([
             'type_piece'=>env("VALEUR_ID_DOCUMENT_SUIVI_EXECUTION_DEVIS"),
             'entreprise_id'=>$devis->entreprise->id,
