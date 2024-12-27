@@ -55,7 +55,7 @@
                             <hr>
 
                             <div class="form-group">
-                            <a onclick="window.history.back();" class="btn btn-sm btn-success"><i class="fa fa-repeat"></i> Fermer</a>
+                            <a onclick="window.history.back();" class="btn btn-sm btn-success"><i class="fa fa-repeat"></i> Fermer </a>
                             @can('document.update', Auth::user()) 
                              <a href="#modal-edit-document" data-toggle="modal" title="télécharger" class="btn btn-sm btn-warning" onclick="edit_document('{{ $document->id }}')"><i class="fa fa-pencil"></i> Modifier</a>
                             @endcan
@@ -63,10 +63,10 @@
                     </div>
                     <div class="col-lg-8 img-bg" style="cursor: pointer;">
                             <div style="box-shadow: 1px 2px 5px 1px #999">
-                              @if($document->type_document!=7147)
+                              @if($document->type_document!=7151)
                                 <embed src= "{{ Storage::disk('local')->url($document->url_doc) }}" height=600 type='application/pdf' style="width: 100%;" />
                               @else
-                              <iframe width="674" height="379" src="https://www.youtube.com/embed/QV2ua08jARE" title="spot" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                              <iframe width="100%" height="379" src="{{ $document->url_doc }}" title="spot" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                               @endif
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                           <label class="col-md-4 control-label" for="document">Joindre le documents<span class="text-danger">*</span></label>
                           <div class="col-md-6">
                               <div class="input-group">
-                                  <input class="form-control col-md-6" type="file" name="document" id="document" accept=".pdf, .jpeg, .png"   placeholder="Joindre une copie du reçu de versement">
+                                  <input class="form-control col-md-6" type="file" name="document" id="document" accept=".pdf, .jpeg, .png"   placeholder="Joindre le document">
                                       <span class="input-group-addon"><i class="gi gi-files"></i></span>
                               </div>
                               @if ($errors->has('date'))
@@ -167,7 +167,7 @@
                         <label class="col-md-4 control-label" for="name">Lien de la vidéo<span class="text-danger">*</span></label>
                         <div class="col-md-6">
                             <div class="input-group">
-                                    <input id="lien_video" type="text" class="form-control"  name="lien_video" value="{{ old('lien_video') }}" >
+                                    <input id="lien_video" type="text" class="form-control"  name="lien_video"  >
                                     <span class="input-group-addon"><i class="fa fa-link"></i></span>
                             </div>
                             @if ($errors->has('lien_video'))
@@ -206,17 +206,19 @@
                        $("#id_doc").val(data.id);
                         $("#titre").val(data.titre_doc);
                         $("#description").val(data.description);
+                        $("#lien_video").val(data.url_doc);
                         $("#categorie").select2();
                         $("#categorie").val(data.categorie).trigger("change");
                         $("#type_document").select2();
                         $("#type_document").val(data.type_document).trigger("change");
+                        
                     }
                 });
         }
 </script>
 <script>
   function cacher_lien_video_ou_file_input() {
-         if($("#type_document").val() == 7147){
+         if($("#type_document").val() == 7151){
             $('#lien_video').show();
             $("#doc_div").hide();
          }

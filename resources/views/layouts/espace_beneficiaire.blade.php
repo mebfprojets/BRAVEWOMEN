@@ -58,12 +58,12 @@
               <span>Soumettre mon Projet</span>
               </a>
           </li>
-          <li class="sub">
+          {{-- <li class="sub">
             <a class="@yield('appui2_pca')" href="{{ route('projet.add_plan_appui2') }}">
               <i class="fa fa-dashboard"></i>
               <span>Ajouter le plan de l'appui 2 </span>
               </a>
-          </li>
+          </li> --}}
           
       @if(kyc_entreprise_is_valide(Auth::user()->code_promoteur) )
         <li class="sub-menu">

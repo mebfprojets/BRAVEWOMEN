@@ -189,13 +189,18 @@ public function lister_document_par_categorie($id){
                  return json_encode($test);
     }
     public function modifier_document(Request $request){
-        //dd($request->all());
+        if($request->lien_video){
+                $lien=$request->lien_video;
+        }else{
+            $lien= $request->document;
+        }
         $document=Document::find($request->id_doc);
         $document->update([
             'titre_doc'=>$request->titre,
             'type_document'=>$request->type_document,
             'description_doc'=>$request->description,
             'categorie'=>$request->categorie,
+            'url_doc'=>$lien
         ]);
         if($request->hasFile('document')) {
             $file = $request->file('document');

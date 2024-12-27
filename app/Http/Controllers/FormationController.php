@@ -173,9 +173,8 @@ class FormationController extends Controller
     if($request->typeentreprise=='mpme'){
     // Recuperer la liste des entreprises rétenues pour la formation 
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
-                                    //->where('participer_a_la_formation',null)
-                                    ->where('aopOuleader',null)
-                                    ->Where(function ($query) {
+                                    ->where('entrepriseaop',null)
+                                    ->where(function ($query) {
                                         $query->orwhere('region',Auth::user()->zone)
                                         ->orwhere('region_affectation', Auth::user()->zone);
                                     })
@@ -185,8 +184,7 @@ class FormationController extends Controller
     } else{
         $entreprises = Entreprise::where("decision_du_comite_phase1", "selectionnee")
                                     ->where('entrepriseaop',"!=",null)
-                                    //->where('participer_a_la_formation',null)
-                                    ->Where(function ($query) {
+                                    ->where(function ($query) {
                                         $query->orwhere('region',Auth::user()->zone)
                                         ->orwhere('region_affectation', Auth::user()->zone);
                                     })->orderBy('updated_at', 'desc')->get();

@@ -1,6 +1,6 @@
 @extends("layouts.admin")
 @section('dashboard', 'active')
-@section('dash.banque_perform_en', 'active')
+@section($page, 'active')
 @section('content')
 <div class="col-md-12 col-md-offset-1 block full" style="margin-left: 10px;">
     <div class="col-md-12">
@@ -10,6 +10,7 @@
                 <div class="block-title">
                     <h2><i class="fa fa-line-chart"></i> <strong>Key indicators</strong></h2>
                 </div>
+                <input type="hidden" value={{ $phase }} id='phase'>
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left text-warning">
@@ -26,7 +27,6 @@
                 </a>
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
-                        
                         <h4 class="text-left text-warning">
                             <strong>{{ $facture_a_payees_par_banques->sum('nombre') }}</strong> ({{format_prix($facture_a_payees_par_banques->sum('montant')) }} FCFA)<br><small>Bills payable</small>
                         </h4>
@@ -247,9 +247,12 @@
 @section('script_additionnel')
 <script language = "JavaScript">
     var url = "{{ route('situation_des_factures') }}"
+    var phase= $('#phase').val();
+    // alert(phase);
       $.ajax({
                  url: url,
                  type: 'GET',
+                 data:{phase:phase},
                  dataType: 'json',
                  error:function(data){
                     if (xhr.status == 401) {
@@ -332,9 +335,11 @@
 </script>
 <script language = "JavaScript">
     var url = "{{ route('demandes.rejete_par_les_banques') }}"
+    var phase= $('#phase').val();
       $.ajax({
                  url: url,
                  type: 'GET',
+                 data:{phase:phase},
                  dataType: 'json',
                  error:function(data){
                     if (xhr.status == 401) {
@@ -398,10 +403,12 @@
 </script>
 <script language = "JavaScript">
     var url = "{{ route('facture.groupbydelaidetraitement') }}?banque_id=1"
+    var phase= $('#phase').val();
       $.ajax({
                  url: url,
                  type: 'GET',
                  dataType: 'json',
+                 data:{phase:phase},
                  error:function(data){
                     if (xhr.status == 401) {
                         window.location.href = 'https://www.bravewomen.bf/login';
@@ -410,11 +417,6 @@
                  success: function (donnee) {
                         var donnch= new Array();
                         var status = new Array();
-                        // var dans_les_delais= [];
-                        // var retard_trois_jours= [];
-                        // var  retard_sept_jours= [];
-                        // var  retard_dix_jours= [];
-                        // var  retard_dix_jours_et_plus= [];
                     
                     for(var i=0; i<donnee.length; i++)
                     {
@@ -505,9 +507,11 @@
 </script>
 <script language = "JavaScript">
     var url = "{{ route('facture.groupbydelaidetraitement') }}?banque_id=2"
+    var phase= $('#phase').val();
       $.ajax({
                  url: url,
                  type: 'GET',
+                data:{phase:phase},
                  dataType: 'json',
                  error:function(data){
                     if (xhr.status == 401) {
@@ -610,9 +614,11 @@
 </script>
 <script language = "JavaScript">
     var url = "{{ route('facture.groupbydelaidetraitement') }}?banque_id=3"
+    var phase= $('#phase').val();
       $.ajax({
                  url: url,
                  type: 'GET',
+                 data:{phase:phase},
                  dataType: 'json',
                  error:function(data){
                     if (xhr.status == 401) {

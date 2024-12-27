@@ -1513,7 +1513,6 @@ if(Auth::user()->can('tableau.debord')){
                             ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
                             ->leftjoin('factures',function($join){
                                 $join->on('factures.entreprise_id','=','entreprises.id')
-                           // ->where('factures.statut','=','validé')
                                 ->whereIn('factures.statut',['payée','validé']);
                                 })
                             ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
@@ -1607,11 +1606,13 @@ $taux_de_consommation_par_banque= DB::table('entreprises')
     
                                                 //dd($nombre_de_dossier_rejete_par_les_banques);
               if($request->lang=='francais'){
-                    return view('dashboard.banque_perform', compact('facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+                    $page='dash.banque_perform';
+                    return view('dashboard.banque_perform', compact('page','facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
 
               }
               elseif($request->lang=='anglais'){
-                return view('dashboard.banque_perform_anglais', compact('facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+                $page='dash.banque_perform_en';
+                return view('dashboard.banque_perform_anglais', compact('page','facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
               }
 }
 else

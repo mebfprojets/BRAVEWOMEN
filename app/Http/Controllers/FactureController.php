@@ -220,7 +220,22 @@ public function store_paiement_file(Request $request){
  }
  public function group_by_delais_de_paiement(Request $request){
     $banque_id= $request->banque_id;
+    $phase=$request->phase;
+        if($request->phase){
                     $facture_par_delais= DB::table('entreprises')
+                                        ->rightJoin('factures',function($join){
+                                            $join->on('factures.entreprise_id','=','entreprises.id');
+                                        })
+                                        ->where('factures.statut_paiement','!=',null)
+                                        ->where('entreprises.banque_id','=', $banque_id)
+                                        ->where('entreprises.phase_projet',$phase)
+                                        ->groupBy('factures.statut_paiement')
+                                        ->select("factures.statut_paiement",DB::raw("COUNT(factures.id) as nombre"), DB::raw("SUM(factures.montant) as montant"))
+                                        ->orderBy('factures.statut_paiement','asc')
+                                        ->get();
+
+        }else{
+            $facture_par_delais= DB::table('entreprises')
                                         ->rightJoin('factures',function($join){
                                             $join->on('factures.entreprise_id','=','entreprises.id');
                                         })
@@ -230,26 +245,49 @@ public function store_paiement_file(Request $request){
                                         ->select("factures.statut_paiement",DB::raw("COUNT(factures.id) as nombre"), DB::raw("SUM(factures.montant) as montant"))
                                         ->orderBy('factures.statut_paiement','asc')
                                         ->get();
+        }
+                    
                                     return json_encode($facture_par_delais);
  }
  public function situation_des_factures_par_statut(Request $request){
-    $facture_par_status = DB::table('entreprises')
-                                                ->leftjoin('factures',function($join){
-                                                    $join->on('factures.entreprise_id','=','entreprises.id');
-                                                })
-                                                ->rightJoin('banques',function($join){
-                                                    $join->on('entreprises.banque_id','=','banques.id');
-                                                })
-                                                ->groupBy('banques.id','banques.nom')
-                                                ->select('banques.nom as nom_banque' ,
-                                                        DB::raw("sum(CASE WHEN factures.statut='payée' OR factures.statut='validé' THEN 1 else 0 end) as nbre_facture_soumis_aux_bank"),
-                                                        DB::raw("sum(CASE WHEN factures.statut='validé' THEN 1 else 0 end) as nbre_facture_en_attente"),
-                                                        DB::raw("sum(CASE WHEN factures.statut='payée' THEN 1 else 0 end) as nbre_facture_payee"),)
-                                                ->get();
+    //dd($request->phase);
+        if($request->phase){
+            $phase=$request->phase;
+            $facture_par_status = DB::table('entreprises')
+            ->leftjoin('factures',function($join){
+                $join->on('factures.entreprise_id','=','entreprises.id');
+            })
+            ->where('entreprises.phase_projet',$phase)
+            ->rightJoin('banques',function($join){
+                $join->on('entreprises.banque_id','=','banques.id');
+            })
+            ->groupBy('banques.id','banques.nom')
+            ->select('banques.nom as nom_banque' ,
+                    DB::raw("sum(CASE WHEN factures.statut='payée' OR factures.statut='validé' THEN 1 else 0 end) as nbre_facture_soumis_aux_bank"),
+                    DB::raw("sum(CASE WHEN factures.statut='validé' THEN 1 else 0 end) as nbre_facture_en_attente"),
+                    DB::raw("sum(CASE WHEN factures.statut='payée' THEN 1 else 0 end) as nbre_facture_payee"),)
+            ->get();
+        }
+        else{
+            $facture_par_status = DB::table('entreprises')
+                                        ->leftjoin('factures',function($join){
+                                            $join->on('factures.entreprise_id','=','entreprises.id');
+                                        })
+                                        ->rightJoin('banques',function($join){
+                                            $join->on('entreprises.banque_id','=','banques.id');
+                                        })
+                                        ->groupBy('banques.id','banques.nom')
+                                        ->select('banques.nom as nom_banque' ,
+                                                DB::raw("sum(CASE WHEN factures.statut='payée' OR factures.statut='validé' THEN 1 else 0 end) as nbre_facture_soumis_aux_bank"),
+                                                DB::raw("sum(CASE WHEN factures.statut='validé' THEN 1 else 0 end) as nbre_facture_en_attente"),
+                                                DB::raw("sum(CASE WHEN factures.statut='payée' THEN 1 else 0 end) as nbre_facture_payee"),)
+                                        ->get();
+        }
+                
                                     return json_encode($facture_par_status);
  }
 
- public function demande_de_paiement_rejete_par_banque(){
+ public function demande_de_paiement_rejete_par_banque(Request $request){
     $nombre_de_dossier_rejete_par_les_banques = DB::table('historiquefactures')
                                                 ->leftjoin('users',function($join){
                                                     $join->on('historiquefactures.user_id','=','users.id')

@@ -39,6 +39,7 @@
                     <th class="text-center">Décision du comite phase 1</th>
                     <th class="text-center">Décision du comite phase 2</th>
                     <th class="text-center">Observation du comité</th>
+                    <th class="text-center">Observation du comité 2</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -87,6 +88,8 @@
                             @endif
                         </td>
                         <td class="text-center">{{ $projet->observations}}</td>
+                        <td class="text-center">{{ $projet->observations_appui2}}</td>
+
                         <td class="text-center"> 
                             <div class="btn-group">
                                 

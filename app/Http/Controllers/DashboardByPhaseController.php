@@ -751,4 +751,120 @@ $nombre_demploi_par_zones = DB::table('entreprises')
 
 
 }
+function dashboard_banque_perform_by_phase(Request $request){
+    if(Auth::user()->can('tableau.debord')){ 
+        $phase=$request->phase;
+        ($request->phase==1)?$page='banque_perform_phase1':$page='banque_perform_phase2';
+        $facture_valides_par_banques= DB::table('banques')
+                                ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                ->leftjoin('factures',function($join){
+                                    $join->on('factures.entreprise_id','=','entreprises.id')
+                                    ->whereIn('factures.statut',['payée','validé']);
+                                    })
+                                ->where('entreprises.phase_projet',$phase)
+                                ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
+                                ->groupBy('banques.id',"banques.nom")
+                                ->get();
+        $contrepartie_mobilise_par_banques= DB::table('banques')
+                                ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                ->leftjoin('accomptes',function($join){
+                                    $join->on('accomptes.entreprise_id','=','entreprises.id');
+                                    })
+                                ->where('entreprises.phase_projet',$phase)
+                                ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(accomptes.montant) as montant"),DB::raw("count(accomptes.id) as nombre"))
+                                ->groupBy('banques.id',"banques.nom")
+                                ->get(); 
+    $subvention_mobilise_par_banques= DB::table('banques')
+                                    ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                    ->leftjoin('subventions',function($join){
+                                        $join->on('subventions.entreprise_id','=','entreprises.id');
+                                        })
+                                    ->where('entreprises.phase_projet',$phase)
+                                    ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(subventions.montant_subvention) as montant"),DB::raw("count(subventions.id) as nombre"))
+                                    ->groupBy('banques.id',"banques.nom")
+                                    ->get();
+            
+        $facture_a_payees_par_banques= DB::table('banques')
+                                        ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                        ->leftjoin('factures',function($join){
+                                            $join->on('factures.entreprise_id','=','entreprises.id')
+                                            ->where('factures.statut','=','validé');
+                                        })
+                                        ->where('entreprises.phase_projet',$phase)
+                                        ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
+                                        ->groupBy('banques.id',"banques.nom")
+                                        ->get();
+        $facture_soumis_par_banques= DB::table('banques')
+                                        ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                        ->leftjoin('factures',function($join){
+                                            $join->on('factures.entreprise_id','=','entreprises.id')
+                                            ->whereIn('factures.statut',['validé','payée']);
+                                        })
+                                        ->where('entreprises.phase_projet',$phase)
+                                        ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
+                                        ->groupBy('banques.id',"banques.nom")
+                                        ->get();
+        $facture_payes_par_banques= DB::table('banques')
+                                        ->leftjoin('entreprises','entreprises.banque_id','=','banques.id')
+                                        ->leftjoin('factures',function($join){
+                                            $join->on('factures.entreprise_id','=','entreprises.id')
+                                            ->where('factures.statut', 'payée');
+                                        })
+                                        ->where('entreprises.phase_projet',$phase)
+                                        ->select("banques.id","banques.nom as nom_banque", DB::raw("SUM(factures.montant) as montant"),DB::raw("count(factures.id) as nombre"))
+                                        ->groupBy('banques.id',"banques.nom")
+                                        ->get();
+         $montant_a_mobilise_par_banque= DB::table('entreprises')
+                                    ->leftjoin('projets',function($join){
+                                        $join->on('projets.entreprise_id','=','entreprises.id')
+                                        ->where('entreprises.date_de_signature_accord_beneficiaire','!=', null);
+                                    })
+                                    ->where('entreprises.phase_projet',$phase)
+                                    ->rightjoin('banques','entreprises.banque_id','=','banques.id')
+                                    ->groupBy('banques.id','banques.nom')
+                                    ->select('banques.nom as nom_banque', DB::raw("COUNT(projets.id) as nombre"), DB::raw("SUM(projets.montant_accorde) as montant"))
+                                    ->get();
+    //dd(($subvention_mobilise_par_banques->sum('montant') + $contrepartie_mobilise_par_banques->sum('montant')));
+    
+    $montant_projet_valide_par_comites= DB::table('entreprises')
+                                    ->leftjoin('projets',function($join){
+                                        $join->on('projets.entreprise_id','=','entreprises.id')
+                                        ->where('projets.statut', 'selectionné');
+                                    })
+                                    ->where('entreprises.phase_projet',$phase)
+                                    ->rightjoin('banques','entreprises.banque_id','=','banques.id')
+                                    ->groupBy('banques.id','banques.nom')
+                                    ->select('banques.nom as nom_banque', DB::raw("COUNT(projets.id) as nombre"), DB::raw("SUM(projets.montant_accorde) as montant"))
+                                    ->get();
+    
+    $taux_de_consommation_par_banque= DB::table('entreprises')
+                                    ->leftjoin('projets',function($join){
+                                        $join->on('projets.entreprise_id','=','entreprises.id')
+                                        ->where('projets.statut', 'selectionné');
+                                    })
+                                    ->where('entreprises.phase_projet',$phase)
+                                    ->leftjoin('factures',function($join){
+                                        $join->on('factures.entreprise_id','=','entreprises.id')
+                                        ->where('factures.statut', 'payée');
+                                    })
+                                    ->rightjoin('banques','entreprises.banque_id','=','banques.id')
+                                    ->groupBy('banques.id','banques.nom')
+                                    ->select('banques.nom as nom_banque' ,DB::raw("count(factures.id) as nbre_facture_payee"), DB::raw("SUM(factures.montant) as montant_decaisse"), DB::raw("SUM(projets.montant_accorde)/2 as montant_a_mobilise"))
+                                    ->get();
+                                   
+    $financement_par_banks= DB::select('select  b.nom as nom_banque, b.id, SUM(s.montant_subvention) as montant_subvention,
+                                    SUM(a.montant) AS montant_contrepartie from banques b LEFT JOIN entreprises e ON e.banque_id = b.id
+                                    LEFT JOIN accomptes a ON a.entreprise_id=e.id
+                                    LEFT JOIN subventions s ON s.entreprise_id=e.id where e.phase_projet=?
+                                    GROUP BY b.id, b.nom',[$phase]);
+           
+                    return view('dashboard.banque_perform_anglais', compact('phase','page','facture_soumis_par_banques','montant_projet_valide_par_comites','contrepartie_mobilise_par_banques','subvention_mobilise_par_banques','financement_par_banks','facture_valides_par_banques','facture_payes_par_banques','financement_par_banks','montant_a_mobilise_par_banque','facture_a_payees_par_banques','taux_de_consommation_par_banque'));
+                  
+    }
+    else
+    {
+        flash("Vous n'avez pas ce droit. Bien vouloir contacter l'administrateur")->error();
+        return redirect()->back();
+    }
+    }
 }

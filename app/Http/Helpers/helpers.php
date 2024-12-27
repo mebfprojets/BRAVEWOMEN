@@ -246,7 +246,7 @@ function Insertion_Journal($table,$operation)
                     }
                     if(!function_exists('return_info_enveloppe')){
                         function return_info_enveloppe(){
-                           $total_enveloppe=  env('total_enveloppe_MPME') + env('total_enveloppe_AOP'); ;
+                          $total_enveloppe=  env('total_enveloppe_MPME') + env('total_enveloppe_AOP'); ;
                           $montant_accorde = InvestissementProjet::where('statut','validé')->sum('subvention_demandee_valide');
                           $subvention_accorde_aop= DB::table('entreprises')
                                     ->leftjoin('projets','projets.entreprise_id','=','entreprises.id')
@@ -258,7 +258,7 @@ function Insertion_Journal($table,$operation)
                                     ->leftjoin('investissement_projets','investissement_projets.projet_id','=','projets.id')
                                     ->where('entreprises.aopOuleader', 'MPME')
                                     ->sum('investissement_projets.subvention_demandee_valide');
-                          $montant_restant= $total_enveloppe - $montant_accorde;
+                        $montant_restant= $total_enveloppe - $montant_accorde;
                           $infos= [$total_enveloppe,$montant_accorde,$montant_restant,$subvention_accorde_aop,$subvention_accorde_mpme];
                             return $infos;
                         }

@@ -42,7 +42,7 @@
         <a href="#modal-pca-liste-dattente" data-toggle="modal"  title="Ajouter dans la liste d'attente " class="btn btn-md btn-warning avis_ugp">Liste d'attente <i class="fa fa-check-square-o"></i></a>
     @endif
     @endif
-    @if((($projet->appui_statut=="affecte_au_comite") && $projet->statut=='selectionné') || ((count($projet->appui2_investissements)>1 && $projet->appui_statut=="affecte_au_comite") && $projet->statut=='selectionné') )
+    @if((($projet->appui_statut=="affecte_au_comite") && ($projet->statut=='selectionné'||($projet->statut=='rejeté'))&&count($projet->appui2_investissements)>0)) 
         <a href="#modal-decision-comite-pca" data-toggle="modal"  title="La décision du comité " class="btn btn-md btn-danger avis_ugp" onclick="setTypeavis('appui2','champ_decision_comite')">Décision du comité sur l'appui 2 <i class="fa fa-check-square-o"></i></a>
     @endif
 @endcan

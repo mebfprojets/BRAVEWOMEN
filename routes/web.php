@@ -357,6 +357,8 @@ Route::get('/show/factureById/{id}',[FactureController::class, 'showById'] )->na
 Route::post("simple-excel/export", [SimpleExcelController::class, "export"])->name('excel.export');
 Route::get('ture/par/statut/banque',[FactureController::class, 'factureparstatutparbanque'] )->name('facture.parstatut');
 Route::get('/dash/banque/perform',[DashboradController::class, 'dashboard_banque_perform'] )->name('dash.banque_perform');
+Route::get('/dash/byphase/banque/perform',[DashboardByPhaseController::class, 'dashboard_banque_perform_by_phase'] )->name('dash.banque_perform_by_phase');
+
 Route::get('/liste/devis/suivre',[DeviController::class, 'listerASuivre'] )->name('devis.listerASuivre');
 Route::get('/devis/suivre/{devis}',[DeviController::class, 'suivreDevis'] )->name('devis.suivre');
 Route::post('store/suivi_devis', [DeviController::class, 'store_suiviDevis'])->name('suivreDevis.store');

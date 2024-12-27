@@ -224,8 +224,9 @@ if($request->hasFile('plan_de_continute_revu')){
             elseif($request->statut=='a_affecter_au_membre_du_comite'){
                 if($type_entreprise=='mpme'){
                     $projets = Projet::where(function ($query) {
-                                            $query->where('statut' , ['a_affecter_au_membre_du_comite']);
-                                    })->where('type_entreprise', 'mpme')->where('avis_ugp','!=',null)->where('liste_dattente_observations',null)->orderBy('updated_at', 'asc')->get();
+                                            $query->where('statut' , ['a_affecter_au_membre_du_comite']
+                                        )->orWhere('appui_statut', 'affecte_au_comite');
+                                    })->where('type_entreprise', 'mpme')->where('avis_ugp','!=',null)->where('avis_ugp_appui2',null)->where('liste_dattente_observations',null)->orderBy('updated_at', 'asc')->get();
                     $type_entreprise='pca_mpme';
                 }
                 else{
@@ -252,11 +253,11 @@ if($request->hasFile('plan_de_continute_revu')){
             }
             elseif($request->statut=='analyse_par_le_comite'){
                 if($type_entreprise=='mpme'){
-                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->where('type_entreprise','mpme')->whereBetween('date_session_comite', ['2024-12-01', '2024-12-03'])->orderBy('updated_at', 'desc')->get(); 
+                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->where('type_entreprise','mpme')->whereBetween('date_session_comite', ['2024-12-9', '2024-12-14'])->orderBy('updated_at', 'desc')->get(); 
                     $type_entreprise='pca_mpme';
                 }
                 else{
-                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->whereIn('type_entreprise',['leader','aop'])->whereBetween('date_session_comite', ['2024-12-01', '2024-12-03'])->orderBy('updated_at', 'desc')->get(); 
+                    $projets = Projet::whereIn('statut', ['selectionne','rejete'])->whereIn('type_entreprise',['leader','aop'])->whereBetween('date_session_comite', ['2024-12-09', '2024-12-14'])->orderBy('updated_at', 'desc')->get(); 
                     $type_entreprise='pca_aop';
                 }
                 $texte= "/PCA/PA analysés par le comité";
@@ -1134,7 +1135,7 @@ else{
             }
         }
         elseif($request->avis=='rejeté'){
-            foreach($projet->appui1_investissements as $investissement){
+            foreach($projet->appui2_investissements as $investissement){
                 if($investissement->statut==null){
                     $investissement->update([
                         'statut'=>'rejeté'
@@ -1145,15 +1146,13 @@ else{
         $projet->update([
             'appui_statut'=>$request->avis,
             'date_session_comite_appui2'=>now(),
-            'observations'=>$request->observation,
+            'observations_appui2'=>$request->observation,
             'montant_accorde'=>$projet->investissementvalides->sum('montant_valide')
         ]);    
     }
     
 }
 
-//return redirect()->back()->with('success','Valider avec success');
-//return redirect('administrator/analyser_pca/',[$projet]);
 }
 
 

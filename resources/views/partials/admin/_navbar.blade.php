@@ -50,6 +50,12 @@
                             <li class="@yield('dash.banque_perform_en')">
                                 <a href="{{ route("dash.banque_perform") }}?lang=anglais" ><i class="fa fa-money sidebar-nav-icon"></i>Banks activities </span></a>
                             </li>
+                            <li class="@yield('banque_perform_phase1')">
+                                <a href="{{ route("dash.banque_perform_by_phase") }}?phase=1" ><i class="fa fa-money sidebar-nav-icon"></i>Banks phase1</span></a>
+                            </li>
+                            <li class="@yield('banque_perform_phase2')">
+                                <a href="{{ route("dash.banque_perform_by_phase") }}?phase=2" ><i class="fa fa-money sidebar-nav-icon"></i>Banks phase2</span></a>
+                            </li>
                             <li class="@yield('dashboard_detail')">
                                 <a href="{{ route("dashboard") }}"><i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>Plus Detaillé</span></a>
                             </li>
