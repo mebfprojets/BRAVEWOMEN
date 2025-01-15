@@ -309,7 +309,7 @@
                                                 <label class=" control-label" for="">Cocher les activités verticales développées par l'entreprise? <span data-toggle="tooltip" title="Parmi les activités verticales ci-après, quelles sont les activités menées par votre entreprise ou AOP au profit des membres ou d’autres entreprises de femmes? Cochez les"><i class="fa fa-info-circle"></i></span> </label>
                                                     @foreach ($activites_verticales as $activites_verticale)
                                                     <div class="col-lg-6 checkbox">
-                                                        <label><input type="checkbox" name='activites_verticales[]' value="{{ $activites_verticale->id }}"> {{ $activites_verticale->libelle }}</label>
+                                                        <label><input type="checkbox" name='activites_verticales[]' value="{{ $activites_verticale->id }}" required> {{ $activites_verticale->libelle }}</label>
                                                     </div>
                                                     @endforeach
                                                 </select>
@@ -318,24 +318,17 @@
                                             <label class=" control-label" for="">Pensez-vous investir dans quelles activités verticales?<span data-toggle="tooltip" title="Parmi les activités horizontales ci-après, Quelles sont les activités que vous menez en sinergie avec d’autres acteurs de votre chaine de valeur ? Cochez les"><i class="fa fa-info-circle"></i></span> </label>
                                                 @foreach ($activites_verticales as $activites_verticale)
                                                 <div class="col-lg-6 checkbox">
-                                                    <label><input type="checkbox" name='activites_verticales_invests[]' value="{{ $activites_verticale->id }}"> {{ $activites_verticale->libelle }}</label>
+                                                    <label><input type="checkbox" name='activites_verticales_invests[]' value="{{ $activites_verticale->id }}" required> {{ $activites_verticale->libelle }}</label>
                                                 </div>
                                                 @endforeach
                                             </select>
                                     </div>
-                                    {{-- <div class="form-group">
-                                        <label class=" control-label" for="">Quelles sont les activités horizontales développées? <span data-toggle="tooltip" title="les activités horizontales sont des activités qui permettent à chaque acteur (producteur, transformateur, etc) de renforcer sa position ( dans la chaîne de valeur)"><i class="fa fa-info-circle"></i></span></label>
-                                        <select id="example-chosen-multiple" name="activites_horizotales[]" class="select-chosen" data-placeholder="Selectionner les activités horizontales.." style="width: 250px;" multiple>
-                                            @foreach ($activites_horizotales as $activites_horizotale)
-                                            <option value="{{ $activites_horizotale->id }}">{{ $activites_horizotale->libelle }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
+                                    
                                     <div class="form-group">
                                         <label class=" control-label" for="">Cocher les activités horizontales développées par l'entreprise? <span data-toggle="tooltip" title="les activités horizontales sont des activités qui permettent à chaque acteur (producteur, transformateur, etc) de renforcer sa position ( dans la chaîne de valeur)"><i class="fa fa-info-circle"></i></span></label>
                                             @foreach ($activites_horizotales as $activites_horizotale)
                                             <div class="col-lg-6 checkbox">
-                                                <label><input type="checkbox" name='activites_horizotales[]' value="{{ $activites_horizotale->id }}"> {{ $activites_horizotale->libelle }}</label>
+                                                <label><input type="checkbox" name='activites_horizotales[]' value="{{ $activites_horizotale->id }}" required> {{ $activites_horizotale->libelle }}</label>
                                             </div>
                                             @endforeach
                                         </select>
@@ -344,7 +337,7 @@
                                         <label class=" control-label" for="">Dans quelles activités horizontales l'entreprise va investir?<span data-toggle="tooltip" title="Cochez les activités horizontales dans lesquelles vous comptez investir dans les trois prochaines années"><i class="fa fa-info-circle"></i></span> </label>
                                             @foreach ($activites_horizotales as $activites_horizotale)
                                             <div class="col-lg-6 checkbox">
-                                                <label><input type="checkbox" name='activites_horizotales_invests[]' value="{{ $activites_horizotale->id }}"> {{ $activites_horizotale->libelle }}</label>
+                                                <label><input type="checkbox" name='activites_horizotales_invests[]' value="{{ $activites_horizotale->id }}" required> {{ $activites_horizotale->libelle }}</label>
                                             </div>
                                             @endforeach
                                         </select>

@@ -306,7 +306,7 @@
                                                 <label class=" control-label" for="">Cocher les activités verticales ménées par l'AOP au profit des membres? <span data-toggle="tooltip" title="Les activités verticales sont des activités réalisées par l’entreprise leader ou l’AOP vers les entreprises"><i class="fa fa-info-circle"></i></span> </label>
                                                     @foreach ($activites_verticales as $activites_verticale)
                                                     <div class="col-lg-6 checkbox">
-                                                        <label><input type="checkbox" name='activites_verticales[]' value="{{ $activites_verticale->id }}"> {{ $activites_verticale->libelle }}</label>
+                                                        <label><input type="checkbox" name='activites_verticales[]' value="{{ $activites_verticale->id }}" required> {{ $activites_verticale->libelle }}</label>
                                                     </div>
                                                     @endforeach
                                                 </select>
@@ -324,7 +324,7 @@
                                             <label class=" control-label" for="">Pensez-vous investir dans quelles activités verticales?<span data-toggle="tooltip" title="Cochez les activités verticales dans lesquelles vous comptez investir dans les trois prochaines années"><i class="fa fa-info-circle"></i></span> </label>
                                                 @foreach ($activites_verticales as $activites_verticale)
                                                 <div class="col-lg-6 checkbox">
-                                                    <label><input type="checkbox" name='activites_verticales_invests[]' value="{{ $activites_verticale->id }}"> {{ $activites_verticale->libelle }}</label>
+                                                    <label><input type="checkbox" name='activites_verticales_invests[]' value="{{ $activites_verticale->id }}" required> {{ $activites_verticale->libelle }}</label>
                                                 </div>
                                                 @endforeach
                                             </select>
