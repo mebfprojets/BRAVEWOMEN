@@ -10,7 +10,7 @@
                 <div class="block-title">
                     <h2><i class="fa fa-line-chart"></i> <strong>Key indicators</strong></h2>
                 </div>
-                <input type="hidden" value={{ $phase }} id='phase'>
+                {{-- <input type="hidden" value={{ $phase }} id='phase'> --}}
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left text-warning">
@@ -32,7 +32,6 @@
                         </h4>
                     </div>
                 </a>
-                
                 <a href="javascript:void(0)" class="widget widget-hover-effect2 themed-background-muted-light">
                     <div class="widget-simple">
                         <h4 class="text-left">

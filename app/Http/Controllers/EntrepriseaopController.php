@@ -27,7 +27,7 @@ class EntrepriseaopController extends Controller
     }
     public function create(Request $request, $code)
     {
-        //dd($promoteur->suscriptionaopleader_etape);
+        
        $promoteur_code= $code;
         $cat_entreprise=$request->typeentreprise;
         $promoteur=Promotrice::where('code_promoteur',$code )->first();
@@ -80,7 +80,7 @@ class EntrepriseaopController extends Controller
     }
     public function store(Request $request)
     {       
-        return redirect()->back();
+        //return redirect()->back();
         $year=date("Y");
         $cat_entreprise=$request->cat_entreprise;
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
@@ -107,7 +107,7 @@ class EntrepriseaopController extends Controller
                             ->whereIn('entreprises.aopOuleader',['aop','leader'])
                             ->get();
        $date_de_formalisation= date('Y-m-d', strtotime($request->date_de_formalisation));
-      // dd($entreprises_as_projet->count() );
+       $nombre_de_souscription_de_la_phase=Entreprise::where('phase_de_souscription',4)->whereIn('aopOuleader',['aop','leader'])->count();
        if(count($entreprise_controle_doublon)==0  && $entreprises_as_projet->count() < 1){
         $entreprise = Entreprise::create([
             'denomination'=>$request->denomination,
@@ -156,7 +156,8 @@ class EntrepriseaopController extends Controller
             'membre_ass'=>$request->membre_ass,
             'ass_de_entreprise_leader'=>$request->ass_de_entreprise_leader,
             'banque_choisi'=>0,
-            'phase_de_souscription'=>3,
+            'phase_de_souscription'=>4,
+            'phase_projet'=>2,
             "num_ss_compte"=>"non défini"
         ]);
         if ($request->hasFile('docidentite')) {

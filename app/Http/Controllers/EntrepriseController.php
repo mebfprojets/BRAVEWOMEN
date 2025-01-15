@@ -145,7 +145,7 @@ class EntrepriseController extends Controller
         if(count($entreprise_nn_traite )<2 ){
         $entreprise= Entreprise::where("promotrice_id", $promoteur->id)->orderBy('created_at','desc')->first();
         $promoteur_code=$promoteur->code_promoteur;
-        $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [62,64,63,59,58,53])->get();
+        $regions=Valeur::where('parametre_id',1 )->whereNotIn('id', [64,63,59])->get();
         
         $forme_juridiques=Valeur::where('parametre_id',8 )->get();
         $nature_clienteles=Valeur::where('parametre_id',10 )->get();
@@ -187,7 +187,7 @@ else{
      */
     public function store(Request $request)
     {
-        return redirect()->back();
+        //return redirect()->back();
         $year=date("Y");
         $promoteur=Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $annees=Valeur::where('parametre_id',16 )->where('id','!=', 46)->get();
@@ -200,7 +200,8 @@ else{
        $date_de_formalisation= date('Y-m-d', strtotime($request->date_de_formalisation));
        //Pour eviter les doubles enregistrements
        $entreprise_controle_doublon= Entreprise::where("code_promoteur",$promoteur->code_promoteur)->where("denomination",$request->denomination)->where("conforme",null)->get();
-       if(count($entreprise_controle_doublon)==0 && count($entreprise_nn_traite)< 2){
+       $nombre_de_souscription_de_la_phase=Entreprise::where('phase_de_souscription',4)->where('aopOuleader','mpme')->count();
+       if( count($entreprise_controle_doublon)==0 && count($entreprise_nn_traite)< 2){
          $entreprise = Entreprise::create([
             'denomination'=>$request->denomination,
             'region'=>$request->region,
@@ -238,7 +239,8 @@ else{
             'status'=>0,
             'banque_choisi'=>0,
             "aopOuleader"=>"mpme",
-            'phase_de_souscription'=>2,
+            'phase_de_souscription'=>3,
+            'phase_projet'=>2,
             "num_ss_compte"=>"non défini"
         ]);
         if($request->hasFile('docagrement')) {
@@ -457,7 +459,7 @@ else{
 
     public function genereRecpisse(Request $request)
     {
-        return route()->back(); 
+        //return route()->back(); 
         $promoteur= Promotrice::where("slug", $request->promoteur)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->orderBy('created_at','desc')->first();
         $chef_de_zone= User::where("zone",$entreprise->region)->first();
@@ -580,7 +582,7 @@ else{
      */
     public function update(Request $request, Entreprise $entreprise)
     {
-        return redirect()->back();
+       // return redirect()->back();
         $promoteur= Promotrice::where("code_promoteur",$request->code_promoteur)->first();
         $entreprise= Entreprise::where("code_promoteur", $promoteur->code_promoteur)->where("description_du_projet",null)->orderBy('created_at','desc')->first();
      if($entreprise->aopOuleader == "mpme"){

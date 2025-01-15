@@ -248,6 +248,15 @@
                       <option value="nord">Nord</option>
                       <option value="hauts bassin">Hauts bassins</option>
                       <option value="boucle du mouhoun">Boucle du Mouhoun</option>
+                      <option value="centre ouest">Centre-Ouest</option>
+                      <option value="centre est">Centre-Est</option>
+                      <option value="centre nord">Centre-nord</option>
+                      <option value="centre sud">Centre-sud</option>
+                      <option value="nord">Nord</option>
+                      <option value="sahel">Sahel</option>
+                      <option value="nord">Nord</option>
+                      <option value="sud ouest">Sud-Ouest</option>
+                      <option value="Plateau central">Plateau central</option>
                   </select>
                 </div>
               </div>

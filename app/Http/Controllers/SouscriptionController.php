@@ -61,6 +61,7 @@ class SouscriptionController extends Controller
                                         $query->orwhere('region',Auth::user()->zone)
                                          ->orwhere('region_affectation', Auth::user()->zone);
                                     })
+                                    ->whereIn('phase_de_souscription',[3,4])
                                     ->orderBy('updated_at', 'desc')->get();
     }
         return view("souscriptions.liste_de_souscription_soumis_a_ugp", compact("entreprises","active","titre","active_principal"));
